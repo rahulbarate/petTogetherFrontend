@@ -8,6 +8,7 @@ import OrgnizationDetails from "../organization/OrganizationDetails";
 import IndividualUserDetails from "../individual/IndividualUserDetails";
 
 const UserDetailsModal = (props) => {
+  console.log("in side user details modal");
   const navigation = useNavigation();
 
   const { userDataContext } = useContext(AuthContext);

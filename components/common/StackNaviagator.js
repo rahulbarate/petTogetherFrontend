@@ -4,11 +4,14 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginPage from "./LoginPage";
-import ShopOwnerProfile from "../shopkeeper/ShopOwnerProfile";
+// import ShopOwnerProfile from "../shopkeeper/ShopOwnerProfile";
 import WelcomePage from "./WelcomePage";
 import AuthContext from "../hooks/useAuth";
 import SignUpPage from "./SignUpPage";
 import UserDetailsModal from "./UserDetailsModal";
+import App from "../../App";
+import Profile from "./Profile";
+import MainComponent from "./MainComponent";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,18 +20,18 @@ const StackNaviagator = () => {
     <Stack.Navigator>
       <Stack.Screen
         options={{ headerShown: false }}
+        name="WelcomePage"
+        component={WelcomePage}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
         name="LoginPage"
         component={LoginPage}
       />
       <Stack.Screen
         options={{ headerShown: false }}
-        name="ShopOwnerProfile"
-        component={ShopOwnerProfile}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="WelcomePage"
-        component={WelcomePage}
+        name="Profile"
+        component={Profile}
       />
       <Stack.Screen
         options={{ headerShown: false }}
@@ -39,6 +42,11 @@ const StackNaviagator = () => {
         options={{ headerShown: false }}
         name="UserDetailsModal"
         component={UserDetailsModal}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="MainComponent"
+        component={MainComponent}
       />
     </Stack.Navigator>
   );

@@ -47,6 +47,7 @@ const SignUpPage = () => {
       setEmail("");
       setPassword("");
       setUserType("");
+      // console.log("in next button" +modalVisibility);
     }
   };
 

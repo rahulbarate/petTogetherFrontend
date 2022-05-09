@@ -100,6 +100,6 @@ const styles = StyleSheet.create({
         borderRadius: 30,
     },
     postViewStyle: {
-        // marginBottom: 10,
+        marginBottom: 45,
     },
 })

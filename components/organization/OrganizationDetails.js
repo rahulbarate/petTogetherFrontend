@@ -57,7 +57,7 @@ const OrgnizationDetails = () => {
         .collection("accounts")
         .doc(userDataContext.email)
         .set(userDataContext)
-        .then(navigation.navigate("ShopOwnerProfile"));
+        .then(navigation.navigate("MainComponent"));
 
         
       alert("Organization Added ");

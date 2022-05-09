@@ -131,7 +131,9 @@ const ProfileComponent = ({ profileData, editButtonHandle }) => {
           <Text style={styles.followNoTextStyle}>
             {"noOfFollowers" in profileData ? profileData.noOfFollowers : ""}
           </Text>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Followers</Text>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+            {"noOfFollowers" in profileData ? "Followers" : ""}
+          </Text>
         </View>
         <View style={styles.profilePictureViewStyle}>
           <TouchableNativeFeedback>
@@ -182,7 +184,7 @@ const styles = StyleSheet.create({
   },
   container1Sub1Style: {
     width: Dimensions.get("window").width,
-    marginTop: 35,
+    marginTop: 10,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

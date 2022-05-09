@@ -39,7 +39,7 @@ const LoginPage = () => {
         // setUserDataContext(user);
         alert("Logged In");
 
-        navigation.navigate("ShopOwnerProfile");
+        navigation.navigate("MainComponent");
       })
       .catch((error) => {
         alert(error.message);

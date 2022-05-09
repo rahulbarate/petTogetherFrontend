@@ -57,7 +57,7 @@ const ShopOwnerDetails = () => {
         .collection("accounts")
         .doc(userDataContext.email)
         .set(userDataContext)
-        .then(navigation.navigate("ShopOwnerProfile"));
+        .then(navigation.navigate("MainComponent"));
       alert("Shop User Added ");
     } catch (error) {
       alert(error.message);
