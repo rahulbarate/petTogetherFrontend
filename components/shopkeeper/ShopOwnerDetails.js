@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
-import AuthContext from "../../hooks/useAuth";
+import AuthContext from "../hooks/useAuth";
 import TextInputComponent from "../common/TextInputComponent";
 import DropDownPicker from "react-native-dropdown-picker";
 import ButtonComponent from "../common/ButtonComponent";
@@ -16,7 +16,7 @@ const ShopOwnerDetails = () => {
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
 
   const [open, setOpen] = useState(false);
-  const [shopName, setShopName] = useState();
+  const [name, setName] = useState();
   const [ownerName, setOwnerName] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
   const [sellerType, setSellerType] = useState(null);
@@ -54,7 +54,7 @@ const ShopOwnerDetails = () => {
 
       db.collection("Users")
         .doc("shopkeeper")
-        .collection("shopAccounts")
+        .collection("accounts")
         .doc(userDataContext.email)
         .set(userDataContext)
         .then(navigation.navigate("ShopOwnerProfile"));
@@ -65,7 +65,7 @@ const ShopOwnerDetails = () => {
   };
 
   useEffect(() => {
-    if ("shopName" in userDataContext) {
+    if ("name" in userDataContext) {
       registerShopUser();
     }
   }, [userDataContext]);
@@ -74,7 +74,7 @@ const ShopOwnerDetails = () => {
     setUserDataContext((prevState) => {
       return {
         ...prevState,
-        shopName,
+        name,
         ownerName,
         phoneNumber,
         sellerType,
@@ -97,9 +97,9 @@ const ShopOwnerDetails = () => {
         <TextInputComponent
           textInputStyle={styles.longTextInputStyle}
           placeholder={"Enter Shop Name Here"}
-          value={shopName}
+          value={name}
           onChangeText={(text) => {
-            setShopName(text);
+            setName(text);
           }}
         />
         <TextInputComponent

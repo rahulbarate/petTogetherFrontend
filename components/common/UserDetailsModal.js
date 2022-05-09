@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Button, TextInput } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
-import AuthContext from "../../hooks/useAuth";
+import AuthContext from "../hooks/useAuth";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useNavigation } from "@react-navigation/native";
 import ShopOwnerDetails from "../shopkeeper/ShopOwnerDetails";

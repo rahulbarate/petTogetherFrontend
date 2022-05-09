@@ -14,7 +14,7 @@ import React, { useState, useContext } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import UserDetailsModal from "./UserDetailsModal";
 import Modal from "react-native-modal";
-import AuthContext from "../../hooks/useAuth";
+import AuthContext from "../hooks/useAuth";
 
 const SignUpPage = () => {
   const [email, setEmail] = useState("");

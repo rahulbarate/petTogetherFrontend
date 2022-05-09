@@ -5,10 +5,12 @@ const TextInputComponent = (props) => {
   return (
     <View style={[styles.textInputStyle, props.textInputStyle]}>
       <TextInput
+        multiline={true}
         placeholder={props.placeholder}
         keyboardType={props.keyboardType ? props.keyboardType : "default"}
         value={props.value}
         onChangeText={props.onChangeText}
+        style={{ flexDirection: "row", flexWrap: "wrap" }}
       />
     </View>
   );

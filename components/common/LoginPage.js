@@ -16,7 +16,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import AuthContext from "../../hooks/useAuth";
+import { localhostBaseURL } from "../common/baseURLs";
+import AuthContext from "../hooks/useAuth";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -34,11 +35,10 @@ const LoginPage = () => {
         return user;
       })
       .then((user) => {
-        // console.log(user);
-        // setUserData(user);
-        setUserDataContext(user);
-        // console.log(userData);
+        getDataFromServer(user.email);
+        // setUserDataContext(user);
         alert("Logged In");
+
         navigation.navigate("ShopOwnerProfile");
       })
       .catch((error) => {
@@ -57,6 +57,21 @@ const LoginPage = () => {
         alert(error);
       });
   };
+
+  const getDataFromServer = async (email) => {
+
+    try {
+      const res = await localhostBaseURL.post("/profile/fetchUserDetails", {
+        email: email,
+      });
+
+      setUserDataContext(res.data);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+
 
   return (
     // <AuthContext.Provider value={{userData}}>
@@ -90,7 +105,7 @@ const LoginPage = () => {
               <Text style={styles.noAccountTextStyle}>
                 Don't Have an Account,
               </Text>
-              <TouchableNativeFeedback onPress={() =>{navigation.navigate("SignUpPage")}}>
+              <TouchableNativeFeedback onPress={() => { navigation.navigate("SignUpPage") }}>
                 <View>
                   <Text style={styles.signupTextStyle}>Signup</Text>
                 </View>
@@ -132,8 +147,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.9)",
     alignSelf: "center",
     borderRadius: 30,
-    padding:5,
-    marginTop:10
+    padding: 5,
+    marginTop: 10
   },
   noAccountTextStyle: {
     fontSize: 15,

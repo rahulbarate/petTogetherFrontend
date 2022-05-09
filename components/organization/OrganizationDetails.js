@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
-import AuthContext from "../../hooks/useAuth";
+import AuthContext from "../hooks/useAuth";
 import TextInputComponent from "../common/TextInputComponent";
 import DropDownPicker from "react-native-dropdown-picker";
 import ButtonComponent from "../common/ButtonComponent";
@@ -15,22 +15,22 @@ const OrgnizationDetails = () => {
 
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
 
-//   const [open, setOpen] = useState(false);
-  const [organizationName, setOrganizationName] = useState();
+  //   const [open, setOpen] = useState(false);
+  const [name, setName] = useState();
   const [ownerName, setOwnerName] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
-//   const [sellerType, setSellerType] = useState(null);
+  //   const [sellerType, setSellerType] = useState(null);
   const [pincode, setPincode] = useState();
   const [state, setState] = useState();
   const [district, setDistrict] = useState();
   const [houseNo, setHouseNo] = useState();
   const [area, setArea] = useState();
 
-//   const [items, setItems] = useState([
-//     { label: "Pet Essentials", value: "essentials" },
-//     { label: "Pets", value: "pets" },
-//     { label: "Both", value: "both" },
-//   ]);
+  //   const [items, setItems] = useState([
+  //     { label: "Pet Essentials", value: "essentials" },
+  //     { label: "Pets", value: "pets" },
+  //     { label: "Both", value: "both" },
+  //   ]);
   const handleSignup = () => {
     createUserWithEmailAndPassword(
       auth,
@@ -54,19 +54,24 @@ const OrgnizationDetails = () => {
 
       db.collection("Users")
         .doc("organization")
-        .collection("organizationAccounts")
+        .collection("accounts")
         .doc(userDataContext.email)
         .set(userDataContext)
         .then(navigation.navigate("ShopOwnerProfile"));
+
+        
       alert("Organization Added ");
     } catch (error) {
       alert(error.message);
+
     }
   };
 
   useEffect(() => {
-    if ("organizationName" in userDataContext) {
-        registerOrganization();
+    if ("name" in userDataContext) {
+      console.log("in useEffect org");
+      console.log(userDataContext);
+      registerOrganization();
     }
   }, [userDataContext]);
 
@@ -74,7 +79,7 @@ const OrgnizationDetails = () => {
     setUserDataContext((prevState) => {
       return {
         ...prevState,
-        organizationName,
+        name,
         ownerName,
         phoneNumber,
         pincode,
@@ -96,9 +101,9 @@ const OrgnizationDetails = () => {
         <TextInputComponent
           textInputStyle={styles.longTextInputStyle}
           placeholder={"Enter organization name here"}
-          value={organizationName}
+          value={name}
           onChangeText={(text) => {
-            setOrganizationName(text);
+            setName(text);
           }}
         />
         <TextInputComponent

@@ -2,9 +2,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import StackNaviagator from "./components/common/StackNaviagator";
-import AuthContext from "./hooks/useAuth";
+// import AuthContext from "../hooks/useAuth";
 import React, { useState,useContext } from "react";
 import { LogBox } from 'react-native';
+import AuthContext from "./components/hooks/useAuth";
 
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();

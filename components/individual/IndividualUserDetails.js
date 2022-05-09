@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
-import AuthContext from "../../hooks/useAuth";
+import AuthContext from "../hooks/useAuth";
 import TextInputComponent from "../common/TextInputComponent";
 import DropDownPicker from "react-native-dropdown-picker";
 import ButtonComponent from "../common/ButtonComponent";
@@ -15,22 +15,22 @@ const IndividualUserDetails = () => {
 
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
 
-//   const [open, setOpen] = useState(false);
-//   const [organizationName, setOrganizationName] = useState();
-  const [userName, setUserName] = useState();
+  //   const [open, setOpen] = useState(false);
+  //   const [organizationName, setOrganizationName] = useState();
+  const [name, setName] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
-//   const [sellerType, setSellerType] = useState(null);
+  //   const [sellerType, setSellerType] = useState(null);
   const [pincode, setPincode] = useState();
   const [state, setState] = useState();
   const [district, setDistrict] = useState();
   const [houseNo, setHouseNo] = useState();
   const [area, setArea] = useState();
 
-//   const [items, setItems] = useState([
-//     { label: "Pet Essentials", value: "essentials" },
-//     { label: "Pets", value: "pets" },
-//     { label: "Both", value: "both" },
-//   ]);
+  //   const [items, setItems] = useState([
+  //     { label: "Pet Essentials", value: "essentials" },
+  //     { label: "Pets", value: "pets" },
+  //     { label: "Both", value: "both" },
+  //   ]);
   const handleSignup = () => {
     createUserWithEmailAndPassword(
       auth,
@@ -54,7 +54,7 @@ const IndividualUserDetails = () => {
 
       db.collection("Users")
         .doc("individualUser")
-        .collection("individualUserAccounts")
+        .collection("accounts")
         .doc(userDataContext.email)
         .set(userDataContext)
         .then(navigation.navigate("ShopOwnerProfile"));
@@ -65,8 +65,9 @@ const IndividualUserDetails = () => {
   };
 
   useEffect(() => {
-    if ("userName" in userDataContext) {
-        registerUser();
+    if ("name" in userDataContext) {
+      console.log(userDataContext);
+      registerUser();
     }
   }, [userDataContext]);
 
@@ -74,7 +75,7 @@ const IndividualUserDetails = () => {
     setUserDataContext((prevState) => {
       return {
         ...prevState,
-        userName,
+        name,
         phoneNumber,
         pincode,
         state,
@@ -95,9 +96,9 @@ const IndividualUserDetails = () => {
         <TextInputComponent
           textInputStyle={styles.longTextInputStyle}
           placeholder={"Enter name here"}
-          value={userName}
+          value={name}
           onChangeText={(text) => {
-            setUserName(text);
+            setName(text);
           }}
         />
         <TextInputComponent
