@@ -45,7 +45,11 @@ export default function MainContainer() {
       }}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Search" component={SearchScreen} />
+      <Tab.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen name="HighAlert" component={HighAlertScreen} />
       <Tab.Screen name="Notify" component={NotifyScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />

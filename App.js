@@ -7,6 +7,13 @@ import React, { useState, useContext } from "react";
 import { LogBox } from "react-native";
 import AuthContext from "./components/hooks/useAuth";
 import MainComponent from "./components/common/MainComponent";
+import {
+  ApplicationProvider,
+  Layout,
+  IconRegistry,
+} from "@ui-kitten/components";
+import { mapping, light as lightTheme } from "@eva-design/eva";
+import { EvaIconsPack } from "@ui-kitten/eva-icons";
 
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
@@ -16,16 +23,19 @@ export default function App() {
   // const [userData, setUserData] = useState({email:"anything"});
   return (
     <View style={styles.container}>
-      <NavigationContainer>
-        <AuthContext.Provider
-          value={{
-            userDataContext: userData,
-            setUserDataContext: setUserData,
-          }}
-        >
-          {userData.isUserAvailable ? <MainComponent /> : <StackNaviagator />}
-        </AuthContext.Provider>
-      </NavigationContainer>
+      <IconRegistry icons={EvaIconsPack} />
+      <ApplicationProvider mapping={mapping} theme={lightTheme}>
+        <NavigationContainer>
+          <AuthContext.Provider
+            value={{
+              userDataContext: userData,
+              setUserDataContext: setUserData,
+            }}
+          >
+            {userData.isUserAvailable ? <MainComponent /> : <StackNaviagator />}
+          </AuthContext.Provider>
+        </NavigationContainer>
+      </ApplicationProvider>
     </View>
     // <MainComponent />
     // <NavigationContainer>
