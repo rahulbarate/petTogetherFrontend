@@ -88,10 +88,13 @@ const EditProfileComponent = (props) => {
       xhr.send(null);
     });
 
+    //
     const storageRef = storage
       .ref(`${userDataContext.email}/profilePictures/`)
       .child("profilePicture.jpeg");
+      
     const uploadTask = storageRef.put(blob);
+    // setIsDataChanged(false);
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -134,6 +137,8 @@ const EditProfileComponent = (props) => {
       ...userDataContext,
       profileImageLink: url,
     };
+
+
     const response = await sendRequestToServer(
       "/profile/updateUserProfile",
       updatedData
@@ -171,6 +176,7 @@ const EditProfileComponent = (props) => {
 
     return updatedData;
   };
+
 
   const updateUserDetails = async () => {
     const updatedData = getUpdatedData();

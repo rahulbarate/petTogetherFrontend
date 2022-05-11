@@ -6,7 +6,7 @@ import StackNaviagator from "./components/common/StackNaviagator";
 import React, { useState, useContext } from "react";
 import { LogBox } from "react-native";
 import AuthContext from "./components/hooks/useAuth";
-import MainComponent from "./components/common/MainComponent";
+import MainComponent from "./components/individual/MainComponent";
 import {
   ApplicationProvider,
   Layout,

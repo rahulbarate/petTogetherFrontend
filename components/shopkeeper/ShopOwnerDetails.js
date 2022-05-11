@@ -31,6 +31,8 @@ const ShopOwnerDetails = () => {
     { label: "Pets", value: "pets" },
     { label: "Both", value: "both" },
   ]);
+  
+  //
   const handleSignup = () => {
     createUserWithEmailAndPassword(
       auth,

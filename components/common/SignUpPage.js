@@ -14,9 +14,12 @@ import React, { useState, useContext } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import UserDetailsModal from "./UserDetailsModal";
 import Modal from "react-native-modal";
+import { useNavigation } from "@react-navigation/native";
 import AuthContext from "../hooks/useAuth";
 
+
 const SignUpPage = () => {
+  const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("");
@@ -39,117 +42,90 @@ const SignUpPage = () => {
       password,
       userType,
     };
-    if (userType === "") {
-      alert("please choose user Type");
-    } else {
-      setUserDataContext(user);
-      setModalVisibility(true);
-      setEmail("");
-      setPassword("");
-      setUserType("");
-      // console.log("in next button" +modalVisibility);
-    }
+    // if (userType === "") {
+    //   alert("please choose user Type");
+    // } else {
+    //   // setModalVisibility(true);
+    //   // setEmail("");
+    //   // setPassword("");
+    //   // setUserType("");
+    //   // console.log("in next button" +modalVisibility);
+    // }
+    setUserDataContext(user);
+    navigation.navigate("AcceptUserDetails");
   };
 
-  return modalVisibility ? (
-    <Modal
-      isVisible={modalVisibility}
-      style={styles.modalStyle}
-      onSwipeComplete={() => setModalVisibility(false)}
-      onBackButtonPress={() => setModalVisibility(false)}
-      swipeDirection="down"
-    >
-      <UserDetailsModal toggleModal={toggleModal} />
-    </Modal>
-  ) : (
+  return (
     <View style={styles.container}>
-      <ImageBackground
-        style={styles.backgroundImageStyle}
-        resizeMode="cover"
-        source={require("../../static/images/hedgehog.jpg")}
-      >
-        <View style={styles.mainContainerStyle}>
-          <Text style={styles.titleTextStyle}>Choose who do you want be !</Text>
-          <KeyboardAwareScrollView>
-            <View style={styles.container1}>
-              <TouchableNativeFeedback
-                background={TouchableNativeFeedback.Ripple(
-                  "#AAF",
-                  true,
-                  150 / 2
-                )}
-                style={styles.circleTouchFeedbackStyle}
-                onPress={() => {
-                  handleUserType("Organization");
+      <View style={styles.mainContainerStyle}>
+        <Text style={styles.titleTextStyle}>Choose who do you want be !</Text>
+        <KeyboardAwareScrollView>
+          <View style={styles.container1}>
+            <TouchableNativeFeedback
+              background={TouchableNativeFeedback.Ripple("#AAF", true, 150 / 2)}
+              style={styles.circleTouchFeedbackStyle}
+              onPress={() => {
+                handleUserType("Organization");
+              }}
+            >
+              <View style={styles.circularViewStyle}>
+                <Text style={styles.textInsideCircle}>Organization</Text>
+              </View>
+            </TouchableNativeFeedback>
+          </View>
+          <View style={styles.container2}>
+            <TouchableNativeFeedback
+              background={TouchableNativeFeedback.Ripple("#AAF", true, 150 / 2)}
+              onPress={() => {
+                handleUserType("Shopkeeper");
+              }}
+              style={styles.circleTouchFeedbackStyle}
+            >
+              <View style={styles.circularViewStyle}>
+                <Text style={styles.textInsideCircle}>Shopkeeper</Text>
+              </View>
+            </TouchableNativeFeedback>
+            <TouchableNativeFeedback
+              background={TouchableNativeFeedback.Ripple("#AAF", true, 150 / 2)}
+              onPress={() => {
+                handleUserType("Individual User");
+              }}
+              style={styles.circleTouchFeedbackStyle}
+            >
+              <View style={styles.circularViewStyle}>
+                <Text style={styles.textInsideCircle}>Individual User</Text>
+              </View>
+            </TouchableNativeFeedback>
+          </View>
+          <View style={styles.textAndButtonsContainer}>
+            <View style={styles.emailTextInputViewStyle}>
+              <TextInput
+                placeholder="Enter email address"
+                value={email}
+                onChangeText={(text) => {
+                  setEmail(text);
                 }}
-              >
-                <View style={styles.circularViewStyle}>
-                  <Text style={styles.textInsideCircle}>Organization</Text>
+              />
+            </View>
+            <View style={styles.passwordTextInputViewStyle}>
+              <TextInput
+                placeholder="Enter password"
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                }}
+              />
+            </View>
+            <View style={styles.buttonContainerStyle}>
+              <TouchableNativeFeedback onPress={handleNextButton}>
+                <View style={styles.nextButtonStyle}>
+                  <Text style={{ fontSize: 20 }}>Next</Text>
                 </View>
               </TouchableNativeFeedback>
             </View>
-            <View style={styles.container2}>
-              <TouchableNativeFeedback
-                background={TouchableNativeFeedback.Ripple(
-                  "#AAF",
-                  true,
-                  150 / 2
-                )}
-                onPress={() => {
-                  handleUserType("Shopkeeper");
-                }}
-                style={styles.circleTouchFeedbackStyle}
-              >
-                <View style={styles.circularViewStyle}>
-                  <Text style={styles.textInsideCircle}>Shopkeeper</Text>
-                </View>
-              </TouchableNativeFeedback>
-              <TouchableNativeFeedback
-                background={TouchableNativeFeedback.Ripple(
-                  "#AAF",
-                  true,
-                  150 / 2
-                )}
-                onPress={() => {
-                  handleUserType("Individual User");
-                }}
-                style={styles.circleTouchFeedbackStyle}
-              >
-                <View style={styles.circularViewStyle}>
-                  <Text style={styles.textInsideCircle}>Individual User</Text>
-                </View>
-              </TouchableNativeFeedback>
-            </View>
-            <View style={styles.textAndButtonsContainer}>
-              <View style={styles.emailTextInputViewStyle}>
-                <TextInput
-                  placeholder="Enter email address"
-                  value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
-                  }}
-                />
-              </View>
-              <View style={styles.passwordTextInputViewStyle}>
-                <TextInput
-                  placeholder="Enter password"
-                  value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                  }}
-                />
-              </View>
-              <View style={styles.buttonContainerStyle}>
-                <TouchableNativeFeedback onPress={handleNextButton}>
-                  <View style={styles.nextButtonStyle}>
-                    <Text style={{ fontSize: 20 }}>Next</Text>
-                  </View>
-                </TouchableNativeFeedback>
-              </View>
-            </View>
-          </KeyboardAwareScrollView>
-        </View>
-      </ImageBackground>
+          </View>
+        </KeyboardAwareScrollView>
+      </View>
     </View>
   );
 };

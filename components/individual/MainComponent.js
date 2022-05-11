@@ -2,9 +2,9 @@ import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import HomeScreen from "./Home";
 import SearchScreen from "./Search";
-import NotifyScreen from "./Notify";
-import ProfileScreen from "./Profile";
 import HighAlertScreen from "./HighAlert";
+import NotifyScreen from "../common/Notify";
+import ProfileScreen from "../common/Profile";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 const homeName = "Home";
@@ -37,7 +37,7 @@ export default function MainContainer() {
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
-      tabBarOptions={{
+      options={{
         tabBarActiveTintColor: "tomato",
         tabBarInactiveTintColor: "black",
         labelstyle: { paddingBottom: 10, fontsize: 10 },
