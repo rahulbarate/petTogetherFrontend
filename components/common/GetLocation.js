@@ -1,17 +1,23 @@
-import { Platform, Text, View, StyleSheet, Dimensions } from "react-native";
+import { Platform, Text, View, StyleSheet, Dimensions, ToastAndroid } from "react-native";
 import * as Location from "expo-location";
 import React, { useContext, useEffect, useState } from "react";
 import MapView, { Marker, Polyline, Callout } from "react-native-maps";
 import AuthContext from "../hooks/useAuth";
 import ButtonComponent from "./ButtonComponent";
+import { useNavigation } from "@react-navigation/native";
 
-const GetLocation = () => {
+const GetLocation = ({ route }) => {
+  const displayToastMessage = (text) => {
+    ToastAndroid.show(text, ToastAndroid.SHORT);
+  };
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
+  const navigation = useNavigation();
 
   const [location, setLocation] = useState(null);
   const [region, setRegion] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [coordinates, setCoordinates] = useState([]);
+  const [markerPosition, setMarkerPosition] = useState({});
 
   const onRegionChange = (region) => {
     // console.log(region);
@@ -35,6 +41,10 @@ const GetLocation = () => {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       });
+      setMarkerPosition({
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
+      });
       setCoordinates((prev) => {
         prev.push({
           latitude: currentLocation.coords.latitude,
@@ -45,7 +55,16 @@ const GetLocation = () => {
     })();
   }, []);
 
-  const saveLocation = () => {};
+  useEffect(() => {
+    setUserDataContext({ ...userDataContext, coordinate: { markerPosition } });
+  }, [markerPosition]);
+
+  const saveLocation = () => {
+    setUserDataContext({ ...userDataContext, coordinate: { markerPosition } });
+    route.params.setRecievedUserLocation(true);
+    displayToastMessage("Location recieved successfully");
+    navigation.goBack();
+  };
   let text = "Waiting..";
   if (errorMsg) {
     text = errorMsg;
@@ -69,19 +88,31 @@ const GetLocation = () => {
             userLocationAnnotationTitle={"you are here"}
             showsCompass={true}
           >
-            {region && (
+            {markerPosition && (
               <Marker
-                coordinate={{
-                  longitude: region.longitude,
-                  latitude: region.latitude,
-                }}
+                coordinate={markerPosition}
                 tracksViewChanges={false}
+                draggable={true}
+                onDragStart={(e) => {
+                  console.log(e.nativeEvent.coordinate);
+                  console.log(e.nativeEvent.coordinate);
+                }}
+                onDragEnd={(e) => {
+                  console.log(e.nativeEvent.coordinate);
+                  console.log(e.nativeEvent.coordinate);
+                  setMarkerPosition({
+                    latitude: e.nativeEvent.coordinate.latitude,
+                    longitude: e.nativeEvent.coordinate.longitude,
+                  });
+                  // console.log(e.nativeEvent.position);
+                }}
               >
                 <Callout>
                   <Text>This is where you are</Text>
                 </Callout>
               </Marker>
             )}
+
             {region && (
               <Polyline
                 coordinates={coordinates}
@@ -98,7 +129,9 @@ const GetLocation = () => {
             )}
           </MapView>
         ) : (
-          <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
             <Text>{text}</Text>
           </View>
         )}
@@ -124,7 +157,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   map: {
-    flex:1,
+    flex: 1,
     width: Dimensions.get("window").width,
     // height: Dimensions.get("window").height - 100,
   },
@@ -147,7 +180,7 @@ const styles = StyleSheet.create({
     flex: 0.2,
     justifyContent: "center",
     alignItems: "center",
-    paddingBottom:10
+    paddingBottom: 10,
   },
   buttonTextStyle: {
     fontSize: 18,

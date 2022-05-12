@@ -21,9 +21,12 @@ import {
 import { storage } from "../../firebase";
 import { localhostBaseURL } from "../common/baseURLs";
 import ButtonComponent from "./ButtonComponent";
+import { useNavigation } from "@react-navigation/native";
 // import * as firebase from "firebase/compat/app";
 
 const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
+
+  const navigation = useNavigation();
   const displayToastMessage = (text) => {
     ToastAndroid.show(text, ToastAndroid.SHORT);
   };
@@ -207,7 +210,7 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
                 buttonStyle={{
                   width: 100,
                   height: 30,
-                  marginHorizontal: "8%",
+                  marginHorizontal: "2%",
                   borderRadius: 20,
                 }}
                 buttonText={"Follow"}
@@ -217,9 +220,23 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
                   width: 100,
                   height: 30,
                   borderRadius: 20,
-                  marginHorizontal: "8%",
+                  marginHorizontal: "2%",
                 }}
                 buttonText={"Message"}
+              />
+              <ButtonComponent
+                buttonStyle={{
+                  width: 100,
+                  height: 30,
+                  borderRadius: 20,
+                  marginHorizontal: "2%",
+                }}
+                buttonText={"Visit"}
+                handleButton={() => {
+                  if (profileData.coordinate) {
+                    navigation.navigate("Map", { userData: profileData });
+                  }
+                }}
               />
             </View>
           ) : (

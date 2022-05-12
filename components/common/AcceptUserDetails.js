@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View, Dimensions, TouchableNativeFeedback } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  TouchableNativeFeedback,
+} from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import AuthContext from "../hooks/useAuth";
 import TextInputComponent from "../common/TextInputComponent";
@@ -74,6 +80,7 @@ const AcceptUserDetails = () => {
       alert(error.message);
     }
   };
+
   const getEnteredUserData = () => {
     let updatedData = {
       email: userDataContext.email,
@@ -89,6 +96,7 @@ const AcceptUserDetails = () => {
       district,
       houseNo,
       area,
+      coordinate: userDataContext.coordinate,
     };
 
     if (userDataContext.userType === "Shopkeeper")
@@ -105,6 +113,7 @@ const AcceptUserDetails = () => {
       const enteredUserData = getEnteredUserData();
       setUserDataContext(enteredUserData);
       handleSignup(enteredUserData);
+      // console.log(enteredUserData);
     } else {
       alert("Please select your current location");
     }
@@ -261,7 +270,7 @@ const AcceptUserDetails = () => {
             }}
           />
         </View>
-        <View>
+        <View style={{flexDirection: "row",alignItems: "center"}}>
           <TextInputComponent
             textInputStyle={{
               width: "45%",
@@ -278,7 +287,7 @@ const AcceptUserDetails = () => {
           <View>
             <TouchableNativeFeedback
               onPress={() => {
-                navigation.navigate("GetLocation",{setRecievedUserLocation});
+                navigation.navigate("GetLocation", { setRecievedUserLocation });
               }}
             >
               <Text

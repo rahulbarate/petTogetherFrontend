@@ -14,6 +14,7 @@ import MainComponent from "../individual/MainComponent";
 import OtherUsersProfile from "./OtherUsersProfile";
 import GetLocation from "./GetLocation";
 import AcceptUserDetails from "./AcceptUserDetails";
+import Map from "./Map";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,13 +23,8 @@ const StackNaviagator = () => {
     <Stack.Navigator>
       <Stack.Screen
         options={{ headerShown: false }}
-        name="GetLocation"
-        component={GetLocation}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="SignUpPage"
-        component={SignUpPage}
+        name="WelcomePage"
+        component={WelcomePage}
       />
       <Stack.Screen
         options={{ headerShown: false }}
@@ -37,13 +33,23 @@ const StackNaviagator = () => {
       />
       <Stack.Screen
         options={{ headerShown: false }}
-        name="AcceptUserDetails"
-        component={AcceptUserDetails}
+        name="Map"
+        component={Map}
       />
       <Stack.Screen
         options={{ headerShown: false }}
-        name="WelcomePage"
-        component={WelcomePage}
+        name="SignUpPage"
+        component={SignUpPage}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="GetLocation"
+        component={GetLocation}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AcceptUserDetails"
+        component={AcceptUserDetails}
       />
       <Stack.Screen
         options={{ headerShown: false }}

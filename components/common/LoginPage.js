@@ -74,57 +74,51 @@ const LoginPage = () => {
   return (
     // <AuthContext.Provider value={{userData}}>
     <View style={styles.mainContainerStyle}>
-      <ImageBackground
-        style={styles.backgroundImageStyle}
-        resizeMode="cover"
-        source={require("../../static/images/girlwithdog.jpg")}
-      >
-        <KeyboardAwareScrollView style={styles.textInputContainerStyle}>
-          <KeyboardAvoidingView>
-            <View>
-              <View style={styles.emailTextInputViewStyle}>
-                <TextInput
-                  placeholder="Enter email address"
-                  value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
-                  }}
-                />
-              </View>
-              <View style={styles.passwordTextInputViewStyle}>
-                <TextInput
-                  placeholder="Enter password"
-                  value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                  }}
-                />
-              </View>
-              <View style={styles.signUpTextViewStyle}>
-                <Text style={styles.noAccountTextStyle}>
-                  Don't Have an Account,
-                </Text>
-                <TouchableNativeFeedback
-                  onPress={() => {
-                    navigation.navigate("SignUpPage");
-                  }}
-                >
-                  <View>
-                    <Text style={styles.signupTextStyle}>Signup</Text>
-                  </View>
-                </TouchableNativeFeedback>
-              </View>
+      <KeyboardAwareScrollView style={styles.textInputContainerStyle}>
+        <KeyboardAvoidingView>
+          <View>
+            <View style={styles.emailTextInputViewStyle}>
+              <TextInput
+                placeholder="Enter email address"
+                value={email}
+                onChangeText={(text) => {
+                  setEmail(text);
+                }}
+              />
             </View>
-          </KeyboardAvoidingView>
-          <View style={styles.buttonContainerStyle}>
-            <TouchableNativeFeedback onPress={handleSignIn}>
-              <View style={styles.loginButtonStyle}>
-                <Text style={{ fontSize: 20 }}>Login</Text>
-              </View>
-            </TouchableNativeFeedback>
+            <View style={styles.passwordTextInputViewStyle}>
+              <TextInput
+                placeholder="Enter password"
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                }}
+              />
+            </View>
+            <View style={styles.signUpTextViewStyle}>
+              <Text style={styles.noAccountTextStyle}>
+                Don't Have an Account,
+              </Text>
+              <TouchableNativeFeedback
+                onPress={() => {
+                  navigation.navigate("SignUpPage");
+                }}
+              >
+                <View>
+                  <Text style={styles.signupTextStyle}>Signup</Text>
+                </View>
+              </TouchableNativeFeedback>
+            </View>
           </View>
-        </KeyboardAwareScrollView>
-      </ImageBackground>
+        </KeyboardAvoidingView>
+        <View style={styles.buttonContainerStyle}>
+          <TouchableNativeFeedback onPress={handleSignIn}>
+            <View style={styles.loginButtonStyle}>
+              <Text style={{ fontSize: 20 }}>Login</Text>
+            </View>
+          </TouchableNativeFeedback>
+        </View>
+      </KeyboardAwareScrollView>
     </View>
     // </AuthContext.Provider>
   );
@@ -133,12 +127,12 @@ const LoginPage = () => {
 const styles = StyleSheet.create({
   mainContainerStyle: {
     flex: 1,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
   },
   backgroundImageStyle: {
     flex: 1,
     justifyContent: "flex-start",
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
   },
   textInputContainerStyle: {
     flex: 8,
