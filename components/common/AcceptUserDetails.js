@@ -5,6 +5,7 @@ import {
   Dimensions,
   TouchableNativeFeedback,
 } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import React, { useContext, useState, useEffect } from "react";
 import AuthContext from "../hooks/useAuth";
 import TextInputComponent from "../common/TextInputComponent";
@@ -58,7 +59,7 @@ const AcceptUserDetails = () => {
         // console.log(user);
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   };
 
@@ -77,7 +78,7 @@ const AcceptUserDetails = () => {
         .then(navigation.navigate("MainComponent"));
       alert("Registered Successfully");
     } catch (error) {
-      alert(error.message);
+      console.log(error.message);
     }
   };
 
@@ -123,16 +124,16 @@ const AcceptUserDetails = () => {
       <KeyboardAwareScrollView style={{ flex: 1, width: deviceWidth }}>
         <View style={styles.container1Style}>
           <View style={{ alignItems: "center" }}>
-            <Text style={styles.titleTextStyle}>Enter Your Details </Text>
+            <Text style={styles.titleTextStyle}>Enter your details </Text>
           </View>
           <TextInputComponent
             textInputStyle={styles.longTextInputStyle}
             placeholder={
               userDataContext.userType === "Shopkeeper"
-                ? "Enter Shop Name"
+                ? "Shop name here"
                 : userDataContext.userType === "Organization"
-                ? "Enter Organization Name"
-                : "Enter Your Name"
+                ? "Organization name here"
+                : "Your Name here"
             }
             value={name}
             onChangeText={(text) => {
@@ -143,7 +144,7 @@ const AcceptUserDetails = () => {
           userDataContext.userType === "Organization" ? (
             <TextInputComponent
               textInputStyle={styles.longTextInputStyle}
-              placeholder={"Enter Owner Name Here"}
+              placeholder={"Owner name here"}
               value={ownerName}
               onChangeText={(text) => {
                 setOwnerName(text);
@@ -154,7 +155,7 @@ const AcceptUserDetails = () => {
           )}
           <TextInputComponent
             textInputStyle={styles.longTextInputStyle}
-            placeholder={"Enter Phone no here"}
+            placeholder={"Phone no here"}
             keyboardType={"phone-pad"}
             value={phoneNumber}
             onChangeText={(text) => {
@@ -241,64 +242,7 @@ const AcceptUserDetails = () => {
           </View>
         )}
 
-        <View style={styles.container2Style}>
-          <TextInputComponent
-            textInputStyle={{
-              width: "45%",
-              height: 50,
-              marginVertical: 5,
-              marginLeft: 15,
-            }}
-            placeholder={"Enter pincode"}
-            keyboardType={"phone-pad"}
-            value={pincode}
-            onChangeText={(text) => {
-              setPincode(text);
-            }}
-          />
-          <TextInputComponent
-            textInputStyle={{
-              width: "45%",
-              height: 50,
-              marginVertical: 5,
-              marginHorizontal: 5,
-            }}
-            placeholder={"Enter State"}
-            value={state}
-            onChangeText={(text) => {
-              setState(text);
-            }}
-          />
-        </View>
-        <View style={{flexDirection: "row",alignItems: "center"}}>
-          <TextInputComponent
-            textInputStyle={{
-              width: "45%",
-              height: 50,
-              marginVertical: 5,
-              marginHorizontal: 15,
-            }}
-            placeholder={"Enter District"}
-            value={district}
-            onChangeText={(text) => {
-              setDistrict(text);
-            }}
-          />
-          <View>
-            <TouchableNativeFeedback
-              onPress={() => {
-                navigation.navigate("GetLocation", { setRecievedUserLocation });
-              }}
-            >
-              <Text
-                style={{ textDecorationLine: "underline", color: "#3399ff" }}
-              >
-                Set Current Location
-              </Text>
-            </TouchableNativeFeedback>
-          </View>
-        </View>
-        <View style={styles.container3Style}>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
           <TextInputComponent
             textInputStyle={styles.longTextInputStyle}
             placeholder={"House no,Building no,Street,etc"}
@@ -315,6 +259,77 @@ const AcceptUserDetails = () => {
               setArea(text);
             }}
           />
+        </View>
+        <View style={styles.container2Style}>
+          <TextInputComponent
+            textInputStyle={{
+              width: "45%",
+              height: 50,
+              marginVertical: 5,
+              marginLeft: 15,
+            }}
+            placeholder={"Pincode"}
+            keyboardType={"phone-pad"}
+            value={pincode}
+            onChangeText={(text) => {
+              setPincode(text);
+            }}
+          />
+          <TextInputComponent
+            textInputStyle={{
+              width: "45%",
+              height: 50,
+              marginVertical: 5,
+              marginHorizontal: 5,
+            }}
+            placeholder={"State"}
+            value={state}
+            onChangeText={(text) => {
+              setState(text);
+            }}
+          />
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TextInputComponent
+            textInputStyle={{
+              width: "45%",
+              height: 50,
+              marginVertical: 5,
+              marginHorizontal: 15,
+            }}
+            placeholder={"District"}
+            value={district}
+            onChangeText={(text) => {
+              setDistrict(text);
+            }}
+          />
+          <View>
+            <TouchableNativeFeedback
+              onPress={() => {
+                navigation.navigate("GetLocation", { setRecievedUserLocation });
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicons name={"location-outline"} size={25} color={"black"} />
+                <Text
+                  style={{
+                    textDecorationLine: "underline",
+                    color: "#3399ff",
+                  }}
+                >
+                  Set current location
+                </Text>
+              </View>
+            </TouchableNativeFeedback>
+          </View>
+        </View>
+        <View style={styles.container3Style}>
           <View style={{ alignItems: "center", marginBottom: 20 }}>
             <ButtonComponent
               buttonStyle={styles.submitButtonStyle}

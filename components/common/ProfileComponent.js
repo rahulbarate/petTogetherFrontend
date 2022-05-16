@@ -202,7 +202,13 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
             {"bio" in profileData ? profileData.bio : ""}
           </Text>
         </View>
-        <View style={styles.editProfileTextViewStyle}>
+        <View
+          style={
+            isItOtherUser
+              ? styles.otherUserProfileViewStyle
+              : styles.editProfileTextViewStyle
+          }
+        >
           {isItOtherUser ? (
             <View style={{ flexDirection: "row" }}>
               <ButtonComponent
@@ -231,25 +237,33 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
                   }
                 }}
               />
-              <ButtonComponent
-                buttonStyle={{
-                  width: 100,
-                  height: 30,
-                  borderRadius: 20,
-                  marginHorizontal: "2%",
-                }}
-                buttonText={"Visit"}
-                handleButton={() => {
-                  if (profileData.coordinate) {
-                    navigation.navigate("Map", { userData: profileData });
-                  }
-                }}
-              />
+              {profileData.userType !== "Individual User" && (
+                <ButtonComponent
+                  buttonStyle={{
+                    width: 100,
+                    height: 30,
+                    borderRadius: 20,
+                    marginHorizontal: "2%",
+                  }}
+                  buttonText={"Visit"}
+                  handleButton={() => {
+                    if (profileData.coordinate) {
+                      navigation.navigate("Map", { userData: profileData });
+                    }
+                  }}
+                />
+              )}
             </View>
           ) : (
-            <TouchableNativeFeedback onPress={editButtonHandle}>
-              <Text style={styles.editProfileTextStyle}>Edit Profile</Text>
-            </TouchableNativeFeedback>
+            <ButtonComponent
+              buttonStyle={{
+                paddingHorizontal: 10,
+                height: 25,
+                borderRadius: 25,
+              }}
+              buttonText={"edit profile"}
+              handleButton={editButtonHandle}
+            />
           )}
         </View>
       </View>
@@ -304,7 +318,7 @@ const styles = StyleSheet.create({
   },
   bioViewStyle: {
     width: Dimensions.get("window").width,
-    height: 80,
+    maxHeight: 80,
   },
   followNoTextStyle: {
     fontSize: 18,
@@ -313,9 +327,16 @@ const styles = StyleSheet.create({
   editProfileTextViewStyle: {
     // backgroundColor:"red",
     paddingRight: "2%",
-    paddingBottom: 5,
     justifyContent: "center",
     alignItems: "flex-end",
+    width: Dimensions.get("window").width,
+  },
+  otherUserProfileViewStyle: {
+    // backgroundColor:"red",
+    paddingRight: "2%",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    marginLeft: "3%",
     width: Dimensions.get("window").width,
   },
   editProfileTextStyle: {

@@ -18,12 +18,19 @@ import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import AuthContext from "../hooks/useAuth";
 import { RadioButton } from "react-native-paper";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const SignUpPage = () => {
   const navigation = useNavigation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("any@gmail.com");
+  const [password, setPassword] = useState("any12345678");
   const [userType, setUserType] = useState("");
+  const [open, setOpen] = useState(false);
+  const [userTypes, setUserTypes] = useState([
+    { label: "Shopkeeper", value: "Shopkeeper" },
+    { label: "Organization", value: "Organization" },
+    { label: "Individual User", value: "Individual User" },
+  ]);
 
   const { setUserDataContext } = useContext(AuthContext);
   // const [modalVisibility, setModalVisibility] = useState(false);
@@ -37,14 +44,16 @@ const SignUpPage = () => {
     setUserType(type);
     ToastAndroid.show(type + " is choosen", ToastAndroid.SHORT);
   };
+
   const handleNextButton = () => {
     const user = {
       email,
       password,
       userType,
     };
+    // console.log(user);
     if (!userType || !email || !password) {
-      alert("Please enter all details");
+      console.log("Please enter all details");
     } else {
       // console.log(userType);
       setUserDataContext(user);
@@ -55,9 +64,187 @@ const SignUpPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.mainContainerStyle}>
-        <Text style={styles.titleTextStyle}>Choose your role !</Text>
+        <Text style={styles.titleTextStyle}>Enter signup details</Text>
         <KeyboardAwareScrollView>
-          <View
+          <View style={styles.textAndButtonsContainer}>
+            <View style={styles.emailTextInputViewStyle}>
+              <TextInput
+                placeholder="Email address"
+                value={email}
+                onChangeText={(text) => {
+                  setEmail(text);
+                }}
+              />
+            </View>
+            <View style={styles.passwordTextInputViewStyle}>
+              <TextInput
+                placeholder="Password"
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                }}
+              />
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "5%",
+              }}
+            >
+              <DropDownPicker
+                open={open}
+                value={userType}
+                items={userTypes}
+                setOpen={setOpen}
+                setValue={setUserType}
+                setItems={setUserTypes}
+                style={{
+                  borderColor: "#3399ff",
+                  borderWidth: 2,
+                  borderRadius: 25,
+                }}
+                containerStyle={{ width: "90%" }}
+                placeholder="Choose your role"
+                onChangeValue={(text) => {
+                  setUserType(text);
+                }}
+              />
+            </View>
+            <View style={styles.buttonContainerStyle}>
+              <TouchableNativeFeedback onPress={handleNextButton}>
+                <View style={styles.nextButtonStyle}>
+                  <Text style={{ fontSize: 20 }}>Next</Text>
+                </View>
+              </TouchableNativeFeedback>
+            </View>
+          </View>
+        </KeyboardAwareScrollView>
+      </View>
+    </View>
+  );
+};
+
+export default SignUpPage;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: Dimensions.get("window").width,
+  },
+  mainContainerStyle: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    // backgroundColor: "rgba(255,255,255,0.3)",
+    width: Dimensions.get("window").width,
+    marginTop: 100,
+  },
+  textAndButtonsContainer: {
+    flex: 2,
+    alignItems: "center",
+    width: Dimensions.get("window").width,
+    // backgroundColor: "yellow",
+  },
+  backgroundImageStyle: {
+    flex: 1,
+    justifyContent: "flex-start",
+  },
+  titleTextStyle: {
+    fontSize: 25,
+    marginTop: 40,
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+  },
+  container1: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    // backgroundColor: "blue",
+  },
+  container2: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    // backgroundColor: "red",
+  },
+  textInsideCircle: {
+    fontSize: 20,
+  },
+  circularViewStyle: {
+    width: 150,
+    height: 150,
+    borderRadius: 150 / 2,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
+  circularViewSelectedStyle: {
+    width: 150,
+    height: 150,
+    borderRadius: 150 / 2,
+    backgroundColor: "#AAF",
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
+  emailTextInputViewStyle: {
+    backgroundColor: "rgb(255,255,255)",
+    height: 50,
+    width: "90%",
+    marginTop: 30,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: "#3399ff",
+    paddingLeft: "5%",
+    justifyContent: "center",
+  },
+  passwordTextInputViewStyle: {
+    marginTop: "5%",
+    backgroundColor: "rgb(255,255,255)",
+    height: 50,
+    width: "90%",
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: "#3399ff",
+    paddingLeft: "5%",
+    justifyContent: "center",
+  },
+  buttonContainerStyle: {
+    marginTop: "15%",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  nextButtonStyle: {
+    marginTop: "5%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#3399ff",
+    height: 50,
+    width: 150,
+    borderRadius: 30,
+  },
+  modalStyle: {
+    margin: 0,
+    marginTop: "15%",
+    borderRadius: 30,
+  },
+  radioButtonTextStyle: {
+    fontSize: 20,
+    textDecorationLine: "underline",
+    color: "#3399ff",
+  },
+  radioButtonUncheckedTextStyle: {
+    fontSize: 20,
+    color: "black",
+  },
+});
+
+{
+  /* <View
             style={{
               marginVertical: 5,
               marginTop: 50,
@@ -144,153 +331,5 @@ const SignUpPage = () => {
                 </Text>
               </View>
             </View>
-          </View>
-          <View style={styles.textAndButtonsContainer}>
-            <View style={styles.emailTextInputViewStyle}>
-              <TextInput
-                placeholder="Enter email address"
-                value={email}
-                onChangeText={(text) => {
-                  setEmail(text);
-                }}
-              />
-            </View>
-            <View style={styles.passwordTextInputViewStyle}>
-              <TextInput
-                placeholder="Enter password"
-                value={password}
-                onChangeText={(text) => {
-                  setPassword(text);
-                }}
-              />
-            </View>
-            <View style={styles.buttonContainerStyle}>
-              <TouchableNativeFeedback onPress={handleNextButton}>
-                <View style={styles.nextButtonStyle}>
-                  <Text style={{ fontSize: 20 }}>Next</Text>
-                </View>
-              </TouchableNativeFeedback>
-            </View>
-          </View>
-        </KeyboardAwareScrollView>
-      </View>
-    </View>
-  );
-};
-
-export default SignUpPage;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: Dimensions.get("window").width,
-  },
-  mainContainerStyle: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    // backgroundColor: "rgba(255,255,255,0.3)",
-    width: Dimensions.get("window").width,
-    marginTop: 100,
-  },
-  textAndButtonsContainer: {
-    flex: 2,
-    alignItems: "center",
-    width: Dimensions.get("window").width,
-    // backgroundColor: "yellow",
-  },
-  backgroundImageStyle: {
-    flex: 1,
-    justifyContent: "flex-start",
-  },
-  titleTextStyle: {
-    fontSize: 35,
-    marginTop: 40,
-    fontWeight: "bold",
-    textDecorationLine: "underline",
-  },
-  container1: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    // backgroundColor: "blue",
-  },
-  container2: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    // backgroundColor: "red",
-  },
-  textInsideCircle: {
-    fontSize: 20,
-  },
-  circularViewStyle: {
-    width: 150,
-    height: 150,
-    borderRadius: 150 / 2,
-    backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
-    margin: 10,
-  },
-  circularViewSelectedStyle: {
-    width: 150,
-    height: 150,
-    borderRadius: 150 / 2,
-    backgroundColor: "#AAF",
-    justifyContent: "center",
-    alignItems: "center",
-    margin: 10,
-  },
-  emailTextInputViewStyle: {
-    backgroundColor: "rgb(255,255,255)",
-    height: 50,
-    width: "90%",
-    marginTop: 30,
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: "#3399ff",
-    paddingLeft: "5%",
-    justifyContent: "center",
-  },
-  passwordTextInputViewStyle: {
-    marginTop: "5%",
-    backgroundColor: "rgb(255,255,255)",
-    height: 50,
-    width: "90%",
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: "#3399ff",
-    paddingLeft: "5%",
-    justifyContent: "center",
-  },
-  buttonContainerStyle: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  nextButtonStyle: {
-    marginTop: "5%",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#3399ff",
-    height: 50,
-    width: 150,
-    borderRadius: 30,
-  },
-  modalStyle: {
-    margin: 0,
-    marginTop: "15%",
-    borderRadius: 30,
-  },
-  radioButtonTextStyle: {
-    fontSize: 20,
-    textDecorationLine: "underline",
-    color: "#3399ff",
-  },
-  radioButtonUncheckedTextStyle: {
-    fontSize: 20,
-    color: "black",
-  },
-});
+          </View> */
+}

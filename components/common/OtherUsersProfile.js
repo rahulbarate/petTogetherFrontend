@@ -137,7 +137,8 @@ const OtherUsersProfile = ({ route }) => {
         editButtonHandle={() => setModalVisibility(true)}
         isItOtherUser={true}
       />
-      <PostsListContainer listOfPosts={listOfData} />
+      <PostsListContainer userData={{ ...otherUserData }}
+        isItOtherUser={true} />
     </View>
   );
 };

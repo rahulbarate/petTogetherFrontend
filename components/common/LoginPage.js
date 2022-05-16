@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableNativeFeedback,
   Dimensions,
+  ToastAndroid,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useState, useContext } from "react";
@@ -21,8 +22,8 @@ import { localhostBaseURL } from "../common/baseURLs";
 import AuthContext from "../hooks/useAuth";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("user@gmail.com");
+  const [password, setPassword] = useState("user12345678");
   //   const [userData, setUserData] = useState();
 
   const { setUserDataContext } = useContext(AuthContext);
@@ -38,12 +39,12 @@ const LoginPage = () => {
       .then((user) => {
         getDataFromServer(user.email);
         // setUserDataContext(user);
-        alert("Logged In");
+        ToastAndroid.show("Logged In", ToastAndroid.SHORT);
 
         navigation.navigate("MainComponent");
       })
       .catch((error) => {
-        alert(error.message);
+        console.log(error.message);
       });
   };
 
@@ -55,7 +56,7 @@ const LoginPage = () => {
         // console.log(user);
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   };
 
@@ -67,7 +68,7 @@ const LoginPage = () => {
 
       setUserDataContext(res.data);
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 
@@ -79,25 +80,27 @@ const LoginPage = () => {
           <View>
             <View style={styles.emailTextInputViewStyle}>
               <TextInput
-                placeholder="Enter email address"
+                placeholder="Email address"
                 value={email}
                 onChangeText={(text) => {
                   setEmail(text);
                 }}
+                keyboardType="email-address"
               />
             </View>
             <View style={styles.passwordTextInputViewStyle}>
               <TextInput
-                placeholder="Enter password"
+                placeholder="Password"
                 value={password}
                 onChangeText={(text) => {
                   setPassword(text);
                 }}
+                keyboardType="email-address"
               />
             </View>
             <View style={styles.signUpTextViewStyle}>
               <Text style={styles.noAccountTextStyle}>
-                Don't Have an Account,
+                {"Don't have an account,"}
               </Text>
               <TouchableNativeFeedback
                 onPress={() => {
@@ -105,7 +108,7 @@ const LoginPage = () => {
                 }}
               >
                 <View>
-                  <Text style={styles.signupTextStyle}>Signup</Text>
+                  <Text style={styles.signupTextStyle}>signup</Text>
                 </View>
               </TouchableNativeFeedback>
             </View>
@@ -162,7 +165,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 250,
+    marginTop: 40,
+    marginBottom: 20,
   },
   loginButtonStyle: {
     justifyContent: "center",

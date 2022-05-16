@@ -152,7 +152,7 @@ const LoadingSpinner = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FFF" },
   searchBar: {
-    marginTop: 30,
+    marginTop: 10,
     width: 10,
     alignSelf: "center",
     marginBottom: 10,

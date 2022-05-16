@@ -75,7 +75,7 @@ const GetLocation = ({ route }) => {
   return (
     <View style={styles.mainContainerStyle}>
       <View style={styles.topContainerStyle}>
-        <Text>Set Location</Text>
+        <Text style={{marginTop:20,fontSize:20}}>Set location</Text>
       </View>
       <View style={styles.mapContainerStyle}>
         {location ? (
@@ -143,6 +143,12 @@ const GetLocation = ({ route }) => {
           buttonText={"Save"}
           handleButton={saveLocation}
         />
+        <ButtonComponent
+          buttonStyle={styles.saveButtonStyle}
+          textStyle={styles.buttonTextStyle}
+          buttonText={"Go back"}
+          handleButton={()=>{navigation.goBack()}}
+        />
       </View>
     </View>
   );
@@ -165,6 +171,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 50,
     borderRadius: 30,
+    marginHorizontal:5,
   },
   topContainerStyle: {
     flex: 1 / 4,
@@ -181,6 +188,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: 10,
+    flexDirection: "row",
   },
   buttonTextStyle: {
     fontSize: 18,

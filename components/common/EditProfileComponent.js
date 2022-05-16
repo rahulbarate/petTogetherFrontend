@@ -92,7 +92,7 @@ const EditProfileComponent = (props) => {
     const storageRef = storage
       .ref(`${userDataContext.email}/profilePictures/`)
       .child("profilePicture.jpeg");
-      
+
     const uploadTask = storageRef.put(blob);
     // setIsDataChanged(false);
     uploadTask.on(
@@ -124,6 +124,7 @@ const EditProfileComponent = (props) => {
       },
       () => {
         uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+          console.log(url);
           setImage(url);
           updateProfilePic(url);
           blob.close();
@@ -137,7 +138,6 @@ const EditProfileComponent = (props) => {
       ...userDataContext,
       profileImageLink: url,
     };
-
 
     const response = await sendRequestToServer(
       "/profile/updateUserProfile",
@@ -176,7 +176,6 @@ const EditProfileComponent = (props) => {
 
     return updatedData;
   };
-
 
   const updateUserDetails = async () => {
     const updatedData = getUpdatedData();

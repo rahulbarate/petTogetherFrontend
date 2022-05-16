@@ -7,6 +7,7 @@ import React, { useState, useContext } from "react";
 import { LogBox } from "react-native";
 import AuthContext from "./components/hooks/useAuth";
 import MainComponent from "./components/individual/MainComponent";
+import { Provider as PaperProvider } from "react-native-paper";
 import {
   ApplicationProvider,
   Layout,
@@ -25,16 +26,22 @@ export default function App() {
     <View style={styles.container}>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
-        <NavigationContainer>
-          <AuthContext.Provider
-            value={{
-              userDataContext: userData,
-              setUserDataContext: setUserData,
-            }}
-          >
-            {userData.isUserAvailable ? <MainComponent /> : <StackNaviagator />}
-          </AuthContext.Provider>
-        </NavigationContainer>
+        <PaperProvider>
+          <NavigationContainer>
+            <AuthContext.Provider
+              value={{
+                userDataContext: userData,
+                setUserDataContext: setUserData,
+              }}
+            >
+              {userData.isUserAvailable ? (
+                <MainComponent />
+              ) : (
+                <StackNaviagator />
+              )}
+            </AuthContext.Provider>
+          </NavigationContainer>
+        </PaperProvider>
       </ApplicationProvider>
     </View>
     // <MainComponent />

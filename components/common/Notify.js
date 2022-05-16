@@ -1,3 +1,4 @@
+import { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,14 +11,41 @@ import {
   TouchableNativeFeedback,
   Alert,
 } from "react-native";
+import { db } from "../../firebase";
+import AuthContext from "../hooks/useAuth";
 export default function NotifyScreen() {
-  function myButton() {
-    Alert.alert("request accepted", "Button", [{ text: "OK" }]);
+  const { userDataContext, setUserDataContext } = useContext(AuthContext);
+  const [buyRequestIds, setBuyRequestIds] = useState(["jhon@gmail.com"]);
+
+  function myButton(email) {
+    Alert.alert(`${email}'s request accepted`);
   }
 
-  function myButton2() {
-    Alert.alert("request REJECTED", "Button", [{ text: "OK" }]);
+  function myButton2(email) {
+    Alert.alert(`${email}'s request REJECTED`);
   }
+
+  const listenRealTime = () => {
+    db.collection("Users")
+      .doc("individualUser")
+      .collection("accounts")
+      .doc(userDataContext.email)
+      .collection("posts")
+      .onSnapshot((snapshot) => {
+        snapshot.docs.forEach((eachDoc, index) => {
+          if ("buyRequestIds" in eachDoc.data()) {
+            const Ids = eachDoc.data().buyRequestIds;
+            // console.log(Ids);
+            if (buyRequestIds.length !== Ids) {
+              setBuyRequestIds(Ids);
+            }
+          }
+        });
+      });
+  };
+  useEffect(() => {
+    listenRealTime();
+  }, []);
 
   const profile = [
     {
@@ -48,40 +76,27 @@ export default function NotifyScreen() {
         <Image style={styles.avatar}></Image>
       </View>
       <View style={styles.nameDescriptionStyle}>
-        <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.name}>{item.describe}</Text>
+        <Text style={styles.name}>{item}</Text>
+        <Text>has sent you a buy request</Text>
       </View>
       <View style={styles.buttonContainerStyle}>
-        <View
-          style={{
-            backgroundColor: "white",
-            borderWidth: 1,
-            borderRadius: 20,
-            paddingHorizontal: 8,
-            paddingVertical: 2,
-            justifyContent: "center",
-            alignItems: "center",
-            marginVertical:5
-          }}
-        >
-          <TouchableNativeFeedback onPress={myButton}>
+        <View style={styles.buttonStyle}>
+          <TouchableNativeFeedback
+            onPress={() => {
+              myButton(item);
+            }}
+          >
             <Text style={{ color: "blue", textDecorationLine: "underline" }}>
               Accept
             </Text>
           </TouchableNativeFeedback>
         </View>
-        <View
-          style={{
-            backgroundColor: "white",
-            borderWidth: 1,
-            borderRadius: 20,
-            paddingHorizontal: 5,
-            paddingVertical: 2,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <TouchableNativeFeedback onPress={myButton2}>
+        <View style={styles.buttonStyle}>
+          <TouchableNativeFeedback
+            onPress={() => {
+              myButton2(item);
+            }}
+          >
             <Text style={{ color: "red", textDecorationLine: "underline" }}>
               Reject
             </Text>
@@ -90,16 +105,13 @@ export default function NotifyScreen() {
       </View>
     </View>
   );
-  itemSeparator = () => {
+  const itemSeparator = () => {
     return <View style={styles.separator}></View>;
   };
+  
   return (
     <SafeAreaView>
-      <FlatList
-        data={profile}
-        renderItem={oneProfile}
-        ItemSeparatorComponent={itemSeparator}
-      />
+      <FlatList data={buyRequestIds} renderItem={oneProfile} />
     </SafeAreaView>
   );
 }
@@ -117,7 +129,7 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 20,
     borderWidth: 2,
-    paddingLeft:5
+    paddingLeft: 5,
     // elevation: 3,
     // backgroundColor:"red"
   },
@@ -157,5 +169,15 @@ const styles = StyleSheet.create({
     // paddingTop:ConstantSourceNode.statusBarHeight,
     backgroundColor: "#ecf0f1",
     padding: 8,
+  },
+  buttonStyle: {
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 3,
   },
 });
