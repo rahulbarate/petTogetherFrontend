@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Button } from "react-native";
 import React from "react";
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -15,6 +15,10 @@ import OtherUsersProfile from "./OtherUsersProfile";
 import GetLocation from "./GetLocation";
 import AcceptUserDetails from "./AcceptUserDetails";
 import Map from "./Map";
+import PostUploadScreen from "./PostUploadScreen";
+import ShopPostUpload from "../shopkeeper/ShopPostUpload";
+import OrganizationPostUpload from "../organization/OrganizationPostUpload";
+import IndividualUserPostUpload from "../individual/IndividualUserPostUpload";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,13 +27,18 @@ const StackNaviagator = () => {
     <Stack.Navigator>
       <Stack.Screen
         options={{ headerShown: false }}
-        name="WelcomePage"
-        component={WelcomePage}
+        name="LoginPage"
+        component={LoginPage}
       />
       <Stack.Screen
         options={{ headerShown: false }}
-        name="LoginPage"
-        component={LoginPage}
+        name="PostUploadScreen"
+        component={PostUploadScreen}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="WelcomePage"
+        component={WelcomePage}
       />
       <Stack.Screen
         options={{ headerShown: false }}
@@ -65,6 +74,21 @@ const StackNaviagator = () => {
         options={{ headerShown: false }}
         name="UserDetailsModal"
         component={UserDetailsModal}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="ShopPostUpload"
+        component={ShopPostUpload}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="OrganizationPostUpload"
+        component={OrganizationPostUpload}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="IndividualUserPostUpload"
+        component={IndividualUserPostUpload}
       />
       <Stack.Screen
         options={{ headerShown: false }}

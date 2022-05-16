@@ -82,7 +82,7 @@ const SearchScreen = ({ navigation, state }) => {
             onChangeText={(text) => setSearchQuery(text)}
             value={searchQuery}
             style={{
-              marginTop: 50,
+              marginTop: 10,
               width: visibleComponent === "search" ? "90%" : "80%",
               alignSelf: "center",
               marginBottom: 10,
@@ -152,7 +152,7 @@ const LoadingSpinner = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FFF" },
   searchBar: {
-    marginTop: 30,
+    marginTop: 10,
     width: 10,
     alignSelf: "center",
     marginBottom: 10,
