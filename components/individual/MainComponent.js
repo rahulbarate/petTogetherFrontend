@@ -13,9 +13,10 @@ import ButtonComponent from "../common/ButtonComponent";
 import AuthContext from "../hooks/useAuth";
 import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
+import Chat from "../common/Chat";
 const homeName = "Home";
 const searchName = "Search";
-const alertName = "HighAlert";
+const chatName = "Chat";
 const notificationName = "Notify";
 const profileName = "Profile";
 
@@ -47,8 +48,8 @@ export default function MainContainer() {
             iconName = focused ? "home" : "home";
           } else if (rn === searchName) {
             iconName = focused ? "search" : "search";
-          } else if (rn === alertName) {
-            iconName = focused ? "alert" : "alert";
+          } else if (rn === chatName) {
+            iconName = focused ? "chatbubble" : "chatbubble-outline";
           } else if (rn === notificationName) {
             iconName = focused ? "notifications" : "notifications-outline";
           } else if (rn === profileName) {
@@ -65,8 +66,14 @@ export default function MainContainer() {
       }}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="HighAlert" component={HighAlertScreen} />
+      <Tab.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{ headerShown: false }}
+      />
+      {/* <Tab.Screen name="HighAlert" component={HighAlertScreen} /> */}
+      <Tab.Screen name="Chat" component={Chat} />
+
       <Tab.Screen name="Notify" component={NotifyScreen} />
       <Tab.Screen
         name="Profile"

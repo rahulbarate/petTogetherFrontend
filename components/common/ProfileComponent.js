@@ -228,6 +228,14 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
                   marginHorizontal: "2%",
                 }}
                 buttonText={"Message"}
+                handleButton={() => {
+                  if (profileData) {
+                    navigation.navigate("Message", {
+                      messageWith: profileData.email,
+                      name: profileData.name,
+                    });
+                  }
+                }}
               />
               {profileData.userType !== "Individual User" && (
                 <ButtonComponent

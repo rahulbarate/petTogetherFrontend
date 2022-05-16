@@ -15,6 +15,7 @@ import OtherUsersProfile from "./OtherUsersProfile";
 import GetLocation from "./GetLocation";
 import AcceptUserDetails from "./AcceptUserDetails";
 import Map from "./Map";
+import Message from "../../Helper/chatHelper/Message";
 import PostUploadScreen from "./PostUploadScreen";
 import ShopPostUpload from "../shopkeeper/ShopPostUpload";
 import OrganizationPostUpload from "../organization/OrganizationPostUpload";
@@ -74,6 +75,11 @@ const StackNaviagator = () => {
         options={{ headerShown: false }}
         name="UserDetailsModal"
         component={UserDetailsModal}
+      />
+      <Stack.Screen
+        name="Message"
+        component={Message}
+        options={({ route }) => ({ title: route.params.name })}
       />
       <Stack.Screen
         options={{ headerShown: false }}
