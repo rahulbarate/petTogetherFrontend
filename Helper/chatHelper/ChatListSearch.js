@@ -71,7 +71,7 @@ const ChatListSearch = ({ chats, setChats, searchQuery, setSearchQuery }) => {
       />
       <View>
         {loading && <LoadingSpinner />}
-        {data.length > 0 && !loading ? (
+        {data.length > 0 && !loading && (
           <FlatList
             style={styles.flatList}
             data={data}
@@ -84,10 +84,6 @@ const ChatListSearch = ({ chats, setChats, searchQuery, setSearchQuery }) => {
             )}
             keyExtractor={(item) => item.id}
           />
-        ) : (
-          <View>
-            <Text>No result found!</Text>
-          </View>
         )}
       </View>
     </View>
