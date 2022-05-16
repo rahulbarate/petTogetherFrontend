@@ -82,7 +82,7 @@ const SearchScreen = ({ navigation, state }) => {
             onChangeText={(text) => setSearchQuery(text)}
             value={searchQuery}
             style={{
-              marginTop: 50,
+              marginTop: 30,
               width: visibleComponent === "search" ? "90%" : "80%",
               alignSelf: "center",
               marginBottom: 10,

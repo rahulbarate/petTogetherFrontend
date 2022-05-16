@@ -25,7 +25,6 @@ import { useNavigation } from "@react-navigation/native";
 // import * as firebase from "firebase/compat/app";
 
 const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
-
   const navigation = useNavigation();
   const displayToastMessage = (text) => {
     ToastAndroid.show(text, ToastAndroid.SHORT);
@@ -223,6 +222,14 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
                   marginHorizontal: "2%",
                 }}
                 buttonText={"Message"}
+                handleButton={() => {
+                  if (profileData) {
+                    navigation.navigate("Message", {
+                      messageWith: profileData.email,
+                      name: profileData.name,
+                    });
+                  }
+                }}
               />
               <ButtonComponent
                 buttonStyle={{
