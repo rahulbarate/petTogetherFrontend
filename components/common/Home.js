@@ -1,27 +1,108 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import ModalDropdown from "react-native-modal-dropdown";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { localhostBaseURL } from "./baseURLs";
 import {
+  FlatList,
   ScrollView,
   StyleSheet,
   Modal,
   View,
+  Text,
   TextInput,
   Dimensions,
   Button as ReactButton,
 } from "react-native";
+import AuthContext from "../hooks/useAuth";
 import { Card, Button, Title, Paragraph } from "react-native-paper";
 const { width } = Dimensions.get("window");
+
 export default function HomeScreen() {
+  const { userDataContext, setUserDataContext } = useContext(AuthContext);
+  const [response, setResponse] = useState([]);
+  const [data, setData] = useState([]);
+  
+  
+  const setPostLike = async (postUserEmail, postUserType, postId,profileImageLink) => {
+    try {
+      const res = await localhostBaseURL.post("/home/setPostLike", {
+        name:userDataContext.name,
+        notificationType:"like",
+        postId,
+        profileImageLink,
+        emailId: userDataContext.email,
+        userType: userDataContext.userType,
+        postUserType,
+        postUserEmail
+      });
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   const Icon = (props) => {
     const [isColor, isRed] = useState(true);
+    // const liked=props.userWhoLikedIds;
+    // const isLiked=liked.includes(userDataContext.email);
+    // if(isLiked){
+    //   isRed(!isColor);
+    // }
+    // else{
+    //   isRed(isColor);
+    // }
     return (
       <Button
         icon={props.name}
-        onPress={() => isRed(!isColor)}
+        onPress={() => {
+          isRed(!isColor);
+          setPostLike(
+            props.postUserEmail, 
+            props.postUserType, 
+            props.postId,
+            props.profileImageLink
+          );
+        }}
         color={isColor ? "black" : "red"}
       />
     );
   };
+
+  const getDataFromServer = async () => {
+    try {
+      const res = await localhostBaseURL.post("/home/fetchPostDetails", {
+        emailId: userDataContext.email,
+        userType: userDataContext.userType,
+      });
+      setResponse(res);
+      //  console.log(res.data);
+      let extractedData = [];
+      for (each of res.data) {
+        //setData(each);
+        for (eachInEach of each) {
+          console.log(eachInEach);
+          const retArray = {
+            id: eachInEach.postId,
+            postUserName: eachInEach.name,
+            profileImageLink: eachInEach.profileImageLink,
+            image: eachInEach.postData.postImageLink,
+            postType: eachInEach.postData.postType,
+            postUserEmail: eachInEach.postData.userEmail,
+            postUserType: eachInEach.postData.userType,
+            // userWhoLikedIds: eachInEach.postData.userWhoLikedIds,
+          };
+          extractedData.push(retArray);
+        }
+      }
+      setData(extractedData);
+      // console.log(extractedData);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  useEffect(() => {
+    getDataFromServer();
+  }, []);
   const Comment = (props) => {
     const [isModalVisible, setModalVisible] = useState(false);
     const [inputValue, setInputValue] = useState("");
@@ -52,104 +133,63 @@ export default function HomeScreen() {
                 onChangeText={(value) => setInputValue(value)}
               />
               <ReactButton title="Close" onPress={toggleModalVisibility} />
-              {/* <Button
-                title="Close"
-                onPress={toggleModalVisibility}
-              /> */}
             </View>
           </View>
         </Modal>
       </View>
     );
   };
-
+  const RenderCard = (item) => {
+    // ~console.log("item", item);
+    return (
+      <Card style={styles.container}>
+        <Card.Content>
+          <Title>{item.item.postUserName}</Title>
+        </Card.Content>
+        <Card.Cover
+          source={{
+            uri: item.item.image,
+          }}
+        />
+        <Card.Content>
+          <Paragraph></Paragraph>
+        </Card.Content>
+        <Card.Actions>
+          <Icon
+            name="heart"
+            postId={item.item.id}
+            postUserEmail={item.item.postUserEmail}
+            postUserType={item.item.postUserType}
+            postType={item.item.postType}
+            profileImageLink={item.item.profileImageLink}
+            postUserName={item.item.name}
+            // userWhoLikedIds={item.item.userWhoLikedIds}
+          />
+          <Comment />
+          {/* <ModalDropdown
+            style={styles.dropbox}
+            options={[
+              "Breed Request",
+              "Buy Request",
+              "Adopt Request",
+              "Reshelter Request",
+            ]}
+          /> */}
+        </Card.Actions>
+      </Card>
+    );
+  };
   return (
     <View>
-      <ScrollView>
-        <Card style={styles.container}>
-          <Card.Content>
-            <Title>Sayali More</Title>
-          </Card.Content>
-          <Card.Cover
-            source={{
-              uri: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-            }}
-          />
-          <Card.Content>
-            <Paragraph>Looking beatiful today..!!</Paragraph>
-          </Card.Content>
-          <Card.Actions>
-            <Icon name="heart" />
-            <Comment />
-            <Button>
-              <Ionicons name="share" color="black" />
-            </Button>
-          </Card.Actions>
-        </Card>
-        <Card style={styles.container}>
-          <Card.Content>
-            <Title>Rahul Barate</Title>
-          </Card.Content>
-          <Card.Cover
-            source={{
-              uri: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1143&q=80",
-            }}
-          />
-          <Card.Content>
-            <Paragraph>Looking beatiful today..!!</Paragraph>
-          </Card.Content>
-          <Card.Actions>
-            <Icon name="heart" />
-            <Comment />
-            <Button>
-              <Ionicons name="share" color="black" />
-            </Button>
-          </Card.Actions>
-        </Card>
-        <Card style={styles.container}>
-          <Card.Content>
-            <Title>Mayuri Shinde</Title>
-          </Card.Content>
-          <Card.Cover
-            source={{
-              uri: "https://images.unsplash.com/photo-1519052537078-e6302a4968d4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            }}
-          />
-          <Card.Content>
-            <Paragraph>Looking beatiful today..!!</Paragraph>
-          </Card.Content>
-          <Card.Actions>
-            <Icon name="heart" />
-            <Comment />
-            <Button>
-              <Ionicons name="share" color="black" />
-            </Button>
-          </Card.Actions>
-        </Card>
-        <Card style={styles.container}>
-          <Card.Content>
-            <Title>Dayanand Naykude</Title>
-          </Card.Content>
-          <Card.Cover
-            source={{
-              uri: "https://images.unsplash.com/photo-1588466585717-f8041aec7875?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-            }}
-          />
-          <Card.Content>
-            <Paragraph>Looking beatiful today..!!</Paragraph>
-          </Card.Content>
-          <Card.Actions>
-            <Icon name="heart" />
-            <Comment />
-            <Button>
-              <Ionicons name="share" color="black" />
-            </Button>
-          </Card.Actions>
-        </Card>
-      </ScrollView>
+      <FlatList
+        data={data}
+        renderItem={({ item }) => <RenderCard item={item} />}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     alignContent: "center",
@@ -188,5 +228,8 @@ const styles = StyleSheet.create({
     borderColor: "rgba(0, 0, 0, 0.2)",
     borderWidth: 1,
     marginBottom: 8,
+  },
+  dropbox: {
+    paddingHorizontal: "35%",
   },
 });
