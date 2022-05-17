@@ -161,18 +161,16 @@ const IndividualUserPostUpload = () => {
       uploadedOn: new Date(),
     };
     if (postType == "petSellPost") {
-      postData = { ...postData, petName, petType,price, breed, dateOfBirth };
+      postData = { ...postData, petName, petType, price, breed, dateOfBirth };
     }
     if (postType == "casual") {
       postData = { ...postData, petName };
     }
-    if(postType == "reshelter")
-    {
-        postData = { ...postData, petName, petType, breed, dateOfBirth };
+    if (postType == "reshelter") {
+      postData = { ...postData, petName, petType, breed, dateOfBirth };
     }
-    if(postType == "breedPost")
-    { 
-        postData = { ...postData, petName, petType, breed };
+    if (postType == "breedPost") {
+      postData = { ...postData, petName, petType, breed };
     }
     return postData;
   };
@@ -249,7 +247,7 @@ const IndividualUserPostUpload = () => {
                     : styles.radioButtonUncheckedTextStyle
                 }
               >
-                Casual Post
+                Casual post
               </Text>
             </View>
             <View style={styles.radioButtonAndTextViewStyle}>
@@ -266,7 +264,7 @@ const IndividualUserPostUpload = () => {
                     : styles.radioButtonUncheckedTextStyle
                 }
               >
-                Sell Post
+                Sell post
               </Text>
             </View>
           </View>
@@ -308,7 +306,7 @@ const IndividualUserPostUpload = () => {
                     : styles.radioButtonUncheckedTextStyle
                 }
               >
-                Up for Breed
+                Up for breed
               </Text>
             </View>
           </View>
@@ -337,6 +335,7 @@ const IndividualUserPostUpload = () => {
                   style={{
                     borderColor: "#3399ff",
                     borderWidth: 2,
+                    borderRadius: 25,
                   }}
                   placeholder="Choose pet type"
                   onChangeValue={(text) => {
@@ -356,8 +355,9 @@ const IndividualUserPostUpload = () => {
                     style={{
                       borderColor: "#3399ff",
                       borderWidth: 2,
+                      borderRadius: 25,
                     }}
-                    placeholder="Choose pet breed"
+                    placeholder="Choose breed"
                     onChangeValue={(text) => {
                       setBreed(text);
                     }}
@@ -374,7 +374,7 @@ const IndividualUserPostUpload = () => {
                 textInputStyle={{
                   height: 50,
                 }}
-                placeholder={"date of birth"}
+                placeholder={"Date of birth"}
                 keyboardType={"phone-pad"}
                 value={dateOfBirth}
                 onChangeText={setDateOfBirth}

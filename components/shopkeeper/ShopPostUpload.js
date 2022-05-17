@@ -330,7 +330,7 @@ import {
                     textInputStyle={{
                       height: 50,
                     }}
-                    placeholder={"Enter date of birth"}
+                    placeholder={"Date of birth"}
                     keyboardType={"phone-pad"}
                     value={dateOfBirth}
                     onChangeText={setDateOfBirth}
@@ -347,6 +347,7 @@ import {
                     style={{
                       borderColor: "#3399ff",
                       borderWidth: 2,
+                      borderRadius: 25,
                     }}
                     placeholder="Choose pet type"
                     onChangeValue={(text) => {
@@ -369,6 +370,7 @@ import {
                     style={{
                       borderColor: "#3399ff",
                       borderWidth: 2,
+                      borderRadius: 25,
                     }}
                     placeholder="Choose pet type"
                     onChangeValue={(text) => {
@@ -388,8 +390,9 @@ import {
                       style={{
                         borderColor: "#3399ff",
                         borderWidth: 2,
+                        borderRadius: 25,
                       }}
-                      placeholder="Choose pet breed"
+                      placeholder="Choose breed"
                       onChangeValue={(text) => {
                         setBreed(text);
                       }}

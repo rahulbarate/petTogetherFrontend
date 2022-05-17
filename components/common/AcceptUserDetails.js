@@ -189,7 +189,7 @@ const AcceptUserDetails = () => {
                       : styles.radioButtonUncheckedTextStyle
                   }
                 >
-                  Pet's Essentials
+                  Pet's essentials
                 </Text>
               </View>
               <View
@@ -263,10 +263,9 @@ const AcceptUserDetails = () => {
         <View style={styles.container2Style}>
           <TextInputComponent
             textInputStyle={{
-              width: "45%",
+              width: "40%",
               height: 50,
               marginVertical: 5,
-              marginLeft: 15,
             }}
             placeholder={"Pincode"}
             keyboardType={"phone-pad"}
@@ -280,7 +279,7 @@ const AcceptUserDetails = () => {
               width: "45%",
               height: 50,
               marginVertical: 5,
-              marginHorizontal: 5,
+              marginLeft: 18,
             }}
             placeholder={"State"}
             value={state}
@@ -289,21 +288,40 @@ const AcceptUserDetails = () => {
             }}
           />
         </View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <TextInputComponent
-            textInputStyle={{
-              width: "45%",
-              height: 50,
-              marginVertical: 5,
-              marginHorizontal: 15,
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            marginVertical: 5,
+          }}
+        >
+          <View
+            style={{
+              flex: 1 / 2,
+              justifyContent: "center",
+              alignItems: "center",
             }}
-            placeholder={"District"}
-            value={district}
-            onChangeText={(text) => {
-              setDistrict(text);
+          >
+            <TextInputComponent
+              textInputStyle={{
+                width: "80%",
+                height: 50,
+              }}
+              placeholder={"District"}
+              value={district}
+              onChangeText={(text) => {
+                setDistrict(text);
+              }}
+            />
+          </View>
+          <View
+            style={{
+              flex: 1 / 2,
+              justifyContent: "center",
+              alignItems: "center",
             }}
-          />
-          <View>
+          >
             <TouchableNativeFeedback
               onPress={() => {
                 navigation.navigate("GetLocation", { setRecievedUserLocation });
@@ -321,6 +339,7 @@ const AcceptUserDetails = () => {
                   style={{
                     textDecorationLine: "underline",
                     color: "#3399ff",
+                    marginRight:15
                   }}
                 >
                   Set current location
@@ -365,6 +384,7 @@ const styles = StyleSheet.create({
   },
   container2Style: {
     flexDirection: "row",
+    justifyContent: "center",
   },
   container3Style: {
     justifyContent: "center",

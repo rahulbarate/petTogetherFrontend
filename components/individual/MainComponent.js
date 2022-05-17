@@ -16,7 +16,7 @@ import { signOut } from "firebase/auth";
 const homeName = "Home";
 const searchName = "Search";
 const alertName = "HighAlert";
-const notificationName = "Notify";
+const notificationName = "Alerts";
 const profileName = "Profile";
 
 const Tab = createBottomTabNavigator();
@@ -67,7 +67,7 @@ export default function MainContainer() {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="HighAlert" component={HighAlertScreen} />
-      <Tab.Screen name="Notify" component={NotifyScreen} />
+      <Tab.Screen name="Alerts" component={NotifyScreen} />
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}

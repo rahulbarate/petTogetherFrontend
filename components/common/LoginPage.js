@@ -24,6 +24,7 @@ import AuthContext from "../hooks/useAuth";
 const LoginPage = () => {
   const [email, setEmail] = useState("user@gmail.com");
   const [password, setPassword] = useState("user12345678");
+  const [loginButtonText, setLoginButtonText] = useState("Login");
   //   const [userData, setUserData] = useState();
 
   const { setUserDataContext } = useContext(AuthContext);
@@ -31,6 +32,7 @@ const LoginPage = () => {
   const navigation = useNavigation();
 
   const handleSignIn = () => {
+    setLoginButtonText("Logging in...");
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -40,8 +42,10 @@ const LoginPage = () => {
         getDataFromServer(user.email);
         // setUserDataContext(user);
         ToastAndroid.show("Logged In", ToastAndroid.SHORT);
-
         navigation.navigate("MainComponent");
+        setTimeout(() => {
+          setLoginButtonText("Login");
+        }, 1000);
       })
       .catch((error) => {
         console.log(error.message);
@@ -76,48 +80,66 @@ const LoginPage = () => {
     // <AuthContext.Provider value={{userData}}>
     <View style={styles.mainContainerStyle}>
       <KeyboardAwareScrollView style={styles.textInputContainerStyle}>
-        <KeyboardAvoidingView>
-          <View>
-            <View style={styles.emailTextInputViewStyle}>
-              <TextInput
-                placeholder="Email address"
-                value={email}
-                onChangeText={(text) => {
-                  setEmail(text);
-                }}
-                keyboardType="email-address"
-              />
-            </View>
-            <View style={styles.passwordTextInputViewStyle}>
-              <TextInput
-                placeholder="Password"
-                value={password}
-                onChangeText={(text) => {
-                  setPassword(text);
-                }}
-                keyboardType="email-address"
-              />
-            </View>
-            <View style={styles.signUpTextViewStyle}>
-              <Text style={styles.noAccountTextStyle}>
-                {"Don't have an account,"}
-              </Text>
-              <TouchableNativeFeedback
-                onPress={() => {
-                  navigation.navigate("SignUpPage");
-                }}
-              >
-                <View>
-                  <Text style={styles.signupTextStyle}>signup</Text>
-                </View>
-              </TouchableNativeFeedback>
-            </View>
+        <View style={styles.textContainerStyle}>
+          <View style={styles.pageTitleViewStyle}>
+            <Text style={styles.pageTitleStyle}>Pet Together</Text>
           </View>
-        </KeyboardAvoidingView>
+          <View style={styles.introTextViewStyle}>
+            <Text style={styles.introTextTitleStyle}>Welcome back!</Text>
+            <Text style={styles.introTextParaStyle}>
+              Let's login and start connecting with pet lovers
+            </Text>
+          </View>
+        </View>
+        <View>
+          <View style={styles.emailTextInputViewStyle}>
+            <TextInput
+              placeholder="Email address"
+              value={email}
+              onChangeText={(text) => {
+                setEmail(text);
+              }}
+              keyboardType="email-address"
+            />
+          </View>
+          <View style={styles.passwordTextInputViewStyle}>
+            <TextInput
+              placeholder="Password"
+              value={password}
+              onChangeText={(text) => {
+                setPassword(text);
+              }}
+              keyboardType="email-address"
+            />
+          </View>
+          <View style={styles.signUpTextViewStyle}>
+            <Text style={styles.noAccountTextStyle}>
+              {"Don't have an account? "}
+            </Text>
+            <TouchableNativeFeedback
+              onPress={() => {
+                navigation.navigate("SignUpPage");
+              }}
+            >
+              <View>
+                <Text style={styles.signupTextStyle}>signup</Text>
+              </View>
+            </TouchableNativeFeedback>
+          </View>
+        </View>
         <View style={styles.buttonContainerStyle}>
-          <TouchableNativeFeedback onPress={handleSignIn}>
-            <View style={styles.loginButtonStyle}>
-              <Text style={{ fontSize: 20 }}>Login</Text>
+          <TouchableNativeFeedback
+            onPress={handleSignIn}
+            disabled={loginButtonText !== "Login" && true}
+          >
+            <View
+              style={
+                loginButtonText !== "Login"
+                  ? [styles.loginButtonStyle, { opacity: 0.5 }]
+                  : styles.loginButtonStyle
+              }
+            >
+              <Text style={{ fontSize: 20 }}>{loginButtonText}</Text>
             </View>
           </TouchableNativeFeedback>
         </View>
@@ -161,6 +183,37 @@ const styles = StyleSheet.create({
     color: "blue",
     textDecorationLine: "underline",
   },
+  textContainerStyle: {
+    flex: 1,
+    // backgroundColor: "red",
+  },
+  pageTitleViewStyle: {
+    flex: 2,
+    // backgroundColor: "blue",
+  },
+  pageTitleStyle: {
+    marginTop: "10%",
+    fontSize: 30,
+    fontWeight: "bold",
+    marginLeft: "5%",
+  },
+  introTextViewStyle: {
+    marginTop: "30%",
+    flex: 6,
+    marginHorizontal: "5%",
+    // backgroundColor: "yellow",
+  },
+  introTextHeadStyle: {
+    marginTop: "15%",
+    fontSize: 40,
+  },
+  introTextTitleStyle: {
+    fontSize: 30,
+  },
+  introTextParaStyle: {
+    fontSize: 20,
+    marginLeft: 5,
+  },
   buttonContainerStyle: {
     flex: 1,
     justifyContent: "center",
@@ -177,7 +230,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   emailTextInputViewStyle: {
-    marginTop: "80%",
+    marginTop: "20%",
     backgroundColor: "rgb(255,255,255)",
     width: "90%",
     height: 50,

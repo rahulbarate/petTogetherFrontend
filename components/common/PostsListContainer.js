@@ -18,6 +18,7 @@ import ProfileComponent from "../common/ProfileComponent";
 import ButtonComponent from "./ButtonComponent";
 import { useNavigation } from "@react-navigation/native";
 import getUserTypeDocString from "../hooks/getUserTypeDocString";
+import { Spinner } from "@ui-kitten/components";
 
 const PostsListContainer = ({ userData, isItOtherUser }) => {
   const navigation = useNavigation();
@@ -65,11 +66,18 @@ const PostsListContainer = ({ userData, isItOtherUser }) => {
   // useEffect(() => {
   //   console.log(listOfAllPosts);
   // }, [listOfAllPosts]);
-
+  const LoadingSpinner = () => {
+    return (
+      <View>
+        <Spinner/>
+      </View>
+    );
+  };
   const renderCardItem = ({ item }) => {
     if (item.postImageLink) {
       return (
         <View style={styles.postCardStyle}>
+          <LoadingSpinner />
           <Image
             style={styles.postImageStyle}
             source={{ uri: item.postImageLink }}
@@ -92,13 +100,8 @@ const PostsListContainer = ({ userData, isItOtherUser }) => {
   return (
     <View style={styles.container2Style}>
       <View style={styles.postTypeStyle}>
-        <Text
-          style={[
-            styles.postTypeTextStyle,
-            { color: "blue", textDecorationLine: "underline", opacity: 1 },
-          ]}
-        >
-          All Post
+        <Text style={[styles.postTypeTextStyle, { opacity: 1 }]}>
+          All posts
         </Text>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -107,6 +110,7 @@ const PostsListContainer = ({ userData, isItOtherUser }) => {
             width: Dimensions.get("window").width - 20,
             height: 1.5,
             backgroundColor: "black",
+            marginBottom: 10,
           }}
         ></View>
       </View>
@@ -166,6 +170,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 10,
   },
+  spinner: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   postTypeTextStyle: {
     fontWeight: "bold",
     fontSize: 18,
@@ -203,6 +212,8 @@ const styles = StyleSheet.create({
   },
   postImageStyle: {
     // flex: 1,
+    position: "absolute",
+    zIndex: 2,
     width: Dimensions.get("window").width / 3 - 15,
     height: Dimensions.get("window").width / 3 - 15,
     borderRadius: 30,

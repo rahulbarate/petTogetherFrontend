@@ -9,6 +9,7 @@ import {
   Image,
   TouchableNativeFeedback,
   ToastAndroid,
+  ImageBackground,
 } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -25,6 +26,7 @@ import { useNavigation } from "@react-navigation/native";
 // import * as firebase from "firebase/compat/app";
 
 const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
+  // console.log(profileData.name + "=>" + profileData.profileImageLink + "|");
   const navigation = useNavigation();
   const displayToastMessage = (text) => {
     ToastAndroid.show(text, ToastAndroid.SHORT);
@@ -173,12 +175,20 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
           </View>
           <View style={styles.profilePictureViewStyle}>
             <TouchableNativeFeedback>
-              <Image
-                style={styles.profileImageStyle}
-                source={{
-                  uri: profileData.profileImageLink,
-                }}
-              />
+              <ImageBackground
+                style={styles.profilePictureViewStyle}
+                source={require("../../static/images/blankProfilePicture.png")}
+                imageStyle={styles.profileImageStyle}
+              >
+                <Image
+                  style={styles.profileImageStyle}
+                  source={
+                    profileData.profileImageLink && {
+                      uri: profileData.profileImageLink,
+                    }
+                  }
+                />
+              </ImageBackground>
             </TouchableNativeFeedback>
           </View>
           <View style={styles.followerFollowingContainerStyle}>
@@ -210,7 +220,13 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
           }
         >
           {isItOtherUser ? (
-            <View style={{ flexDirection: "row" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <ButtonComponent
                 buttonStyle={{
                   width: 100,
@@ -253,7 +269,7 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
                 height: 25,
                 borderRadius: 25,
               }}
-              buttonText={"edit profile"}
+              buttonText={"Edit profile"}
               handleButton={editButtonHandle}
             />
           )}
@@ -282,7 +298,6 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 150 / 2,
-    backgroundColor: "blue",
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: 8,
@@ -325,9 +340,10 @@ const styles = StyleSheet.create({
   },
   otherUserProfileViewStyle: {
     // backgroundColor:"red",
+    marginVertical: "2%",
     paddingRight: "2%",
     justifyContent: "center",
-    alignItems: "flex-start",
+    alignItems: "center",
     marginLeft: "3%",
     width: Dimensions.get("window").width,
   },

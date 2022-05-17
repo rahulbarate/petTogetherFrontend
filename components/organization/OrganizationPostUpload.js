@@ -184,6 +184,7 @@ const OrganizationPostUpload = () => {
       ToastAndroid.show("Post uploaded " ,ToastAndroid.SHORT);
       navigation.navigate("MainComponent");
     }
+    
   };
 
   const handleUploadButton = () => {
@@ -286,6 +287,7 @@ const OrganizationPostUpload = () => {
                   style={{
                     borderColor: "#3399ff",
                     borderWidth: 2,
+                    borderRadius: 25,
                   }}
                   placeholder="Choose pet type"
                   onChangeValue={(text) => {
@@ -305,6 +307,7 @@ const OrganizationPostUpload = () => {
                     style={{
                       borderColor: "#3399ff",
                       borderWidth: 2,
+                      borderRadius: 25,
                     }}
                     placeholder="Choose pet breed"
                     onChangeValue={(text) => {
@@ -323,7 +326,7 @@ const OrganizationPostUpload = () => {
               width: "48%",
             }}
             placeholder={
-              postType === "petForAdoption" ? "date of birth" : "date of event"
+              postType === "petForAdoption" ? "Date of birth" : "Date of event"
             }
             keyboardType={"phone-pad"}
             value={postType === "petForAdoption" ? dateOfBirth : dateOfEvent}
