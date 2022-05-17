@@ -39,7 +39,7 @@ const Chat = ({ navigation }) => {
   }, [isFocused]);
 
   return (
-    <View style={{ backgroundColor: "#FFF", flex: 1 }}>
+    <View style={{ backgroundColor: "#FFF", flex: 1,marginBottom:50 }}>
       <View>
         <ChatListSearch
           chats={chats}

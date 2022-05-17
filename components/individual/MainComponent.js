@@ -17,6 +17,7 @@ import Chat from "../common/Chat";
 const homeName = "Home";
 const searchName = "Search";
 const alertName = "HighAlert";
+const chatName = "Chat";
 const notificationName = "Alerts";
 const profileName = "Profile";
 
@@ -67,7 +68,8 @@ export default function MainContainer() {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="HighAlert" component={HighAlertScreen} />
+      {/* <Tab.Screen name="HighAlert" component={HighAlertScreen} /> */}
+      <Tab.Screen name="Chat" component={Chat} />
       <Tab.Screen name="Alerts" component={NotifyScreen} />
       <Tab.Screen
         name="Profile"
