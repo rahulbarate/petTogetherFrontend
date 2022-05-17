@@ -88,10 +88,13 @@ const EditProfileComponent = (props) => {
       xhr.send(null);
     });
 
+    //
     const storageRef = storage
       .ref(`${userDataContext.email}/profilePictures/`)
       .child("profilePicture.jpeg");
+
     const uploadTask = storageRef.put(blob);
+    // setIsDataChanged(false);
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -121,6 +124,7 @@ const EditProfileComponent = (props) => {
       },
       () => {
         uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+          console.log(url);
           setImage(url);
           updateProfilePic(url);
           blob.close();
@@ -134,6 +138,7 @@ const EditProfileComponent = (props) => {
       ...userDataContext,
       profileImageLink: url,
     };
+
     const response = await sendRequestToServer(
       "/profile/updateUserProfile",
       updatedData
@@ -385,7 +390,6 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 150 / 2,
-    backgroundColor: "blue",
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: 8,

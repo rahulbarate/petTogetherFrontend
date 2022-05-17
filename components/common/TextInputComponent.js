@@ -10,7 +10,13 @@ const TextInputComponent = (props) => {
         keyboardType={props.keyboardType ? props.keyboardType : "default"}
         value={props.value}
         onChangeText={props.onChangeText}
-        style={{ flexDirection: "row", flexWrap: "wrap" }}
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          fontSize: props.fontSize && props.fontSize,
+          // backgroundColor: "yellow",
+          textAlignVertical:props.textAlignVertical?props.textAlignVertical:"center"
+        }}
       />
     </View>
   );

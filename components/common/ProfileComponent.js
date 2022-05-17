@@ -9,6 +9,7 @@ import {
   Image,
   TouchableNativeFeedback,
   ToastAndroid,
+  ImageBackground,
 } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -21,9 +22,12 @@ import {
 import { storage } from "../../firebase";
 import { localhostBaseURL } from "../common/baseURLs";
 import ButtonComponent from "./ButtonComponent";
+import { useNavigation } from "@react-navigation/native";
 // import * as firebase from "firebase/compat/app";
 
 const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
+  // console.log(profileData.name + "=>" + profileData.profileImageLink + "|");
+  const navigation = useNavigation();
   const displayToastMessage = (text) => {
     ToastAndroid.show(text, ToastAndroid.SHORT);
   };
@@ -171,12 +175,20 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
           </View>
           <View style={styles.profilePictureViewStyle}>
             <TouchableNativeFeedback>
-              <Image
-                style={styles.profileImageStyle}
-                source={{
-                  uri: profileData.profileImageLink,
-                }}
-              />
+              <ImageBackground
+                style={styles.profilePictureViewStyle}
+                source={require("../../static/images/blankProfilePicture.png")}
+                imageStyle={styles.profileImageStyle}
+              >
+                <Image
+                  style={styles.profileImageStyle}
+                  source={
+                    profileData.profileImageLink && {
+                      uri: profileData.profileImageLink,
+                    }
+                  }
+                />
+              </ImageBackground>
             </TouchableNativeFeedback>
           </View>
           <View style={styles.followerFollowingContainerStyle}>
@@ -200,14 +212,26 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
             {"bio" in profileData ? profileData.bio : ""}
           </Text>
         </View>
-        <View style={styles.editProfileTextViewStyle}>
+        <View
+          style={
+            isItOtherUser
+              ? styles.otherUserProfileViewStyle
+              : styles.editProfileTextViewStyle
+          }
+        >
           {isItOtherUser ? (
-            <View style={{ flexDirection: "row" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <ButtonComponent
                 buttonStyle={{
                   width: 100,
                   height: 30,
-                  marginHorizontal: "8%",
+                  marginHorizontal: "2%",
                   borderRadius: 20,
                 }}
                 buttonText={"Follow"}
@@ -217,15 +241,45 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
                   width: 100,
                   height: 30,
                   borderRadius: 20,
-                  marginHorizontal: "8%",
+                  marginHorizontal: "2%",
                 }}
                 buttonText={"Message"}
+                handleButton={() => {
+                  if (profileData) {
+                    navigation.navigate("Message", {
+                      messageWith: profileData.email,
+                      name: profileData.name,
+                    });
+                  }
+                }}
               />
+              {profileData.userType !== "Individual User" && (
+                <ButtonComponent
+                  buttonStyle={{
+                    width: 100,
+                    height: 30,
+                    borderRadius: 20,
+                    marginHorizontal: "2%",
+                  }}
+                  buttonText={"Visit"}
+                  handleButton={() => {
+                    if (profileData.coordinate) {
+                      navigation.navigate("Map", { userData: profileData });
+                    }
+                  }}
+                />
+              )}
             </View>
           ) : (
-            <TouchableNativeFeedback onPress={editButtonHandle}>
-              <Text style={styles.editProfileTextStyle}>Edit Profile</Text>
-            </TouchableNativeFeedback>
+            <ButtonComponent
+              buttonStyle={{
+                paddingHorizontal: 10,
+                height: 25,
+                borderRadius: 25,
+              }}
+              buttonText={"Edit profile"}
+              handleButton={editButtonHandle}
+            />
           )}
         </View>
       </View>
@@ -252,7 +306,6 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 150 / 2,
-    backgroundColor: "blue",
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: 8,
@@ -280,7 +333,7 @@ const styles = StyleSheet.create({
   },
   bioViewStyle: {
     width: Dimensions.get("window").width,
-    height: 80,
+    maxHeight: 80,
   },
   followNoTextStyle: {
     fontSize: 18,
@@ -289,9 +342,17 @@ const styles = StyleSheet.create({
   editProfileTextViewStyle: {
     // backgroundColor:"red",
     paddingRight: "2%",
-    paddingBottom: 5,
     justifyContent: "center",
     alignItems: "flex-end",
+    width: Dimensions.get("window").width,
+  },
+  otherUserProfileViewStyle: {
+    // backgroundColor:"red",
+    marginVertical: "2%",
+    paddingRight: "2%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: "3%",
     width: Dimensions.get("window").width,
   },
   editProfileTextStyle: {

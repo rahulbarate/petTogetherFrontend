@@ -1,3 +1,4 @@
+import { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,15 +11,104 @@ import {
   TouchableNativeFeedback,
   Alert,
 } from "react-native";
+import { db } from "../../firebase";
+import AuthContext from "../hooks/useAuth";
+import sendRequestToServer from "../hooks/sendRequestToServer";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import NotificationCard from "./NotificationCard";
+import getUserTypeDocString from "../hooks/getUserTypeDocString";
+
 export default function NotifyScreen() {
-  function myButton() {
-    Alert.alert("request accepted", "Button", [{ text: "OK" }]);
+  const { userDataContext, setUserDataContext } = useContext(AuthContext);
+  const [notifications, setNotifications] = useState([]);
+
+  function acceptButtonHandle(item) {
+    Alert.alert(`${item.name}'s request accepted`);
   }
 
-  function myButton2() {
-    Alert.alert("request REJECTED", "Button", [{ text: "OK" }]);
+  function rejectButtonHandle(item) {
+    Alert.alert(`${item.name}'s request REJECTED`);
   }
 
+  const listenRealTime = () => {
+    db.collection("Users")
+      .doc(getUserTypeDocString(userDataContext.userType))
+      .collection("accounts")
+      .doc(userDataContext.email)
+      .onSnapshot((snapshot) => {
+        // const data = snapshot.data();
+        if (snapshot.data().notification) {
+          const notificationHistory = snapshot.data().notification;
+          setNotifications([...notificationHistory]);
+        }
+        // console.log(notificationHistory);
+
+        // for (let each of notificationHistory) {
+        //   setNotifications((previous) => [...previous, each]);
+        // }
+      });
+  };
+  useEffect(() => {
+    listenRealTime();
+  }, []);
+
+  const getIndividualUsersData = async (email) => {
+    const result = await sendRequestToServer("/profile/fetchUserDetails", {
+      email: email,
+    });
+    return result;
+  };
+
+  const getDescriptionString = (notificationType) => {
+    switch (notificationType) {
+      case "like":
+        return "has liked your post";
+        break;
+      case "comment":
+        return "has commented on your phone";
+        break;
+      case "petBuyRequest":
+        return "want to buy your pet";
+        break;
+      case "reshelterRequest":
+        return "want to reshelter your pet";
+        break;
+      case "breedRequest":
+        return "sent breed request for your pet";
+        break;
+      case "adoptionRequest":
+        return "want adopt your pet";
+        break;
+    }
+  };
+
+  const isItRequest = (notificationType) => {
+    if (
+      notificationType === "comment" ||
+      notificationType === "like" ||
+      notificationType === "event"
+    )
+      return false;
+    else return true;
+  };
+
+  const updateWholeArray = async (updatedRequestData, index) => {
+    const updatedArray = [
+      ...notifications.slice(0, index),
+      ...notifications.slice(index + 1, notifications.length),
+      updatedRequestData,
+    ];
+    try {
+      await db
+        .collection("Users")
+        .doc(getUserTypeDocString(userDataContext.userType))
+        .collection("accounts")
+        .doc(userDataContext.email)
+        .update({ notification: updatedArray });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   const profile = [
     {
       id: 1,
@@ -42,63 +132,25 @@ export default function NotifyScreen() {
     },
   ];
 
-  const oneProfile = ({ item }) => (
-    <View style={styles.item}>
-      <View style={styles.avatarContainer}>
-        <Image style={styles.avatar}></Image>
-      </View>
-      <View style={styles.nameDescriptionStyle}>
-        <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.name}>{item.describe}</Text>
-      </View>
-      <View style={styles.buttonContainerStyle}>
-        <View
-          style={{
-            backgroundColor: "white",
-            borderWidth: 1,
-            borderRadius: 20,
-            paddingHorizontal: 8,
-            paddingVertical: 2,
-            justifyContent: "center",
-            alignItems: "center",
-            marginVertical:5
-          }}
-        >
-          <TouchableNativeFeedback onPress={myButton}>
-            <Text style={{ color: "blue", textDecorationLine: "underline" }}>
-              Accept
-            </Text>
-          </TouchableNativeFeedback>
-        </View>
-        <View
-          style={{
-            backgroundColor: "white",
-            borderWidth: 1,
-            borderRadius: 20,
-            paddingHorizontal: 5,
-            paddingVertical: 2,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <TouchableNativeFeedback onPress={myButton2}>
-            <Text style={{ color: "red", textDecorationLine: "underline" }}>
-              Reject
-            </Text>
-          </TouchableNativeFeedback>
-        </View>
-      </View>
-    </View>
-  );
-  itemSeparator = () => {
+  const oneProfile = ({ item, index }) => {
+    return (
+      <NotificationCard
+        item={item}
+        updateWholeArray={updateWholeArray}
+        index={index}
+      />
+    );
+  };
+  const itemSeparator = () => {
     return <View style={styles.separator}></View>;
   };
+
   return (
     <SafeAreaView>
       <FlatList
-        data={profile}
+        data={notifications}
         renderItem={oneProfile}
-        ItemSeparatorComponent={itemSeparator}
+        keyExtractor={(item, index) => index}
       />
     </SafeAreaView>
   );
@@ -117,29 +169,30 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 20,
     borderWidth: 2,
-    paddingLeft:5
+    paddingLeft: 5,
     // elevation: 3,
     // backgroundColor:"red"
   },
   nameDescriptionStyle: {
     flex: 0.8,
     flexDirection: "column",
+    marginLeft: "2%",
     // backgroundColor:"white"
   },
   avatar: {
-    height: 55,
-    width: 55,
+    borderRadius: 60 / 2,
+    height: 60,
+    width: 60,
   },
   name: {
     fontWeight: "600",
-    fontSize: 16,
-    marginLeft: 13,
+    fontSize: 20,
   },
   avatarContainer: {
     backgroundColor: "#D9D9D9",
-    borderRadius: 100,
-    height: 89,
-    width: 89,
+    borderRadius: 60 / 2,
+    height: 60,
+    width: 60,
     justifyContent: "center",
     alignItems: "center",
   },

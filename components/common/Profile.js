@@ -140,7 +140,10 @@ const Profile = () => {
         editButtonHandle={() => setModalVisibility(true)}
         isItOtherUser={false}
       />
-      <PostsListContainer listOfPosts={listOfData} />
+      <PostsListContainer
+        userData={{ ...userDataContext }}
+        isItOtherUser={false}
+      />
     </View>
   );
 };

@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableNativeFeedback,
   Dimensions,
+  ToastAndroid,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useState, useContext } from "react";
@@ -23,6 +24,7 @@ import AuthContext from "../hooks/useAuth";
 const LoginPage = () => {
   const [email, setEmail] = useState("user@gmail.com");
   const [password, setPassword] = useState("user12345678");
+  const [loginButtonText, setLoginButtonText] = useState("Login");
   //   const [userData, setUserData] = useState();
 
   const { setUserDataContext } = useContext(AuthContext);
@@ -30,6 +32,7 @@ const LoginPage = () => {
   const navigation = useNavigation();
 
   const handleSignIn = () => {
+    setLoginButtonText("Logging in...");
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -38,12 +41,14 @@ const LoginPage = () => {
       .then((user) => {
         getDataFromServer(user.email);
         // setUserDataContext(user);
-        alert("Logged In");
-
+        ToastAndroid.show("Logged In", ToastAndroid.SHORT);
         navigation.navigate("MainComponent");
+        setTimeout(() => {
+          setLoginButtonText("Login");
+        }, 1000);
       })
       .catch((error) => {
-        alert(error.message);
+        console.log(error.message);
       });
   };
 
@@ -55,7 +60,7 @@ const LoginPage = () => {
         // console.log(user);
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   };
 
@@ -67,64 +72,78 @@ const LoginPage = () => {
 
       setUserDataContext(res.data);
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 
   return (
     // <AuthContext.Provider value={{userData}}>
     <View style={styles.mainContainerStyle}>
-      <ImageBackground
-        style={styles.backgroundImageStyle}
-        resizeMode="cover"
-        source={require("../../static/images/girlwithdog.jpg")}
-      >
-        <KeyboardAwareScrollView style={styles.textInputContainerStyle}>
-          <KeyboardAvoidingView>
-            <View>
-              <View style={styles.emailTextInputViewStyle}>
-                <TextInput
-                  placeholder="Enter email address"
-                  value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
-                  }}
-                />
-              </View>
-              <View style={styles.passwordTextInputViewStyle}>
-                <TextInput
-                  placeholder="Enter password"
-                  value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                  }}
-                />
-              </View>
-              <View style={styles.signUpTextViewStyle}>
-                <Text style={styles.noAccountTextStyle}>
-                  Don't Have an Account,
-                </Text>
-                <TouchableNativeFeedback
-                  onPress={() => {
-                    navigation.navigate("SignUpPage");
-                  }}
-                >
-                  <View>
-                    <Text style={styles.signupTextStyle}>Signup</Text>
-                  </View>
-                </TouchableNativeFeedback>
-              </View>
-            </View>
-          </KeyboardAvoidingView>
-          <View style={styles.buttonContainerStyle}>
-            <TouchableNativeFeedback onPress={handleSignIn}>
-              <View style={styles.loginButtonStyle}>
-                <Text style={{ fontSize: 20 }}>Login</Text>
+      <KeyboardAwareScrollView style={styles.textInputContainerStyle}>
+        <View style={styles.textContainerStyle}>
+          <View style={styles.pageTitleViewStyle}>
+            <Text style={styles.pageTitleStyle}>Pet Together</Text>
+          </View>
+          <View style={styles.introTextViewStyle}>
+            <Text style={styles.introTextTitleStyle}>Welcome back!</Text>
+            <Text style={styles.introTextParaStyle}>
+              Let's login and start connecting with pet lovers
+            </Text>
+          </View>
+        </View>
+        <View>
+          <View style={styles.emailTextInputViewStyle}>
+            <TextInput
+              placeholder="Email address"
+              value={email}
+              onChangeText={(text) => {
+                setEmail(text);
+              }}
+              keyboardType="email-address"
+            />
+          </View>
+          <View style={styles.passwordTextInputViewStyle}>
+            <TextInput
+              placeholder="Password"
+              value={password}
+              onChangeText={(text) => {
+                setPassword(text);
+              }}
+              keyboardType="email-address"
+            />
+          </View>
+          <View style={styles.signUpTextViewStyle}>
+            <Text style={styles.noAccountTextStyle}>
+              {"Don't have an account? "}
+            </Text>
+            <TouchableNativeFeedback
+              onPress={() => {
+                navigation.navigate("SignUpPage");
+              }}
+            >
+              <View>
+                <Text style={styles.signupTextStyle}>signup</Text>
               </View>
             </TouchableNativeFeedback>
           </View>
-        </KeyboardAwareScrollView>
-      </ImageBackground>
+        </View>
+        <View style={styles.buttonContainerStyle}>
+          <TouchableNativeFeedback
+            onPress={handleSignIn}
+            disabled={loginButtonText !== "Login" && true}
+          >
+            <View
+              style={
+                loginButtonText !== "Login"
+                  ? [styles.loginButtonStyle, { opacity: 0.5 }]
+                  : styles.loginButtonStyle
+              }
+            >
+              <Text style={{ fontSize: 20 }}>{loginButtonText}</Text>
+            </View>
+          </TouchableNativeFeedback>
+        </View>
+      </KeyboardAwareScrollView>
     </View>
     // </AuthContext.Provider>
   );
@@ -133,12 +152,12 @@ const LoginPage = () => {
 const styles = StyleSheet.create({
   mainContainerStyle: {
     flex: 1,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
   },
   backgroundImageStyle: {
     flex: 1,
     justifyContent: "flex-start",
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
   },
   textInputContainerStyle: {
     flex: 8,
@@ -164,11 +183,43 @@ const styles = StyleSheet.create({
     color: "blue",
     textDecorationLine: "underline",
   },
+  textContainerStyle: {
+    flex: 1,
+    // backgroundColor: "red",
+  },
+  pageTitleViewStyle: {
+    flex: 2,
+    // backgroundColor: "blue",
+  },
+  pageTitleStyle: {
+    marginTop: "10%",
+    fontSize: 30,
+    fontWeight: "bold",
+    marginLeft: "5%",
+  },
+  introTextViewStyle: {
+    marginTop: "30%",
+    flex: 6,
+    marginHorizontal: "5%",
+    // backgroundColor: "yellow",
+  },
+  introTextHeadStyle: {
+    marginTop: "15%",
+    fontSize: 40,
+  },
+  introTextTitleStyle: {
+    fontSize: 30,
+  },
+  introTextParaStyle: {
+    fontSize: 20,
+    marginLeft: 5,
+  },
   buttonContainerStyle: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 250,
+    marginTop: 40,
+    marginBottom: 20,
   },
   loginButtonStyle: {
     justifyContent: "center",
@@ -179,7 +230,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   emailTextInputViewStyle: {
-    marginTop: "80%",
+    marginTop: "20%",
     backgroundColor: "rgb(255,255,255)",
     width: "90%",
     height: 50,

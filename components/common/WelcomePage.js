@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
+import ButtonComponent from "./ButtonComponent";
 
 const WelcomePage = () => {
   const introTextHead = "Hello!";
@@ -15,33 +16,32 @@ const WelcomePage = () => {
   const introTextPara =
     "Compassion for animals is intimately associated with goodness of character, and it may be confidently asserted that he who is cruel to animals cannot be a good man.";
 
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
   return (
     <View style={styles.mainContainerStyle}>
-      <ImageBackground
-        resizeMode="cover"
-        style={styles.backgroundImageStyle}
-        source={require("../../static/images/back.jpg")}
-      >
-        <View style={styles.textContainerStyle}>
-          <View style={styles.pageTitleViewStyle}>
-            <Text style={styles.pageTitleStyle}>Pet Together</Text>
-          </View>
-          <View style={styles.introTextViewStyle}>
-            <Text style={styles.introTextHeadStyle}>{introTextHead}</Text>
-            <Text style={styles.introTextTitleStyle}>{introTextTitle}</Text>
-            <Text style={styles.introTextParaStyle}>{introTextPara}</Text>
-          </View>
-          <View style={styles.helloButtonViewStyle}>
-            <TouchableNativeFeedback onPress={()=>{navigation.navigate("LoginPage")}}>
-              <View style={styles.letsGoButtonStyle}>
-                <Text style={{fontSize:20}}>Let's Go!</Text>
-              </View>
-            </TouchableNativeFeedback>
-          </View>
+      <View style={styles.textContainerStyle}>
+        <View style={styles.pageTitleViewStyle}>
+          <Text style={styles.pageTitleStyle}>Pet Together</Text>
         </View>
-      </ImageBackground>
+        <View style={styles.introTextViewStyle}>
+          <Text style={styles.introTextHeadStyle}>{introTextHead}</Text>
+          <Text style={styles.introTextTitleStyle}>{introTextTitle}</Text>
+          <Text style={styles.introTextParaStyle}>{introTextPara}</Text>
+        </View>
+        <View style={styles.helloButtonViewStyle}>
+          <ButtonComponent
+            buttonStyle={{
+              width: 200,
+              height: 50,
+              borderRadius: 20,
+            }}
+            textStyle={{ fontSize: 20 }}
+            buttonText={"Let's Go"}
+            handleButton={()=>{navigation.navigate("LoginPage")}}
+          />
+        </View>
+      </View>
     </View>
   );
 };
@@ -49,8 +49,9 @@ const WelcomePage = () => {
 export default WelcomePage;
 
 const styles = StyleSheet.create({
-    mainContainerStyle: {
+  mainContainerStyle: {
     flex: 1,
+    justifyContent: "flex-start",
   },
   backgroundImageStyle: {
     flex: 1,
@@ -87,17 +88,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   helloButtonViewStyle: {
-      justifyContent:"center",
-      alignItems:"center",
+    justifyContent: "center",
+    alignItems: "center",
     flex: 5,
   },
   letsGoButtonStyle: {
-    justifyContent:"center",
-    alignItems:"center",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "white",
     height: 50,
     width: 300,
-    borderRadius:30,
-    marginTop:"30%"
+    borderRadius: 30,
+    marginTop: "30%",
   },
 });
