@@ -13,6 +13,7 @@ import ButtonComponent from "../common/ButtonComponent";
 import AuthContext from "../hooks/useAuth";
 import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
+import Chat from "../common/Chat";
 const homeName = "Home";
 const searchName = "Search";
 const alertName = "HighAlert";
@@ -47,8 +48,8 @@ export default function MainContainer() {
             iconName = focused ? "home" : "home";
           } else if (rn === searchName) {
             iconName = focused ? "search" : "search";
-          } else if (rn === alertName) {
-            iconName = focused ? "alert" : "alert";
+          } else if (rn === chatName) {
+            iconName = focused ? "chatbubble" : "chatbubble-outline";
           } else if (rn === notificationName) {
             iconName = focused ? "notifications" : "notifications-outline";
           } else if (rn === profileName) {
