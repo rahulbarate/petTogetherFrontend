@@ -38,14 +38,14 @@ const PostsListContainer = ({ userData, isItOtherUser }) => {
           let postArr = [];
           // setListOfAllPosts([]);
           snapshot.docs.forEach((eachPost) => {
-            postArr.push(eachPost.data());
+            postArr.push({ ...eachPost.data(), postId: eachPost.id });
           });
 
           setListOfAllPosts(postArr);
         }
       });
   };
-
+  
   const formatData = (data, numColumns) => {
     const numOfFullRows = Math.floor(data.length / numColumns);
     let numElementsInLastRow = data.length - numColumns * numOfFullRows;
@@ -69,20 +69,37 @@ const PostsListContainer = ({ userData, isItOtherUser }) => {
   const LoadingSpinner = () => {
     return (
       <View>
-        <Spinner/>
+        <Spinner />
       </View>
     );
   };
-  const renderCardItem = ({ item }) => {
+  const displaySinglePost = (listOfAllPosts, index, profileImageLink) => {
+    navigation.navigate("SinglePostList", {
+      allPosts: listOfAllPosts,
+      initialScrollIndex: index,
+      profileImageLink,
+    });
+  };
+  const renderCardItem = ({ item, index }) => {
     if (item.postImageLink) {
       return (
-        <View style={styles.postCardStyle}>
-          <LoadingSpinner />
-          <Image
-            style={styles.postImageStyle}
-            source={{ uri: item.postImageLink }}
-          />
-        </View>
+        <TouchableNativeFeedback
+          onPress={() => {
+            displaySinglePost(
+              listOfAllPosts,
+              index,
+              userDataContext.profileImageLink
+            );
+          }}
+        >
+          <View style={styles.postCardStyle}>
+            <LoadingSpinner />
+            <Image
+              style={styles.postImageStyle}
+              source={{ uri: item.postImageLink }}
+            />
+          </View>
+        </TouchableNativeFeedback>
       );
     }
   };

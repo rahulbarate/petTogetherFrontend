@@ -20,6 +20,8 @@ import PostUploadScreen from "./PostUploadScreen";
 import ShopPostUpload from "../shopkeeper/ShopPostUpload";
 import OrganizationPostUpload from "../organization/OrganizationPostUpload";
 import IndividualUserPostUpload from "../individual/IndividualUserPostUpload";
+import SinglePostCard from "./SinglePostCard";
+import SinglePostList from "./SinglePostList";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +32,16 @@ const StackNaviagator = () => {
         options={{ headerShown: false }}
         name="LoginPage"
         component={LoginPage}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="SinglePostList"
+        component={SinglePostList}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="SinglePostCard"
+        component={SinglePostCard}
       />
       <Stack.Screen
         options={{ headerShown: false }}

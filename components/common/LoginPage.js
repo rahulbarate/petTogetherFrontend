@@ -82,12 +82,12 @@ const LoginPage = () => {
       <KeyboardAwareScrollView style={styles.textInputContainerStyle}>
         <View style={styles.textContainerStyle}>
           <View style={styles.pageTitleViewStyle}>
-            <Text style={styles.pageTitleStyle}>Pet Together</Text>
+            <Text style={styles.pageTitleStyle}>Pet together</Text>
           </View>
           <View style={styles.introTextViewStyle}>
             <Text style={styles.introTextTitleStyle}>Welcome back!</Text>
             <Text style={styles.introTextParaStyle}>
-              Let's login and start connecting with pet lovers
+              Let's login and start connecting with pet lovers.
             </Text>
           </View>
         </View>

@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
-import ModalDropdown from "react-native-modal-dropdown";
+// import ModalDropdown from "react-native-modal-dropdown";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { localhostBaseURL } from "./baseURLs";
+import { localhostBaseURL } from "../common/baseURLs";
 import {
   FlatList,
   ScrollView,
@@ -36,7 +36,7 @@ export default function HomeScreen() {
         postUserEmail
       });
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 
@@ -96,7 +96,7 @@ export default function HomeScreen() {
       setData(extractedData);
       // console.log(extractedData);
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 
