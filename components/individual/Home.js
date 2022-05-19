@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, Component } from "react";
 import ModalDropdown from "react-native-modal-dropdown";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { localhostBaseURL } from "./baseURLs";
+import { localhostBaseURL } from "../common/baseURLs";
 import {
   FlatList,
   ScrollView,
@@ -11,10 +11,14 @@ import {
   Text,
   TextInput,
   Dimensions,
+  Alert,
   Button as ReactButton,
+  ShadowPropTypesIOS,
 } from "react-native";
 import AuthContext from "../hooks/useAuth";
 import { Card, Button, Title, Paragraph } from "react-native-paper";
+import getUserTypeDocString from "../hooks/getUserTypeDocString";
+import { db } from "../../firebase";
 const { width } = Dimensions.get("window");
 
 export default function HomeScreen() {
@@ -33,23 +37,17 @@ export default function HomeScreen() {
         emailId: userDataContext.email,
         userType: userDataContext.userType,
         postUserType,
-        postUserEmail
+        postUserEmail,
+        sendTime:new Date()
       });
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 
   const Icon = (props) => {
     const [isColor, isRed] = useState(true);
-    // const liked=props.userWhoLikedIds;
-    // const isLiked=liked.includes(userDataContext.email);
-    // if(isLiked){
-    //   isRed(!isColor);
-    // }
-    // else{
-    //   isRed(isColor);
-    // }
+    
     return (
       <Button
         icon={props.name}
@@ -75,11 +73,14 @@ export default function HomeScreen() {
       });
       setResponse(res);
       //  console.log(res.data);
+      if(res.data==null){
+        return;
+      }
       let extractedData = [];
       for (each of res.data) {
         //setData(each);
         for (eachInEach of each) {
-          console.log(eachInEach);
+          // console.log(eachInEach);
           const retArray = {
             id: eachInEach.postId,
             postUserName: eachInEach.name,
@@ -96,7 +97,7 @@ export default function HomeScreen() {
       setData(extractedData);
       // console.log(extractedData);
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 
@@ -139,20 +140,74 @@ export default function HomeScreen() {
       </View>
     );
   };
+  const sendRequest=async(postUserEmail,postUserType,postId,profileImageLink,postType)=>{
+    try {
+        const res = await localhostBaseURL.post("/home/setNotification", {
+        name:userDataContext.name,
+        notificationType:postType,
+        postId,
+        profileImageLink,
+        emailId: userDataContext.email,
+        userType: userDataContext.userType,
+        postUserType,
+        postUserEmail,
+        sendTime:new Date()
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const showAlert = (postUserEmail,postUserType,postId,profileImageLink,postType) =>
+    Alert.alert('Send Request','Do you want to send Request ?',[
+      {text: 'Cancel',onPress: () => console.log('Cancel Pressed'),style:'cancel'},  
+      {text: 'OK', onPress:()=>{
+        sendRequest(postUserEmail,postUserType,postId,profileImageLink,postType)
+      }},  
+    ]  
+  );
+  const postInformation=(postType)=>{
+    if(postType == "casual")
+      return("Casual Post");
+    else if(postType == "petSellPost")
+      return("Pet Sell Post");
+    else if(postType == "reshelter")
+      return("Reshelter Post");
+    else if(postType == "breedPost")
+      return("Breed Post");
+    else
+      return("Adoption Post");
+  }
+  const viewButton =(postUserEmail,postUserType,postId,profileImageLink,postType)=>{
+    if(postType=="casual")
+      return(null);
+    else{
+      return(
+        <Button type="outline" icon="plus" onPress={()=>{
+          showAlert(postUserEmail,postUserType,postId,profileImageLink,postType)
+        }}></Button>);
+    }
+  }
   const RenderCard = (item) => {
-    // ~console.log("item", item);
+    // console.log("item", item);
     return (
       <Card style={styles.container}>
         <Card.Content>
-          <Title>{item.item.postUserName}</Title>
+          <View style={styles.postContent}>
+            <View >
+              <Title>{item.item.postUserName}</Title>
+              <Text>{postInformation(item.item.postType)}</Text>
+            </View>
+            <View style={styles.requestButton}>
+              {viewButton(item.item.postUserEmail,item.item.postUserType,item.item.id,item.item.profileImageLink,item.item.postType)}
+            </View>
+          </View>
         </Card.Content>
-        <Card.Cover
+          <Card.Cover
           source={{
             uri: item.item.image,
           }}
-        />
+          />
         <Card.Content>
-          <Paragraph></Paragraph>
         </Card.Content>
         <Card.Actions>
           <Icon
@@ -166,26 +221,25 @@ export default function HomeScreen() {
             // userWhoLikedIds={item.item.userWhoLikedIds}
           />
           <Comment />
-          {/* <ModalDropdown
-            style={styles.dropbox}
-            options={[
-              "Breed Request",
-              "Buy Request",
-              "Adopt Request",
-              "Reshelter Request",
-            ]}
-          /> */}
         </Card.Actions>
       </Card>
     );
   };
-  return (
-    <View>
-      <FlatList
+  const showPost=()=>{
+    if(data.length===0){
+      return <Text alignItems="center" justifyContent="center">There is no post to display.</Text>
+    }
+    else{
+      return <FlatList
         data={data}
         renderItem={({ item }) => <RenderCard item={item} />}
         keyExtractor={(item) => item.id}
-      />
+        />
+    }
+  }
+  return (
+    <View>
+      {showPost()}
     </View>
   );
 }
@@ -231,5 +285,15 @@ const styles = StyleSheet.create({
   },
   dropbox: {
     paddingHorizontal: "35%",
+  },
+  postContent:{
+    flex:1,
+    flexDirection:"row"
+  },
+  requestButton:{
+    flex:1,
+    flexDirection:"row",
+    justifyContent:"flex-end",
+    paddingTop:10,
   },
 });
