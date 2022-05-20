@@ -71,6 +71,7 @@ const LoginPage = () => {
       });
 
       setUserDataContext(res.data);
+      // console.log(res.data);
     } catch (error) {
       console.log(error);
     }

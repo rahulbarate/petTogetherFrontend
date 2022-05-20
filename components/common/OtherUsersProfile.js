@@ -20,17 +20,26 @@ import PostsListContainer from "../common/PostsListContainer";
 // import EditShopOwnerDetails from "./EditShopOwnerDetails";
 import EditProfileComponent from "../common/EditProfileComponent";
 import sendRequestToServer from "../hooks/sendRequestToServer";
+import getUserTypeDocString from "../hooks/getUserTypeDocString";
 
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
 const OtherUsersProfile = ({ route }) => {
-  // const { userDataContext, setUserDataContext } = useContext(AuthContext);
+  const { userDataContext, setUserDataContext } = useContext(AuthContext);
   const [otherUserData, setOtherUserData] = useState();
+  const [listOfAllPosts, setListOfAllPosts] = useState();
+  const [followRequestsSentArray, setFollowRequestsSentArray] = useState([]);
+  const [currentUserFollowingArray, setCurrentUserFollowingArray] = useState(
+    []
+  );
+  const [currentUserFollowersArray, setCurrentUserFollowersArray] = useState(
+    []
+  );
   // const {usersEmail,setUsersEmail} = useState(route.email);
   const { clickedUsersEmail } = route.params;
 
-  const [response, setResponse] = useState({});
+  // const [response, setResponse] = useState({});
   const data = [
     {
       key: "1",
@@ -88,7 +97,7 @@ const OtherUsersProfile = ({ route }) => {
       imageLink: require("../../static/images/back7.jpg"),
     },
   ];
-  const [listOfData, setListOfData] = useState(data);
+  // const [listOfData, setListOfData] = useState(data);
   const [modalVisibility, setModalVisibility] = useState(false);
 
   const fetchUsersData = async () => {
@@ -118,7 +127,7 @@ const OtherUsersProfile = ({ route }) => {
       const res = await sendRequestToServer("/profile/fetchUserDetails", {
         email: clickedUsersEmail,
       });
-    //   console.log(res);
+      //   console.log(res);
       //   setResponse(res);
       setOtherUserData(res);
     } catch (error) {
@@ -126,9 +135,84 @@ const OtherUsersProfile = ({ route }) => {
     }
   };
 
-  useEffect(() => {
-    getUsersData();
-  });
+  const listenRealTimePostUpdate = () => {
+    const userTypeDoc = getUserTypeDocString(otherUserData.userType);
+    db.collection("Users")
+      .doc(userTypeDoc)
+      .collection("accounts")
+      .doc(otherUserData.email)
+      .collection("posts")
+      .orderBy("uploadedOn", "desc")
+      .onSnapshot((snapshot) => {
+        if (listOfAllPosts.length !== snapshot.docs.length) {
+          let postArr = [];
+          // setListOfAllPosts([]);
+          snapshot.docs.forEach((eachPost) => {
+            postArr.push({ ...eachPost.data(), postId: eachPost.id });
+          });
+
+          setListOfAllPosts(postArr);
+        }
+      });
+  };
+
+  const getLoggedInUserFollowRequestSentArray = async () => {
+    try {
+      const result = await db
+        .collection("Users")
+        .doc(getUserTypeDocString(userDataContext.userType))
+        .collection("accounts")
+        .doc(userDataContext.email)
+        .onSnapshot((snapshot) => {
+          if (snapshot.exists) {
+            if (snapshot.data().followRequestsSentArray) {
+              // console.log(snapshot.data().followRequestsSentArray);
+              setFollowRequestsSentArray(
+                snapshot.data().followRequestsSentArray
+              );
+            }
+          }
+        });
+      // .get();
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const getLoggedInUserFollowAndFollowingArray = async () => {
+    try {
+      db.collection("Users")
+        .doc(getUserTypeDocString(userDataContext.userType))
+        .collection("accounts")
+        .doc(userDataContext.email)
+        .onSnapshot((snapshot) => {
+          if (snapshot.exists) {
+            if ("followingArray" in snapshot.data()) {
+              // console.log("In followingArray");
+              // console.log(snapshot.data().followingArray);
+              setCurrentUserFollowingArray(snapshot.data().followingArray);
+            }
+            if ("followersArray" in snapshot.data()) {
+              // console.log("In followers array");
+              // console.log(snapshot.data().followersArray);
+              setCurrentUserFollowersArray(snapshot.data().followersArray);
+            }
+          }
+        });
+
+      // .get();
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // useEffect(() => {
+  //   listenRealTimePostUpdate();
+  // });
+  useEffect(async () => {
+    await getUsersData();
+    // await getLoggedInUserFollowRequestSentArray();
+    // await getLoggedInUserFollowAndFollowingArray();
+  }, []);
 
   return (
     <View style={styles.mainContainerStyle}>
@@ -136,9 +220,15 @@ const OtherUsersProfile = ({ route }) => {
         profileData={{ ...otherUserData }}
         editButtonHandle={() => setModalVisibility(true)}
         isItOtherUser={true}
+        followRequestsSentArray={followRequestsSentArray}
+        currentUserFollowersArray={[]}
+        // currentUserFollowingArray={currentUserFollowingArray}
       />
-      <PostsListContainer userData={{ ...otherUserData }}
-        isItOtherUser={true} />
+      <PostsListContainer
+        userData={{ ...otherUserData }}
+        allPosts={listOfAllPosts}
+        isItOtherUser={true}
+      />
     </View>
   );
 };

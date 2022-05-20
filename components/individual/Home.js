@@ -79,7 +79,7 @@ export default function HomeScreen() {
       for (each of res.data) {
         //setData(each);
         for (eachInEach of each) {
-          console.log(eachInEach);
+          // console.log(eachInEach);
           const retArray = {
             id: eachInEach.postId,
             postUserName: eachInEach.name,

@@ -206,7 +206,11 @@ const IndividualUserPostUpload = () => {
             <TouchableNativeFeedback onPress={pickImage}>
               <Image
                 style={styles.postImageStyle}
-                source={image ? { uri: image } : {}}
+                source={
+                  image
+                    ? { uri: image }
+                    : require("../../static/images/camera1.jpeg")
+                }
               />
             </TouchableNativeFeedback>
           </View>
@@ -289,7 +293,7 @@ const IndividualUserPostUpload = () => {
                     : styles.radioButtonUncheckedTextStyle
                 }
               >
-                Re-shelter
+                Impound
               </Text>
             </View>
             <View style={styles.radioButtonAndTextViewStyle}>

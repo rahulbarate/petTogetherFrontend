@@ -181,10 +181,9 @@ const OrganizationPostUpload = () => {
 
     const response = await sendRequestToServer("/profile/uploadPost", postData);
     if (response.success) {
-      ToastAndroid.show("Post uploaded " ,ToastAndroid.SHORT);
+      ToastAndroid.show("Post uploaded ", ToastAndroid.SHORT);
       navigation.navigate("MainComponent");
     }
-    
   };
 
   const handleUploadButton = () => {
@@ -204,7 +203,11 @@ const OrganizationPostUpload = () => {
             <TouchableNativeFeedback onPress={pickImage}>
               <Image
                 style={styles.postImageStyle}
-                source={image ? { uri: image } : {}}
+                source={
+                  image
+                    ? { uri: image }
+                    : require("../../static/images/camera1.jpeg")
+                }
               />
             </TouchableNativeFeedback>
           </View>

@@ -19,13 +19,20 @@ import ProfileComponent from "../common/ProfileComponent";
 import PostsListContainer from "../common/PostsListContainer";
 // import EditShopOwnerDetails from "./EditShopOwnerDetails";
 import EditProfileComponent from "../common/EditProfileComponent";
+import getUserTypeDocString from "../hooks/getUserTypeDocString";
 
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
 const Profile = () => {
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
-  const [response, setResponse] = useState({});
+  // const [response, setResponse] = useState({});
+  // const [currentUserFollowingArray, setCurrentUserFollowingArray] = useState(
+  //   userDataContext.followingArray && userDataContext.followingArray
+  // );
+  // const [currentUserFollowersArray, setCurrentUserFollowersArray] = useState(
+  //   userDataContext.followersArray && userDataContext.followersArray
+  // );
   const data = [
     {
       key: "1",
@@ -122,6 +129,35 @@ const Profile = () => {
       alert(error);
     }
   };
+  const getLoggedInUserFollowAndFollowingArray = async () => {
+    try {
+      const result = await db
+        .collection("Users")
+        .doc(getUserTypeDocString(userDataContext.userType))
+        .collection("accounts")
+        .doc(userDataContext.email)
+        .get();
+      if (!result.exists) {
+        console.log("doc not found");
+      } else {
+        if ("followingArray" in result.data()) {
+          console.log(result.data());
+          setCurrentUserFollowingArray(result.data().followingArray);
+        }
+        if ("followersArray" in result.data()) {
+          setCurrentUserFollowersArray(result.data().followersArray);
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // useEffect(async () => {
+  //   // await getUsersData();
+  //   // await getLoggedInUserFollowRequestSentArray();
+  //   // getLoggedInUserFollowAndFollowingArray();
+  // }, []);
 
   return modalVisibility ? (
     <Modal
@@ -139,6 +175,9 @@ const Profile = () => {
         profileData={{ ...userDataContext }}
         editButtonHandle={() => setModalVisibility(true)}
         isItOtherUser={false}
+        followRequestsSentArray={[]}
+        currentUserFollowersArray={[]}
+        currentUserFollowingArray={[]}
       />
       <PostsListContainer
         userData={{ ...userDataContext }}

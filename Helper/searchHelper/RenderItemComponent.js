@@ -13,7 +13,7 @@ const RenderItemComponent = ({ item }) => {
     <TouchableOpacity onPress={handleItemClicked}>
       <View style={styles.conainer}>
         <Avatar
-          source={{ uri: item.profileImageLink }}
+          source={item.profileImageLink && { uri: item.profileImageLink }}
           size="giant"
           style={styles.profilePic}
         />

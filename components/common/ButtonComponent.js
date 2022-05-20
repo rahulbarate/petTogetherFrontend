@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View,TouchableNativeFeedback } from "react-native";
+import { StyleSheet, Text, View, TouchableNativeFeedback } from "react-native";
 import React from "react";
 
 const ButtonComponent = (props) => {
   return (
     <View>
       <TouchableNativeFeedback
+        disabled={props.makeButtonDisabled ? props.makeButtonDisabled : false}
         onPress={props.handleButton ? props.handleButton : null}
       >
         <View style={[styles.buttonStyle, props.buttonStyle]}>

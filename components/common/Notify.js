@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   TouchableNativeFeedback,
   Alert,
+  ScrollView,
 } from "react-native";
 import { db } from "../../firebase";
 import AuthContext from "../hooks/useAuth";
@@ -30,27 +31,48 @@ export default function NotifyScreen() {
     Alert.alert(`${item.name}'s request REJECTED`);
   }
 
-  const listenRealTime = () => {
-    db.collection("Users")
-      .doc(getUserTypeDocString(userDataContext.userType))
-      .collection("accounts")
-      .doc(userDataContext.email)
-      .onSnapshot((snapshot) => {
-        // const data = snapshot.data();
-        if (snapshot.data().notification) {
-          const notificationHistory = snapshot.data().notification;
-          setNotifications([...notificationHistory]);
-        }
-        // console.log(notificationHistory);
+  const listenRealTime = async () => {
+    try {
+      db.collection("Users")
+        .doc(getUserTypeDocString(userDataContext.userType))
+        .collection("accounts")
+        .doc(userDataContext.email)
+        .onSnapshot((snapshot) => {
+          // const data = snapshot.data();
+          if (snapshot.exists && "notification" in snapshot.data()) {
+            const notificationHistory = snapshot.data().notification;
+            // console.log(notificationHistory);
+            setNotifications([...notificationHistory]);
+            // console.log("here");
+            // if () {
+            // }
+          } else {
+            // console.log("does not exist");
+            setNotifications([]);
+          }
+          // console.log(notificationHistory);
 
-        // for (let each of notificationHistory) {
-        //   setNotifications((previous) => [...previous, each]);
-        // }
-      });
+          // for (let each of notificationHistory) {
+          //   setNotifications((previous) => [...previous, each]);
+          // }
+        });
+    } catch (error) {
+      console.log("listenRealTimelog: " + error.message);
+    }
   };
   useEffect(() => {
     listenRealTime();
   }, []);
+  useEffect(() => {
+    if (notifications.length !== 0) {
+      let arrayToSort = notifications;
+      arrayToSort.sort((a, b) => {
+        return b.sendTime - a.sendTime;
+      });
+      arrayToSort = arrayToSort.reverse();
+      setNotifications(arrayToSort);
+    }
+  }, [notifications]);
 
   const getIndividualUsersData = async (email) => {
     const result = await sendRequestToServer("/profile/fetchUserDetails", {
@@ -92,7 +114,7 @@ export default function NotifyScreen() {
     else return true;
   };
 
-  const updateWholeArray = async (updatedRequestData, index) => {
+  const updateWholeArrayForPost = async (updatedRequestData, index) => {
     const updatedArray = [
       ...notifications.slice(0, index),
       ...notifications.slice(index + 1, notifications.length),
@@ -109,6 +131,10 @@ export default function NotifyScreen() {
       console.log(error.message);
     }
   };
+
+  // const updateWholeArrayForFollowRequest = async (index)=>{
+  //   // const updatedArray =[...]
+  // }
   const profile = [
     {
       id: 1,
@@ -133,24 +159,53 @@ export default function NotifyScreen() {
   ];
 
   const oneProfile = ({ item, index }) => {
-    return (
-      <NotificationCard
-        item={item}
-        updateWholeArray={updateWholeArray}
-        index={index}
-      />
-    );
+    // console.log("in the oneProfile " + item);
+    if (item.notificationType !== "noNotifications") {
+      return (
+        <NotificationCard
+          item={item}
+          updateWholeArrayForPost={updateWholeArrayForPost}
+          index={index}
+        />
+      );
+    } else {
+      // console.log("here i am");
+      return (
+        <View>
+          <Text>No Notifications</Text>
+        </View>
+      );
+    }
   };
   const itemSeparator = () => {
     return <View style={styles.separator}></View>;
   };
+  // console.log(notifications);
 
   return (
     <SafeAreaView>
+      {/* <ScrollView>
+        {notifications.length !== 0 ? (
+          notifications.map((item, index) => {
+            // console.log(here);
+            return (
+              <NotificationCard
+                item={item}
+                updateWholeArrayForPost={updateWholeArrayForPost}
+                index={index}
+              />
+            );
+          })
+        ) : (
+          <View>
+            <Text>No Notifications</Text>
+          </View>
+        )}
+      </ScrollView> */}
       <FlatList
         data={notifications}
         renderItem={oneProfile}
-        keyExtractor={(item, index) => index}
+        keyExtractor={(item, index) => index.toString()}
       />
     </SafeAreaView>
   );

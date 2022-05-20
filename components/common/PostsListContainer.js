@@ -8,6 +8,7 @@ import {
   Dimensions,
   Image,
   TouchableNativeFeedback,
+  ImageBackground,
 } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import AuthContext from "../hooks/useAuth";
@@ -20,7 +21,7 @@ import { useNavigation } from "@react-navigation/native";
 import getUserTypeDocString from "../hooks/getUserTypeDocString";
 import { Spinner } from "@ui-kitten/components";
 
-const PostsListContainer = ({ userData, isItOtherUser }) => {
+const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
   const navigation = useNavigation();
   const [listOfAllPosts, setListOfAllPosts] = useState([]);
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
@@ -45,7 +46,7 @@ const PostsListContainer = ({ userData, isItOtherUser }) => {
         }
       });
   };
-  
+
   const formatData = (data, numColumns) => {
     const numOfFullRows = Math.floor(data.length / numColumns);
     let numElementsInLastRow = data.length - numColumns * numOfFullRows;
@@ -82,6 +83,22 @@ const PostsListContainer = ({ userData, isItOtherUser }) => {
   };
   const renderCardItem = ({ item, index }) => {
     if (item.postImageLink) {
+      const postTypeTextString =
+        item.postType === "casual"
+          ? "Casual"
+          : item.postType === "petSellPost" && !item.userWhoBought
+          ? "Up for sell"
+          : item.postType === "reshelter" && !item.organizationWhoResheltered
+          ? "Up for impounding"
+          : item.postType === "petForAdoption" && !item.userWhoAdopted
+          ? "Up for adoption"
+          : item.postType === "breedPost"
+          ? "Up for  breeding"
+          : item.userWhoBought
+          ? "Sold"
+          : item.organizationWhoResheltered
+          ? "Impounded"
+          : "Adopted";
       return (
         <TouchableNativeFeedback
           onPress={() => {
@@ -94,10 +111,33 @@ const PostsListContainer = ({ userData, isItOtherUser }) => {
         >
           <View style={styles.postCardStyle}>
             <LoadingSpinner />
-            <Image
+            <ImageBackground
               style={styles.postImageStyle}
               source={{ uri: item.postImageLink }}
-            />
+            >
+              <View
+                style={{
+                  backgroundColor: "white",
+                  borderBottomWidth: 0.8,
+                  marginLeft: 5,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 18 }}>{postTypeTextString}</Text>
+              </View>
+              <View
+                style={{
+                  backgroundColor: "white",
+                  borderTopWidth: 0.8,
+                  marginLeft: 5,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 18 }}>{item.petName}</Text>
+              </View>
+            </ImageBackground>
           </View>
         </TouchableNativeFeedback>
       );
@@ -135,7 +175,7 @@ const PostsListContainer = ({ userData, isItOtherUser }) => {
         <FlatList
           data={listOfAllPosts}
           renderItem={renderCardItem}
-          numColumns={3}
+          numColumns={2}
           style={{ width: Dimensions.get("window").width }}
           keyExtractor={(item, index) => index.toString()}
         />
@@ -199,27 +239,10 @@ const styles = StyleSheet.create({
     opacity: 0.4,
     marginHorizontal: "10%",
   },
-  postCardStyle: {
-    // flex: 1,
-    width: Dimensions.get("window").width / 3 - 15,
-    height: Dimensions.get("window").width / 3 - 15,
-    elevation: 3,
-    borderRadius: 30,
-    shadowOffset: { width: 5, height: 5 },
-    shadowColor: "black",
-    shadowOpacity: 0.3,
-    marginHorizontal: "2%",
-    marginVertical: "2%",
-    // elevation: 3,
-    // background color must be set
-    backgroundColor: "#0000",
-    // backgroundColor: "orange",
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
   transparentCard: {
-    width: Dimensions.get("window").width / 3 - 15,
-    height: Dimensions.get("window").width / 3 - 15,
+    width: Dimensions.get("window").width / 2 - 15,
+    height: Dimensions.get("window").width / 2 - 15,
     margin: 5,
     justifyContent: "center",
     alignItems: "center",
@@ -227,13 +250,35 @@ const styles = StyleSheet.create({
   postScrollViewStyle: {
     alignItems: "flex-start",
   },
+  postCardStyle: {
+    // flex: 1,
+    width: Dimensions.get("window").width / 2 - 15,
+    height: Dimensions.get("window").width / 2 - 15,
+    borderRadius: 20,
+    marginHorizontal: "2%",
+    marginVertical: "2%",
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 3,
+    // borderWidth:2,
+    shadowOffset: { width: 5, height: 5 },
+    shadowColor: "black",
+    shadowOpacity: 0.3,
+    // elevation: 3,
+    // background color must be set
+    // backgroundColor: "#0000",
+    // backgroundColor: "orange",
+  },
   postImageStyle: {
+    // borderWidth:2,
+    overflow: "hidden",
     // flex: 1,
     position: "absolute",
     zIndex: 2,
-    width: Dimensions.get("window").width / 3 - 15,
-    height: Dimensions.get("window").width / 3 - 15,
-    borderRadius: 30,
+    width: Dimensions.get("window").width / 2 - 15,
+    height: Dimensions.get("window").width / 2 - 15,
+    justifyContent: "space-between",
+    borderRadius: 20,
   },
   postViewStyle: {
     flex: 1,

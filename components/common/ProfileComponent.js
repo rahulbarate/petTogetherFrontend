@@ -19,160 +19,155 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { storage } from "../../firebase";
+import { db, Firestore, storage } from "../../firebase";
 import { localhostBaseURL } from "../common/baseURLs";
 import ButtonComponent from "./ButtonComponent";
 import { useNavigation } from "@react-navigation/native";
+import getUserTypeDocString from "../hooks/getUserTypeDocString";
+import AuthContext from "../hooks/useAuth";
+import FollowersFollowingList from "./FollowersFollowingList";
+import Modal from "react-native-modal";
 // import * as firebase from "firebase/compat/app";
 
-const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
+const ProfileComponent = ({
+  profileData,
+  editButtonHandle,
+  isItOtherUser,
+  followRequestsSentArray,
+  // currentUserFollowingArray,
+  // currentUserFollowersArray,
+}) => {
   // console.log(profileData.name + "=>" + profileData.profileImageLink + "|");
   const navigation = useNavigation();
+  const { userDataContext, setUserDataContext } = useContext(AuthContext);
+  const [modalVisibility, setModalVisibility] = useState(false);
+  const [whoseListIsPassed, setWhoseListIsPassed] = useState();
+  const [followersOrFollowingsArray, setFollowersOrFollowingsArray] = useState(
+    []
+  );
+  // const [followRequestsSent, setFollowRequestsSent] = useState(
+  //   followRequestsSentArray
+  // );
+  const [followButtonText, setFollowButtonText] = useState("Loading");
   const displayToastMessage = (text) => {
     ToastAndroid.show(text, ToastAndroid.SHORT);
   };
-  //   console.log(profileData.profileImageLink);
-  //   const { userDataContext, setUserDataContext } = useContext(AuthContext);
 
   const [image, setImage] = useState(profileData.profileImageLink);
-  //   ? profileData.profileImageLink
-  //   : "https://images.unsplash.com/photo-1497124401559-3e75ec2ed794?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-  //   );
-  //   const storage = getStorage();
-  //   const metadata = {
-  //     contentType: "image/jpeg",
-  //   };
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    // console.log(result);
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-      uploadImage();
-    }
-  };
-  const sendUpdateRequestToServer = async (url) => {
-    // console.log(url);
-    //   console.log("in the server req");
+  //remove Current User From Followers Of Other User
+  const unfollowOtherUser = async () => {
     try {
-      const res = await localhostBaseURL.post("/profile/updateUserProfile", {
-        userData: { ...profileData, profileImageLink: url },
-      });
+      db.collection("Users")
+        .doc(getUserTypeDocString(profileData.userType))
+        .collection("accounts")
+        .doc(profileData.email)
+        .update({
+          followersArray: Firestore.FieldValue.arrayRemove(
+            userDataContext.email
+          ),
+        });
 
-      if (res.data.success) {
-        displayToastMessage("Profile Pic Updated");
-        // setIsDataChanged(false);
-      }
-      // setUserDataContext(res.data);
-    } catch (error) {
-      alert(error);
+      db.collection("Users")
+        .doc(getUserTypeDocString(userDataContext.userType))
+        .collection("accounts")
+        .doc(userDataContext.email)
+        .update({
+          followingArray: Firestore.FieldValue.arrayRemove(profileData.email),
+        });
+    } catch (err) {
+      console.log(err);
     }
   };
 
-  const uploadImage = async () => {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = () => {
-        resolve(xhr.response);
-      };
-      xhr.onerror = () => {
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", image, true);
-      xhr.send(null);
-    });
-
-    const storageRef = storage.ref().child(new Date().toISOString() + ".jpeg");
-    const uploadTask = storageRef.put(blob);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-        }
-      },
-      (error) => {
-        switch (error.code) {
-          case "storage/unauthorized":
-            break;
-          case "storage/canceled":
-            break;
-          case "storage/unknown":
-            break;
-        }
-        blob.close();
-        return;
-      },
-      () => {
-        uploadTask.snapshot.ref.getDownloadURL().then((url) => {
-          //   console.log("File available at", url);
-          sendUpdateRequestToServer(url);
-          blob.close();
+  //send follow request method
+  const sendFollowRequestToOtherUser = async () => {
+    try {
+      await db
+        .collection("Users")
+        .doc(getUserTypeDocString(profileData.userType))
+        .collection("accounts")
+        .doc(profileData.email)
+        .update({
+          notification: Firestore.FieldValue.arrayUnion({
+            notificationType: "followRequest",
+            userType: userDataContext.userType,
+            userId: userDataContext.email,
+            name: userDataContext.name,
+            profileImageLink: userDataContext.profileImageLink,
+            requestStatus: "waiting",
+          }),
         });
-      }
-    );
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+  //adding data in our follow request sent
+  const addDataInFollowRequestSentArray = async () => {
+    try {
+      await db
+        .collection("Users")
+        .doc(getUserTypeDocString(userDataContext.userType))
+        .collection("accounts")
+        .doc(userDataContext.email)
+        .update({
+          followRequestsSentArray: Firestore.FieldValue.arrayUnion(
+            profileData.email
+          ),
+        });
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
-  return (
+  //handle follow Button
+  const handleFollowButton = async () => {
+    if (followButtonText === "Follow") {
+      setFollowButtonText("Request sent");
+      sendFollowRequestToOtherUser();
+      addDataInFollowRequestSentArray();
+    } else if (followButtonText === "Following") {
+      setFollowButtonText("Follow");
+      await unfollowOtherUser();
+    }
+  };
+
+  useEffect(() => {
+    if (followRequestsSentArray.length !== 0) {
+      // console.log(followRequestsSentArray);
+      if (followRequestsSentArray.includes(profileData.email))
+        setFollowButtonText("Request sent");
+      // else {
+      // }
+    }
+    if ("followingArray" in userDataContext) {
+      if (userDataContext.followingArray.includes(profileData.email))
+        setFollowButtonText("Following");
+      else {
+        setFollowButtonText("Follow");
+      }
+    }
+  }, [followRequestsSentArray]);
+
+  return modalVisibility ? (
+    <View style={styles.container1Style}>
+      <Modal
+        isVisible={modalVisibility}
+        style={styles.modalStyle}
+        onSwipeComplete={() => setModalVisibility(false)}
+        onBackButtonPress={() => setModalVisibility(false)}
+        swipeDirection="down"
+      >
+        <FollowersFollowingList
+          whoseListIsPassed={whoseListIsPassed}
+          followersOrFollowingsArray={followersOrFollowingsArray}
+        />
+      </Modal>
+    </View>
+  ) : (
     <View style={styles.container1Style}>
       {isItOtherUser ? (
         <View style={styles.container1Sub1Style}>
-          <View style={styles.profilePictureViewStyle}>
-            <TouchableNativeFeedback>
-              <Image
-                style={styles.profileImageStyle}
-                source={{
-                  uri: profileData.profileImageLink,
-                }}
-              />
-            </TouchableNativeFeedback>
-          </View>
-          <View style={styles.followerFollowingContainerStyle}>
-            <Text style={styles.followNoTextStyle}>
-              {"noOfFollowers" in profileData ? profileData.noOfFollowers : ""}
-            </Text>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              {"noOfFollowers" in profileData ? "Followers" : ""}
-            </Text>
-          </View>
-          <View style={styles.followerFollowingContainerStyle}>
-            <Text style={styles.followNoTextStyle}>
-              {"noOfFollowings" in profileData
-                ? profileData.noOfFollowings
-                : ""}
-            </Text>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              {"noOfFollowings" in profileData ? "Followings" : ""}
-            </Text>
-          </View>
-        </View>
-      ) : (
-        <View style={styles.container1Sub1Style}>
-          <View style={styles.followerFollowingContainerStyle}>
-            <Text style={styles.followNoTextStyle}>
-              {"noOfFollowers" in profileData ? profileData.noOfFollowers : ""}
-            </Text>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              {"noOfFollowers" in profileData ? "Followers" : ""}
-            </Text>
-          </View>
           <View style={styles.profilePictureViewStyle}>
             <TouchableNativeFeedback>
               <ImageBackground
@@ -191,16 +186,99 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
               </ImageBackground>
             </TouchableNativeFeedback>
           </View>
-          <View style={styles.followerFollowingContainerStyle}>
-            <Text style={styles.followNoTextStyle}>
-              {"noOfFollowings" in profileData
-                ? profileData.noOfFollowings
-                : ""}
-            </Text>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              {"noOfFollowings" in profileData ? "Followings" : ""}
-            </Text>
+          <TouchableNativeFeedback
+            onPress={() => {
+              setWhoseListIsPassed("followers");
+              setFollowersOrFollowingsArray(profileData.followersArray);
+              setModalVisibility(true);
+            }}
+          >
+            <View style={styles.followerFollowingContainerStyle}>
+              <Text style={styles.followNoTextStyle}>
+                {"followersArray" in profileData
+                  ? profileData.followersArray.length
+                  : "0"}
+              </Text>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                {"followersArray" in profileData ? "Followers" : ""}
+              </Text>
+            </View>
+          </TouchableNativeFeedback>
+          <TouchableNativeFeedback
+            onPress={() => {
+              setWhoseListIsPassed("followings");
+              setFollowersOrFollowingsArray(profileData.followingArray);
+              setModalVisibility(true);
+            }}
+          >
+            <View style={styles.followerFollowingContainerStyle}>
+              <Text style={styles.followNoTextStyle}>
+                {"followingArray" in profileData
+                  ? profileData.followingArray.length
+                  : "0"}
+              </Text>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                {"followingArray" in profileData ? "Followings" : ""}
+              </Text>
+            </View>
+          </TouchableNativeFeedback>
+        </View>
+      ) : (
+        <View style={styles.container1Sub1Style}>
+          <TouchableNativeFeedback
+            onPress={() => {
+              setWhoseListIsPassed("followers");
+              setFollowersOrFollowingsArray(profileData.followersArray);
+              setModalVisibility(true);
+            }}
+          >
+            <View style={styles.followerFollowingContainerStyle}>
+              <Text style={styles.followNoTextStyle}>
+                {"followersArray" in profileData
+                  ? profileData.followersArray.length
+                  : "0"}
+              </Text>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                {"followersArray" in profileData ? "Followers" : ""}
+              </Text>
+            </View>
+          </TouchableNativeFeedback>
+          <View style={styles.profilePictureViewStyle}>
+            <TouchableNativeFeedback>
+              <ImageBackground
+                style={styles.profilePictureViewStyle}
+                source={require("../../static/images/blankProfilePicture.png")}
+                imageStyle={styles.profileImageStyle}
+              >
+                <Image
+                  style={styles.profileImageStyle}
+                  source={
+                    profileData.profileImageLink && {
+                      uri: profileData.profileImageLink,
+                    }
+                  }
+                />
+              </ImageBackground>
+            </TouchableNativeFeedback>
           </View>
+          <TouchableNativeFeedback
+            onPress={() => {
+              setWhoseListIsPassed("followings");
+              setFollowersOrFollowingsArray(profileData.followingArray);
+              setModalVisibility(true);
+            }}
+          >
+            <View style={styles.followerFollowingContainerStyle}>
+              <Text style={styles.followNoTextStyle}>
+                {"followingArray" in profileData
+                  ? profileData.followingArray.length
+                  : "0"}
+              </Text>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                {"followingArray" in profileData ? "Followings" : ""}
+              </Text>
+            </View>
+          </TouchableNativeFeedback>
         </View>
       )}
       <View>
@@ -233,8 +311,19 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
                   height: 30,
                   marginHorizontal: "2%",
                   borderRadius: 20,
+                  backgroundColor:
+                    followButtonText !== "Follow" ? "#A9A9A9" : "#3399ff",
                 }}
-                buttonText={"Follow"}
+                makeButtonDisabled={
+                  followButtonText === "Request sent" ||
+                  followButtonText === "Loading"
+                    ? true
+                    : false
+                }
+                buttonText={followButtonText}
+                handleButton={() => {
+                  handleFollowButton();
+                }}
               />
               <ButtonComponent
                 buttonStyle={{
@@ -290,6 +379,11 @@ const ProfileComponent = ({ profileData, editButtonHandle, isItOtherUser }) => {
 export default ProfileComponent;
 
 const styles = StyleSheet.create({
+  modalStyle: {
+    margin: 0,
+    marginTop: "15%",
+    borderRadius: 30,
+  },
   container1Style: {
     justifyContent: "center",
     alignItems: "center",
