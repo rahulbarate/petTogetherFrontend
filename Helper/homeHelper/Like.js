@@ -59,6 +59,7 @@ const Like = (props) => {
           );
         }}
         color={isLiked ? "red" : "black"}
+        style={props.buttonStyle ? props.buttonStyle : {}}
       >
         {likes.length > 0 && <Text>{likes.length}</Text>}
       </Button>

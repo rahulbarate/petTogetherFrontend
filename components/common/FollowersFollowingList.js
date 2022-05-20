@@ -53,12 +53,14 @@ const FollowersFollowingList = (props) => {
   const renderCardItem = ({ item, index }) => {
     return <UserDetailsCard item={item} index={index} />;
   };
-  const [modalVisibility, setModalVisibility] = useState(props.modalVisibility);
+  // const [modalVisibility, setModalVisibility] = useState(props.modalVisibility);
   return (
     <View style={styles.mainContainerStyle}>
       <Text style={{ fontSize: 25, marginBottom: 50, marginTop: 20 }}>
         {props.whoseListIsPassed === "followers"
           ? "These people follows you"
+          : props.whoseListIsPassed === "userWhoLikedIds"
+          ? "List of user liked this post"
           : "You follow these people"}
       </Text>
       <FlatList

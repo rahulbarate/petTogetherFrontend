@@ -27,10 +27,12 @@ import getUserTypeDocString from "../hooks/getUserTypeDocString";
 import AuthContext from "../hooks/useAuth";
 import FollowersFollowingList from "./FollowersFollowingList";
 import Modal from "react-native-modal";
+import sendRequestToServer from "../hooks/sendRequestToServer";
 // import * as firebase from "firebase/compat/app";
 
 const ProfileComponent = ({
-  profileData,
+  profileEmail,
+  profileType,
   editButtonHandle,
   isItOtherUser,
   followRequestsSentArray,
@@ -38,27 +40,61 @@ const ProfileComponent = ({
   // currentUserFollowersArray,
 }) => {
   // console.log(profileData.name + "=>" + profileData.profileImageLink + "|");
+  // console.log(profileDataToBeSent);
   const navigation = useNavigation();
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
+  const [profileData, setProfileData] = useState({});
+  const [currentUserData, setCurrentUserData] = useState({});
   const [modalVisibility, setModalVisibility] = useState(false);
   const [whoseListIsPassed, setWhoseListIsPassed] = useState();
   const [followersOrFollowingsArray, setFollowersOrFollowingsArray] = useState(
     []
   );
+  const [followButtonText, setFollowButtonText] = useState("Loading");
+  // const [image, setImage] = useState(profileData.profileImageLink);
+  // const [currentUserFollowingArray, setCurrentUserFollowingArray] = useState(
+  //   []
+  // );
   // const [followRequestsSent, setFollowRequestsSent] = useState(
   //   followRequestsSentArray
   // );
-  const [followButtonText, setFollowButtonText] = useState("Loading");
-  const displayToastMessage = (text) => {
-    ToastAndroid.show(text, ToastAndroid.SHORT);
+  // const displayToastMessage = (text) => {
+  //   ToastAndroid.show(text, ToastAndroid.SHORT);
+  // };
+  const fetchLatestData = () => {
+    db.collection("Users")
+      .doc(getUserTypeDocString(profileType))
+      .collection("accounts")
+      .doc(profileEmail)
+      .onSnapshot((snapshot) => {
+        if (snapshot.exists) {
+          setProfileData(snapshot.data());
+        }
+      });
+  };
+  const fetchCurrentUserLatestData = () => {
+    db.collection("Users")
+      .doc(getUserTypeDocString(userDataContext.userType))
+      .collection("accounts")
+      .doc(userDataContext.email)
+      .onSnapshot((snapshot) => {
+        if (snapshot.exists) {
+          // console.log(snapshot.data());
+          setCurrentUserData(snapshot.data());
+        }
+      });
   };
 
-  const [image, setImage] = useState(profileData.profileImageLink);
+  useEffect(() => {
+    fetchLatestData();
+    fetchCurrentUserLatestData();
+  }, [profileEmail]);
 
   //remove Current User From Followers Of Other User
   const unfollowOtherUser = async () => {
     try {
-      db.collection("Users")
+      await db
+        .collection("Users")
         .doc(getUserTypeDocString(profileData.userType))
         .collection("accounts")
         .doc(profileData.email)
@@ -68,12 +104,23 @@ const ProfileComponent = ({
           ),
         });
 
-      db.collection("Users")
+      await db
+        .collection("Users")
         .doc(getUserTypeDocString(userDataContext.userType))
         .collection("accounts")
         .doc(userDataContext.email)
         .update({
           followingArray: Firestore.FieldValue.arrayRemove(profileData.email),
+        });
+      await db
+        .collection("Users")
+        .doc(getUserTypeDocString(userDataContext.userType))
+        .collection("accounts")
+        .doc(userDataContext.email)
+        .update({
+          followRequestsSentArray: Firestore.FieldValue.arrayRemove(
+            profileData.email
+          ),
         });
     } catch (err) {
       console.log(err);
@@ -96,6 +143,7 @@ const ProfileComponent = ({
             name: userDataContext.name,
             profileImageLink: userDataContext.profileImageLink,
             requestStatus: "waiting",
+            sendTime: new Date(),
           }),
         });
     } catch (err) {
@@ -132,22 +180,69 @@ const ProfileComponent = ({
     }
   };
 
+  const checkObjectAreEqualOrNot = (oldUserData, newUserData) => {
+    if (
+      oldUserData.name === newUserData.name &&
+      oldUserData.bio === newUserData.bio &&
+      oldUserData.profileImageLink === newUserData.profileImageLink &&
+      oldUserData.followingArray.length === newUserData.followingArray.length &&
+      oldUserData.followersArray.length === newUserData.followersArray.length
+    ) {
+      return true;
+    } else return false;
+  };
+  const listenRealTimeProfileChanges = async () => {
+    await db
+      .collection("Users")
+      .doc(getUserTypeDocString(profileData.userType))
+      .collection("accounts")
+      .doc(profileData.email)
+      .onSnapshot((snapshot) => {
+        if (snapshot.exists) {
+          if (checkObjectAreEqualOrNot(profileData, snapshot.data())) {
+            setProfileData(snapshot.data());
+          }
+        }
+      });
+  };
+
+  // useEffect(() => {
+  //   listenRealTimeProfileChanges();
+  // });
+
+  // const getCurrentUserFollowingArr
   useEffect(() => {
-    if (followRequestsSentArray.length !== 0) {
-      // console.log(followRequestsSentArray);
-      if (followRequestsSentArray.includes(profileData.email))
+    if (isItOtherUser) {
+      // console.log(userDataContext.followRequestsSentArray);
+      if (
+        "followRequestsSentArray" in currentUserData &&
+        currentUserData.followRequestsSentArray.length !== 0 &&
+        currentUserData.followRequestsSentArray.includes(profileData.email)
+      ) {
+        // console.log("here1");
         setFollowButtonText("Request sent");
-      // else {
-      // }
-    }
-    if ("followingArray" in userDataContext) {
-      if (userDataContext.followingArray.includes(profileData.email))
+      } else if (
+        "followersArray" in profileData &&
+        profileData.followersArray.length !== 0 &&
+        profileData.followersArray.includes(userDataContext.email)
+      ) {
+        // console.log("here2");
         setFollowButtonText("Following");
-      else {
+      } else {
+        // console.log("here3");
         setFollowButtonText("Follow");
       }
     }
-  }, [followRequestsSentArray]);
+  });
+
+  // useEffect(async () => {``
+  //   const result = await sendRequestToServer("profile/fetchUserDetails", {
+  //     email: profileData.email,
+  //   });
+  //   if (result.followingArray.length !== 0) {
+  //     setCurrentUserFollowingArray(result.followingArray);
+  //   }
+  // }, [followButtonText]);
 
   return modalVisibility ? (
     <View style={styles.container1Style}>
@@ -197,7 +292,7 @@ const ProfileComponent = ({
               <Text style={styles.followNoTextStyle}>
                 {"followersArray" in profileData
                   ? profileData.followersArray.length
-                  : "0"}
+                  : ""}
               </Text>
               <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                 {"followersArray" in profileData ? "Followers" : ""}
@@ -215,7 +310,7 @@ const ProfileComponent = ({
               <Text style={styles.followNoTextStyle}>
                 {"followingArray" in profileData
                   ? profileData.followingArray.length
-                  : "0"}
+                  : ""}
               </Text>
               <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                 {"followingArray" in profileData ? "Followings" : ""}
@@ -236,7 +331,7 @@ const ProfileComponent = ({
               <Text style={styles.followNoTextStyle}>
                 {"followersArray" in profileData
                   ? profileData.followersArray.length
-                  : "0"}
+                  : ""}
               </Text>
               <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                 {"followersArray" in profileData ? "Followers" : ""}
@@ -272,7 +367,7 @@ const ProfileComponent = ({
               <Text style={styles.followNoTextStyle}>
                 {"followingArray" in profileData
                   ? profileData.followingArray.length
-                  : "0"}
+                  : ""}
               </Text>
               <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                 {"followingArray" in profileData ? "Followings" : ""}

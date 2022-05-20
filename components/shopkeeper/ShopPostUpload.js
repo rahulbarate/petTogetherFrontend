@@ -351,7 +351,7 @@ const ShopPostUpload = () => {
                     borderWidth: 2,
                     borderRadius: 25,
                   }}
-                  placeholder="Choose pet type"
+                  placeholder="Product type"
                   onChangeValue={(text) => {
                     setProductCategory(text);
                   }}

@@ -26,6 +26,7 @@ LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
 const OtherUsersProfile = ({ route }) => {
+  // console.log(pro);
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
   const [otherUserData, setOtherUserData] = useState();
   const [listOfAllPosts, setListOfAllPosts] = useState();
@@ -37,7 +38,7 @@ const OtherUsersProfile = ({ route }) => {
     []
   );
   // const {usersEmail,setUsersEmail} = useState(route.email);
-  const { clickedUsersEmail } = route.params;
+  const { clickedUsersEmail,clickedUsersType } = route.params;
 
   // const [response, setResponse] = useState({});
   const data = [
@@ -218,6 +219,8 @@ const OtherUsersProfile = ({ route }) => {
     <View style={styles.mainContainerStyle}>
       <ProfileComponent
         profileData={{ ...otherUserData }}
+        profileEmail={clickedUsersEmail}
+        profileType={clickedUsersType}
         editButtonHandle={() => setModalVisibility(true)}
         isItOtherUser={true}
         followRequestsSentArray={followRequestsSentArray}

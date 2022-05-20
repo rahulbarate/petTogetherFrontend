@@ -14,18 +14,21 @@ import {
 } from "react-native";
 import { db } from "../../firebase";
 import AuthContext from "../hooks/useAuth";
+import sendRequestToServer from "../hooks/sendRequestToServer";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import NotificationCard from "./NotificationCard";
+import getUserTypeDocString from "../hooks/getUserTypeDocString";
+
 export default function NotifyScreen() {
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
-  const [buyRequestIds, setBuyRequestIds] = useState([
-    { id: 100, email: "jhon@gmail.com" },
-  ]);
+  const [notifications, setNotifications] = useState([]);
 
-  function myButton(email) {
-    Alert.alert(`${email}'s request accepted`);
+  function acceptButtonHandle(item) {
+    Alert.alert(`${item.name}'s request accepted`);
   }
 
-  function myButton2(email) {
-    Alert.alert(`${email}'s request REJECTED`);
+  function rejectButtonHandle(item) {
+    Alert.alert(`${item.name}'s request REJECTED`);
   }
 
   const listenRealTime = async () => {
@@ -61,14 +64,20 @@ export default function NotifyScreen() {
     listenRealTime();
   }, []);
   useEffect(() => {
-    if (notifications.length !== 0) {
-      let arrayToSort = notifications;
-      arrayToSort.sort((a, b) => {
-        return b.sendTime - a.sendTime;
-      });
-      arrayToSort = arrayToSort.reverse();
-      setNotifications(arrayToSort);
-    }
+    notifications.sort((a, b) => {
+      if (a.sendTime < b.sendTime) return -1;
+      if (a.sendTime > b.sendTime) return 1;
+      return 0;
+      // return new Date(b.sendTime) - new Date(a.sendTime);
+    });
+    notifications.reverse();
+    // if (notifications.length !== 0) {
+    //   let arrayToSort = notifications;
+    //   arrayToSort.sort((a, b) => {
+    //     return new Date(b.sendTime) - new Date(a.sendTime);
+    //   });
+    //   arrayToSort = arrayToSort.reverse();
+    //   setNotifications(arrayToSort);
   }, [notifications]);
 
   const getIndividualUsersData = async (email) => {
@@ -200,7 +209,7 @@ export default function NotifyScreen() {
         )}
       </ScrollView> */}
       <FlatList
-        data={buyRequestIds}
+        data={notifications}
         renderItem={oneProfile}
         keyExtractor={(item, index) => index.toString()}
       />
@@ -228,22 +237,23 @@ const styles = StyleSheet.create({
   nameDescriptionStyle: {
     flex: 0.8,
     flexDirection: "column",
+    marginLeft: "2%",
     // backgroundColor:"white"
   },
   avatar: {
-    height: 55,
-    width: 55,
+    borderRadius: 60 / 2,
+    height: 60,
+    width: 60,
   },
   name: {
     fontWeight: "600",
-    fontSize: 16,
-    marginLeft: 13,
+    fontSize: 20,
   },
   avatarContainer: {
     backgroundColor: "#D9D9D9",
-    borderRadius: 100,
-    height: 89,
-    width: 89,
+    borderRadius: 60 / 2,
+    height: 60,
+    width: 60,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -261,15 +271,5 @@ const styles = StyleSheet.create({
     // paddingTop:ConstantSourceNode.statusBarHeight,
     backgroundColor: "#ecf0f1",
     padding: 8,
-  },
-  buttonStyle: {
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 3,
   },
 });

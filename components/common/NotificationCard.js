@@ -99,7 +99,7 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
       profileImageLink: userDataContext.profileImageLink,
       notificationType: `${item.notificationType}${status}`,
       requestStatus: status,
-      sendTime:new Date(),
+      sendTime: new Date(),
       postId: item.postId ? item.postId : "",
     };
     try {
@@ -291,14 +291,16 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
       <View style={styles.nameDescriptionStyle}>
         <Text style={styles.name}>{item.name}</Text>
         <Text>{getDescriptionString(item.notificationType)}</Text>
-        <Text>{"at "+moment(item.sendTime).calendar(null, formats)}</Text>
+        <Text>
+          {/* {"at " + moment(item.sendTime.toDate()).calendar(null, formats)} */}
+        </Text>
       </View>
       {isItRequest(item.notificationType) && (
         <View style={{ flexDirection: "row" }}>
           <View>
             <TouchableNativeFeedback
               disabled={
-                requestStatus === "accepted" || requestStatus === "rejected"
+                item.requestStatus === "accepted" || item.requestStatus === "rejected"
                   ? true
                   : false
               }
@@ -308,7 +310,7 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
             >
               <View
                 style={
-                  requestStatus === "accepted" || requestStatus === "rejected"
+                  item.requestStatus === "accepted" || item.requestStatus === "rejected"
                     ? { opacity: 0.1 }
                     : {}
                 }
@@ -320,7 +322,7 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
           <View>
             <TouchableNativeFeedback
               disabled={
-                requestStatus === "accepted" || requestStatus === "rejected"
+                item.requestStatus === "accepted" || item.requestStatus === "rejected"
                   ? true
                   : false
               }
@@ -330,7 +332,7 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
             >
               <View
                 style={
-                  requestStatus === "accepted" || requestStatus === "rejected"
+                  item.requestStatus === "accepted" || item.requestStatus === "rejected"
                     ? { opacity: 0.1 }
                     : {}
                 }
@@ -359,7 +361,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 5,
     marginHorizontal: 10,
-    marginVertical:2,
+    marginVertical: 2,
     borderRadius: 10,
     borderWidth: 1.5,
     paddingLeft: 5,

@@ -13,9 +13,19 @@ import getUserTypeDocString from "../hooks/getUserTypeDocString";
 import AuthContext from "../hooks/useAuth";
 import { useNavigation } from "@react-navigation/native";
 import { db } from "../../firebase";
+import Like from "../../Helper/homeHelper/Like";
+import { localhostBaseURL } from "./baseURLs";
+import Modal from "react-native-modal";
+import FollowersFollowingList from "./FollowersFollowingList";
 
 const SinglePostCard = ({ item, profileImageLink }) => {
+  // const navigation = useNavigation();
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
+  const [modalVisibility, setModalVisibility] = useState(false);
+  const [whoseListIsPassed, setWhoseListIsPassed] = useState("userWhoLikedIds");
+  const [followersOrFollowingsArray, setFollowersOrFollowingsArray] = useState(
+    item.userWhoLikedIds ? item.userWhoLikedIds : []
+  );
   const [markPostString, setMarkPostString] = useState(
     item.userWhoBought
       ? "Sold"
@@ -38,7 +48,18 @@ const SinglePostCard = ({ item, profileImageLink }) => {
       ? "Up for  breeding"
       : ""
   );
+  // const { userDataContext } = useContext(AuthContext);
+  const [likes, setLikes] = useState(
+    item.userWhoLikedIds ? item.userWhoLikedIds : []
+  );
+  const isLiked =
+    likes.length > 0 &&
+    likes.filter((like) => {
+      return like == userDataContext.email;
+    }).length > 0;
   const navigation = useNavigation();
+
+  // useEffect(() => {},[likes])
 
   //delete post function
   const deletePost = async (postId) => {
@@ -70,7 +91,78 @@ const SinglePostCard = ({ item, profileImageLink }) => {
     ]);
   };
 
-  return (
+  const handleComment = (item) => {
+    const dataForComment = {
+      postId: item.postId,
+      postUserEmail: item.userEmail,
+      postUserType: item.userType,
+      postComments: item.comments,
+    };
+    return navigation.navigate("Comment", dataForComment);
+  };
+  const handleLikeButton = (item) => {
+    if (item.userEmail === userDataContext.email) {
+      //display list
+      setModalVisibility(true);
+    } else {
+      //
+      setPostLike(
+        item.userEmail,
+        item.userType,
+        item.postId,
+        profileImageLink,
+        isLiked
+      );
+    }
+  };
+  const setPostLike = async (
+    postUserEmail,
+    postUserType,
+    postId,
+    profileImageLink,
+    isLiked
+  ) => {
+    try {
+      if (isLiked) {
+        setLikes((prev) =>
+          prev.filter((like) => like != userDataContext.email)
+        );
+      } else {
+        setLikes((prev) => [...prev, userDataContext.email]);
+      }
+      const res = await localhostBaseURL.post("/home/setPostLike", {
+        name: userDataContext.name,
+        notificationType: "like",
+        postId,
+        profileImageLink,
+        emailId: userDataContext.email,
+        userType: userDataContext.userType,
+        postUserType,
+        postUserEmail,
+        sendTime: new Date(),
+        isLiked,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return modalVisibility ? (
+    <View style={styles.container1Style}>
+      <Modal
+        isVisible={modalVisibility}
+        style={styles.modalStyle}
+        onSwipeComplete={() => setModalVisibility(false)}
+        onBackButtonPress={() => setModalVisibility(false)}
+        swipeDirection="down"
+      >
+        <FollowersFollowingList
+          whoseListIsPassed={whoseListIsPassed}
+          followersOrFollowingsArray={followersOrFollowingsArray}
+        />
+      </Modal>
+    </View>
+  ) : (
     <View style={styles.mainContainerStyle}>
       <View style={styles.postCardStyle}>
         <View style={styles.container1Style}>
@@ -114,14 +206,35 @@ const SinglePostCard = ({ item, profileImageLink }) => {
         </View>
         <View style={styles.container3Style}>
           <View style={styles.likeIconViewStyle}>
-            <TouchableNativeFeedback>
-              <View>
-                <Ionicons name={"heart-outline"} size={35} />
+            <TouchableNativeFeedback
+              onPress={() => {
+                handleLikeButton(item);
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicons
+                  name={"heart-outline"}
+                  size={35}
+                  color={isLiked ? "red" : "black"}
+                />
+                <Text style={{ fontSize: 20, marginBottom: 5 }}>
+                  {likes.length > 0 && likes.length}
+                </Text>
               </View>
             </TouchableNativeFeedback>
           </View>
           <View style={styles.commentIconViewStyle}>
-            <TouchableNativeFeedback>
+            <TouchableNativeFeedback
+              onPress={() => {
+                handleComment(item);
+              }}
+            >
               <View>
                 <Ionicons name={"chatbubble-outline"} size={30} />
               </View>
@@ -136,6 +249,16 @@ const SinglePostCard = ({ item, profileImageLink }) => {
 export default SinglePostCard;
 
 const styles = StyleSheet.create({
+  modalStyle: {
+    margin: 0,
+    marginTop: "15%",
+    borderRadius: 30,
+  },
+  container1Style: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: Dimensions.get("window").width,
+  },
   mainContainerStyle: {
     // flex: 1,
     justifyContent: "center",

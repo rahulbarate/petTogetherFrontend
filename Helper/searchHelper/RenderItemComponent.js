@@ -6,7 +6,10 @@ import { useNavigation } from "@react-navigation/native";
 const RenderItemComponent = ({ item }) => {
   const navigation = useNavigation();
   const handleItemClicked = () => {
-    navigation.navigate("OtherUsersProfile", { clickedUsersEmail: item.email });
+    navigation.navigate("OtherUsersProfile", {
+      clickedUsersEmail: item.email,
+      clickedUsersType: item.userType,
+    });
   };
 
   return (

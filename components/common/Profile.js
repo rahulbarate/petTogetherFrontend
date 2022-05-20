@@ -26,6 +26,7 @@ LogBox.ignoreAllLogs();
 
 const Profile = () => {
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
+  // console.log(userDataContext);
   // const [response, setResponse] = useState({});
   // const [currentUserFollowingArray, setCurrentUserFollowingArray] = useState(
   //   userDataContext.followingArray && userDataContext.followingArray
@@ -172,7 +173,9 @@ const Profile = () => {
   ) : (
     <View style={styles.mainContainerStyle}>
       <ProfileComponent
-        profileData={{ ...userDataContext }}
+        // profileData={{ ...userDataContext }}
+        profileEmail={userDataContext.email}
+        profileType={userDataContext.userType}
         editButtonHandle={() => setModalVisibility(true)}
         isItOtherUser={false}
         followRequestsSentArray={[]}

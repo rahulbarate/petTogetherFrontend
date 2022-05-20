@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, Component } from "react";
-import ModalDropdown from "react-native-modal-dropdown";
+// import ModalDropdown from "react-native-modal-dropdown";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { localhostBaseURL } from "../common/baseURLs";
 import {
@@ -15,6 +15,7 @@ import {
   Button as ReactButton,
   ShadowPropTypesIOS,
   TouchableOpacity,
+  TouchableNativeFeedback,
 } from "react-native";
 import AuthContext from "../hooks/useAuth";
 import { Card, Button, Title, Paragraph } from "react-native-paper";
@@ -143,30 +144,69 @@ export default function HomeScreen() {
     postUserType,
     postId,
     profileImageLink,
-    postType
+    postType,
+    isDisabled
   ) => {
     if (postType == "casual") return null;
     else {
       return (
-        <Button
-          type="outline"
-          icon="plus"
-          onPress={() => {
-            showAlert(
-              postUserEmail,
-              postUserType,
-              postId,
-              profileImageLink,
-              postType
-            );
-          }}
-        ></Button>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Text>Send request</Text>
+
+          <TouchableNativeFeedback
+            disabled={isDisabled}
+            onPress={() => {
+              showAlert(
+                postUserEmail,
+                postUserType,
+                postId,
+                profileImageLink,
+                postType
+              );
+            }}
+          >
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <Ionicons name={"add-circle-outline"} size={30} />
+            </View>
+          </TouchableNativeFeedback>
+        </View>
+        // <Button
+        //   type="outline"
+        //   icon="plus"
+        // onPress={() => {
+        //   showAlert(
+        //     postUserEmail,
+        //     postUserType,
+        //     postId,
+        //     profileImageLink,
+        //     postType
+        //   );
+        //   }}
+        // ></Button>
       );
     }
   };
 
   const RenderCard = (item) => {
     const navigation = useNavigation();
+    // const [canSendRequest, setCanSendRequest] = useState();
+    let isDisabled;
+    // console.log(item.item.petName);
+    // console.log(item.item.use);
+    if(item.item.userWhoBought) {
+      isDisabled = true;
+    }
+    // const isDisabled = item.item.userWhoBought
+    //   ? false
+    //   : item.item.organizationWhoResheltered
+    //   ? false
+    //   : item.item.userWhoAdopted
+    //   ? false
+    //   : true;
+    // useEffect(() => {
+    //   db.collection
+    // },[])
+
     const handleItemClicked = () => {
       navigation.navigate("OtherUsersProfile", {
         clickedUsersEmail: item.item.postUserEmail,
@@ -203,7 +243,8 @@ export default function HomeScreen() {
                 item.item.postUserType,
                 item.item.id,
                 item.item.profileImageLink,
-                item.item.postType
+                item.item.postType,
+                isDisabled
               )}
             </View>
           </View>
@@ -340,10 +381,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   requestButton: {
-    flex: 1,
+    // width:30,
+    // height:30,
+    // borderRadius:30/2,
+    // borderWidth:2,
+    // flex: 1,
     flexDirection: "row",
-    justifyContent: "flex-end",
-    paddingTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+    marginLeft: "40%",
   },
   spinner: {
     flex: 1,
