@@ -58,7 +58,7 @@ const ChatListSearch = ({ chats, setChats, searchQuery, setSearchQuery }) => {
   return (
     <View>
       <Searchbar
-        placeholder="Search"
+        placeholder="Search user"
         onChangeText={(text) => setSearchQuery(text)}
         value={searchQuery}
         style={{

@@ -14,21 +14,18 @@ import {
 } from "react-native";
 import { db } from "../../firebase";
 import AuthContext from "../hooks/useAuth";
-import sendRequestToServer from "../hooks/sendRequestToServer";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import NotificationCard from "./NotificationCard";
-import getUserTypeDocString from "../hooks/getUserTypeDocString";
-
 export default function NotifyScreen() {
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
-  const [notifications, setNotifications] = useState([]);
+  const [buyRequestIds, setBuyRequestIds] = useState([
+    { id: 100, email: "jhon@gmail.com" },
+  ]);
 
-  function acceptButtonHandle(item) {
-    Alert.alert(`${item.name}'s request accepted`);
+  function myButton(email) {
+    Alert.alert(`${email}'s request accepted`);
   }
 
-  function rejectButtonHandle(item) {
-    Alert.alert(`${item.name}'s request REJECTED`);
+  function myButton2(email) {
+    Alert.alert(`${email}'s request REJECTED`);
   }
 
   const listenRealTime = async () => {
@@ -203,7 +200,7 @@ export default function NotifyScreen() {
         )}
       </ScrollView> */}
       <FlatList
-        data={notifications}
+        data={buyRequestIds}
         renderItem={oneProfile}
         keyExtractor={(item, index) => index.toString()}
       />
@@ -231,23 +228,22 @@ const styles = StyleSheet.create({
   nameDescriptionStyle: {
     flex: 0.8,
     flexDirection: "column",
-    marginLeft: "2%",
     // backgroundColor:"white"
   },
   avatar: {
-    borderRadius: 60 / 2,
-    height: 60,
-    width: 60,
+    height: 55,
+    width: 55,
   },
   name: {
     fontWeight: "600",
-    fontSize: 20,
+    fontSize: 16,
+    marginLeft: 13,
   },
   avatarContainer: {
     backgroundColor: "#D9D9D9",
-    borderRadius: 60 / 2,
-    height: 60,
-    width: 60,
+    borderRadius: 100,
+    height: 89,
+    width: 89,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -265,5 +261,15 @@ const styles = StyleSheet.create({
     // paddingTop:ConstantSourceNode.statusBarHeight,
     backgroundColor: "#ecf0f1",
     padding: 8,
+  },
+  buttonStyle: {
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 3,
   },
 });

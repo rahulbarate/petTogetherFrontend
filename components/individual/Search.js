@@ -78,7 +78,7 @@ const SearchScreen = ({ navigation, state }) => {
             </TouchableOpacity>
           )}
           <Searchbar
-            placeholder="Search"
+            placeholder="Search user"
             onChangeText={(text) => setSearchQuery(text)}
             value={searchQuery}
             style={{
