@@ -13,102 +13,42 @@ import {
 } from "react-native";
 import { db } from "../../firebase";
 import AuthContext from "../hooks/useAuth";
-import sendRequestToServer from "../hooks/sendRequestToServer";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import NotificationCard from "./NotificationCard";
-import getUserTypeDocString from "../hooks/getUserTypeDocString";
-
 export default function NotifyScreen() {
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
-  const [notifications, setNotifications] = useState([]);
+  const [buyRequestIds, setBuyRequestIds] = useState([
+    { id: 100, email: "jhon@gmail.com" },
+  ]);
 
-  function acceptButtonHandle(item) {
-    Alert.alert(`${item.name}'s request accepted`);
+  function myButton(email) {
+    Alert.alert(`${email}'s request accepted`);
   }
 
-  function rejectButtonHandle(item) {
-    Alert.alert(`${item.name}'s request REJECTED`);
+  function myButton2(email) {
+    Alert.alert(`${email}'s request REJECTED`);
   }
 
   const listenRealTime = () => {
     db.collection("Users")
-      .doc(getUserTypeDocString(userDataContext.userType))
+      .doc("individualUser")
       .collection("accounts")
       .doc(userDataContext.email)
+      .collection("posts")
       .onSnapshot((snapshot) => {
-        // const data = snapshot.data();
-        if (snapshot.data().notification) {
-          const notificationHistory = snapshot.data().notification;
-          setNotifications([...notificationHistory]);
-        }
-        // console.log(notificationHistory);
-
-        // for (let each of notificationHistory) {
-        //   setNotifications((previous) => [...previous, each]);
-        // }
+        snapshot.docs.forEach((eachDoc, index) => {
+          if ("buyRequestIds" in eachDoc.data()) {
+            const Ids = eachDoc.data().buyRequestIds;
+            console.log(Ids);
+            if (buyRequestIds.length !== Ids) {
+              setBuyRequestIds(Ids);
+            }
+          }
+        });
       });
   };
   useEffect(() => {
     listenRealTime();
   }, []);
 
-  const getIndividualUsersData = async (email) => {
-    const result = await sendRequestToServer("/profile/fetchUserDetails", {
-      email: email,
-    });
-    return result;
-  };
-
-  const getDescriptionString = (notificationType) => {
-    switch (notificationType) {
-      case "like":
-        return "has liked your post";
-        break;
-      case "comment":
-        return "has commented on your phone";
-        break;
-      case "petBuyRequest":
-        return "want to buy your pet";
-        break;
-      case "reshelterRequest":
-        return "want to reshelter your pet";
-        break;
-      case "breedRequest":
-        return "sent breed request for your pet";
-        break;
-      case "adoptionRequest":
-        return "want adopt your pet";
-        break;
-    }
-  };
-
-  const isItRequest = (notificationType) => {
-    if (
-      notificationType === "comment" ||
-      notificationType === "like" ||
-      notificationType === "event"
-    )
-      return false;
-    else return true;
-  };
-
-  const updateWholeArray = async (updatedRequestData, index) => {
-    const updatedArray = [
-      ...notifications.slice(0, index),
-      ...notifications.slice(index + 1, notifications.length),
-      updatedRequestData,
-    ];
-    try {
-      await db
-        .collection("Users")
-        .doc(getUserTypeDocString(userDataContext.userType))
-        .collection("accounts")
-        .doc(userDataContext.email)
-        .update({ notification: updatedArray });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
   const profile = [
     {
       id: 1,
@@ -132,25 +72,50 @@ export default function NotifyScreen() {
     },
   ];
 
-  const oneProfile = ({ item, index }) => {
-    return (
-      <NotificationCard
-        item={item}
-        updateWholeArray={updateWholeArray}
-        index={index}
-      />
-    );
-  };
+  const oneProfile = ({ item }) => (
+    <View style={styles.item}>
+      <View style={styles.avatarContainer}>
+        <Image style={styles.avatar}></Image>
+      </View>
+      <View style={styles.nameDescriptionStyle}>
+        <Text style={styles.name}>{item}</Text>
+        <Text>has sent you a buy request</Text>
+      </View>
+      <View style={styles.buttonContainerStyle}>
+        <View style={styles.buttonStyle}>
+          <TouchableNativeFeedback
+            onPress={() => {
+              myButton(item);
+            }}
+          >
+            <Text style={{ color: "blue", textDecorationLine: "underline" }}>
+              Accept
+            </Text>
+          </TouchableNativeFeedback>
+        </View>
+        <View style={styles.buttonStyle}>
+          <TouchableNativeFeedback
+            onPress={() => {
+              myButton2(item);
+            }}
+          >
+            <Text style={{ color: "red", textDecorationLine: "underline" }}>
+              Reject
+            </Text>
+          </TouchableNativeFeedback>
+        </View>
+      </View>
+    </View>
+  );
   const itemSeparator = () => {
     return <View style={styles.separator}></View>;
   };
-
   return (
     <SafeAreaView>
       <FlatList
-        data={notifications}
+        data={buyRequestIds}
         renderItem={oneProfile}
-        keyExtractor={(item, index) => index}
+        keyExtractor={(item) => item.id}
       />
     </SafeAreaView>
   );
@@ -176,23 +141,22 @@ const styles = StyleSheet.create({
   nameDescriptionStyle: {
     flex: 0.8,
     flexDirection: "column",
-    marginLeft: "2%",
     // backgroundColor:"white"
   },
   avatar: {
-    borderRadius: 60 / 2,
-    height: 60,
-    width: 60,
+    height: 55,
+    width: 55,
   },
   name: {
     fontWeight: "600",
-    fontSize: 20,
+    fontSize: 16,
+    marginLeft: 13,
   },
   avatarContainer: {
     backgroundColor: "#D9D9D9",
-    borderRadius: 60 / 2,
-    height: 60,
-    width: 60,
+    borderRadius: 100,
+    height: 89,
+    width: 89,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -210,5 +174,15 @@ const styles = StyleSheet.create({
     // paddingTop:ConstantSourceNode.statusBarHeight,
     backgroundColor: "#ecf0f1",
     padding: 8,
+  },
+  buttonStyle: {
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 3,
   },
 });
