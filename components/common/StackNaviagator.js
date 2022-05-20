@@ -20,6 +20,7 @@ import PostUploadScreen from "./PostUploadScreen";
 import ShopPostUpload from "../shopkeeper/ShopPostUpload";
 import OrganizationPostUpload from "../organization/OrganizationPostUpload";
 import IndividualUserPostUpload from "../individual/IndividualUserPostUpload";
+import Comment from "../../Helper/homeHelper/Comment";
 
 const Stack = createNativeStackNavigator();
 
@@ -81,6 +82,7 @@ const StackNaviagator = () => {
         component={Message}
         options={({ route }) => ({ title: route.params.name })}
       />
+      <Stack.Screen name="Comment" component={Comment} />
       <Stack.Screen
         options={{ headerShown: false }}
         name="ShopPostUpload"
