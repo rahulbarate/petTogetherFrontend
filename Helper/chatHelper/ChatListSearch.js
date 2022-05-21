@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Searchbar } from "react-native-paper";
 import {
   Text,
@@ -13,10 +13,12 @@ import { FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { localhostBaseURL } from "../../components/common/baseURLs";
+import AuthContext from "../../components/hooks/useAuth";
 
 const ChatListSearch = ({ chats, setChats, searchQuery, setSearchQuery }) => {
   const [data, setdata] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { userDataContext, setUserDataContext } = useContext(AuthContext);
 
   const onChangeSearch = async (query) => {
     if (query === " ") {
@@ -36,7 +38,9 @@ const ChatListSearch = ({ chats, setChats, searchQuery, setSearchQuery }) => {
         return setLoading(false);
       }
 
-      setdata(res.data);
+      setdata(
+        res.data.filter((element) => element.id != userDataContext.email)
+      );
     } catch (error) {
       console.log(error);
     }
@@ -71,20 +75,30 @@ const ChatListSearch = ({ chats, setChats, searchQuery, setSearchQuery }) => {
       />
       <View>
         {loading && <LoadingSpinner />}
-        {data.length > 0 && !loading && (
-          <FlatList
-            style={styles.flatList}
-            data={data}
-            renderItem={({ item }) => (
-              <RenderItemComponent
-                item={item}
-                chats={chats}
-                setChats={setChats}
-              />
-            )}
-            keyExtractor={(item) => item.id}
-          />
-        )}
+        {!loading &&
+          searchQuery !== "" &&
+          (data.length > 0 ? (
+            <FlatList
+              style={styles.flatList}
+              data={data}
+              renderItem={({ item }) => (
+                <RenderItemComponent
+                  item={item}
+                  chats={chats}
+                  setChats={setChats}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          ) : (
+            <View
+              style={{
+                alignItems: "center",
+              }}
+            >
+              <Text>No result found</Text>
+            </View>
+          ))}
       </View>
     </View>
   );
