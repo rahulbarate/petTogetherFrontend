@@ -19,11 +19,6 @@ const Message = ({ route }) => {
 
   const { name, messageWith } = route.params;
 
-  // console.log("in message", {
-  //   messageWith: messageWith,
-  //   email: userDataContext.email,
-  // });
-
   const getAllMessages = async () => {
     const docId =
       messageWith > userDataContext.email
@@ -91,7 +86,7 @@ const Message = ({ route }) => {
       .doc(docId)
       .collection("messages")
       .add({ ...myMsg });
-    console.log("ms", msg.text);
+
     let user = [userDataContext.email, messageWith];
     await db
       .collection("Chat")
