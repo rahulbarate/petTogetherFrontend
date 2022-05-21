@@ -215,19 +215,19 @@ const ProfileComponent = ({
     if (isItOtherUser) {
       // console.log(userDataContext.followRequestsSentArray);
       if (
-        "followRequestsSentArray" in currentUserData &&
-        currentUserData.followRequestsSentArray.length !== 0 &&
-        currentUserData.followRequestsSentArray.includes(profileData.email)
-      ) {
-        // console.log("here1");
-        setFollowButtonText("Request sent");
-      } else if (
         "followersArray" in profileData &&
         profileData.followersArray.length !== 0 &&
         profileData.followersArray.includes(userDataContext.email)
       ) {
-        // console.log("here2");
         setFollowButtonText("Following");
+        // console.log("here1");
+      } else if (
+        "followRequestsSentArray" in currentUserData &&
+        currentUserData.followRequestsSentArray.length !== 0 &&
+        currentUserData.followRequestsSentArray.includes(profileData.email)
+      ) {
+        setFollowButtonText("Request sent");
+        // console.log("here2");
       } else {
         // console.log("here3");
         setFollowButtonText("Follow");
