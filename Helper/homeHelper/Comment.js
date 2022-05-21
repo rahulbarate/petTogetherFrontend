@@ -19,10 +19,11 @@ const Comment = ({ route }) => {
   const { postId, postUserEmail, postUserType, postComments } = route.params;
   const { userDataContext } = useContext(AuthContext);
   const [text, setText] = useState("");
-  const [comments, setComments] = useState(postComments?postComments:[]);
+  const [comments, setComments] = useState(postComments ? postComments : []);
 
   // reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  comments.sort((a, b) => new Date(b.date) - new Date(a.date));
+  comments.length > 0 &&
+    comments.sort((a, b) => new Date(b.date) - new Date(a.date));
   const onSubmit = async (text) => {
     try {
       const res = await localhostBaseURL.post("/home/addComment", {
