@@ -194,7 +194,10 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
       await sendPostRequestAccpetedToServer(item);
     }
     await updateWholeArrayForPost(
-      { ...item, requestStatus: "accepted" },
+      {
+        ...item,
+        requestStatus: "accepted",
+      },
       index
     );
     await sendOtherUserNotification(item, "accepted");
@@ -300,7 +303,8 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
           <View>
             <TouchableNativeFeedback
               disabled={
-                item.requestStatus === "accepted" || item.requestStatus === "rejected"
+                item.requestStatus === "accepted" ||
+                item.requestStatus === "rejected"
                   ? true
                   : false
               }
@@ -310,7 +314,8 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
             >
               <View
                 style={
-                  item.requestStatus === "accepted" || item.requestStatus === "rejected"
+                  item.requestStatus === "accepted" ||
+                  item.requestStatus === "rejected"
                     ? { opacity: 0.1 }
                     : {}
                 }
@@ -322,7 +327,8 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
           <View>
             <TouchableNativeFeedback
               disabled={
-                item.requestStatus === "accepted" || item.requestStatus === "rejected"
+                item.requestStatus === "accepted" ||
+                item.requestStatus === "rejected"
                   ? true
                   : false
               }
@@ -332,7 +338,8 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
             >
               <View
                 style={
-                  item.requestStatus === "accepted" || item.requestStatus === "rejected"
+                  item.requestStatus === "accepted" ||
+                  item.requestStatus === "rejected"
                     ? { opacity: 0.1 }
                     : {}
                 }
