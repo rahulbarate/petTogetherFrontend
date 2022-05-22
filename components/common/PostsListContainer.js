@@ -124,7 +124,7 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 18 }}>{postTypeTextString}</Text>
+                <Text style={{ fontSize: 15 }}>{postTypeTextString}</Text>
               </View>
               <View
                 style={{

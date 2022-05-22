@@ -90,13 +90,13 @@ const AcceptUserDetails = () => {
       profileImageLink: userDataContext.profileImageLink
         ? userDataContext.profileImageLink
         : "",
-      name,
-      phoneNumber,
-      pincode,
-      state,
-      district,
-      houseNo,
-      area,
+      name: name ? name : "",
+      phoneNumber: phoneNumber ? phoneNumber : "",
+      pincode: pincode ? pincode : "",
+      state: state ? state : "",
+      district: district ? district : "",
+      houseNo: houseNo ? houseNo : "",
+      area: area ? area : "",
       coordinate: userDataContext.coordinate,
     };
 
@@ -110,13 +110,13 @@ const AcceptUserDetails = () => {
   };
 
   const handleShopSubmit = () => {
-    if (recievedUserLocation) {
+    if (recievedUserLocation || name) {
       const enteredUserData = getEnteredUserData();
       setUserDataContext(enteredUserData);
       handleSignup(enteredUserData);
       // console.log(enteredUserData);
     } else {
-      alert("Please select your current location");
+      alert("Please fill all details and set your current location");
     }
   };
   return (
@@ -339,7 +339,7 @@ const AcceptUserDetails = () => {
                   style={{
                     textDecorationLine: "underline",
                     color: "#3399ff",
-                    marginRight:15
+                    marginRight: 15,
                   }}
                 >
                   Set current location

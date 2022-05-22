@@ -41,8 +41,8 @@ const SinglePostList = ({ route }) => {
   };
   const getItemLayout = (data, index) => {
     return {
-      length: 500,
-      offset: 500 * index,
+      length: 300,
+      offset: 300 * index,
       index: index,
     };
   };

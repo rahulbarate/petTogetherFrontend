@@ -22,6 +22,13 @@ import getUserTypeDocString from "../hooks/getUserTypeDocString";
 export default function NotifyScreen() {
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
   const [notifications, setNotifications] = useState([]);
+  // notifications.sort((a, b) => {
+  //   if (a.sendTime < b.sendTime) return -1;
+  //   if (a.sendTime > b.sendTime) return 1;
+  //   return 0;
+  //   // return new Date(b.sendTime) - new Date(a.sendTime);
+  // });
+  // notifications.reverse();
 
   function acceptButtonHandle(item) {
     Alert.alert(`${item.name}'s request accepted`);

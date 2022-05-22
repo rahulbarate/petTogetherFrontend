@@ -216,37 +216,89 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
     }
   };
 
-  const getDescriptionString = (notificationType) => {
+  const getDescriptionString = (notificationType, requestStatus, name) => {
+    if (notificationType === "like") return "has liked your post";
+    if (notificationType === "comment") return "has commented on your post";
+
+    //pet buy request string
+    if (notificationType === "petBuyRequest" && requestStatus === "waiting")
+      return "wants to buy your pet";
+    if (notificationType === "petBuyRequest" && requestStatus === "accepted")
+      return `accepted ${name}'s pet buy request`;
+    if (notificationType === "petBuyRequest" && requestStatus === "rejected")
+      return `rejected ${name}'s pet buy request`;
+
+    //pet reshelter string
+    if (notificationType === "reshelterRequest" && requestStatus === "waiting")
+      return "wants to impound your pet";
+    if (notificationType === "reshelterRequest" && requestStatus === "accepted")
+      return `accepted ${name}'s impounding request`;
+    if (notificationType === "reshelterRequest" && requestStatus === "rejected")
+      return `rejected ${name}'s impounding request`;
+
+    //pet breed request
+    if (notificationType === "breedRequest" && requestStatus === "waiting")
+      return "sent breed request for your pet";
+    if (notificationType === "breedRequest" && requestStatus === "accepted")
+      return `accepted ${name}'s breed request`;
+    if (notificationType === "breedRequest" && requestStatus === "rejected")
+      return `rejected ${name}'s breed request`;
+
+    //pet adoption reqeust
+    if (notificationType === "adoptionRequest" && requestStatus === "waiting")
+      return "wants to adopt your pet";
+    if (notificationType === "breedRequest" && requestStatus === "accepted")
+      return `accepted ${name}'s pet adoption request`;
+    if (notificationType === "breedRequest" && requestStatus === "rejected")
+      return `rejected ${name}'s pet adoption request`;
+
+    //follow request
+    if (notificationType === "followRequest" && requestStatus === "waiting")
+      return "sent you a follow request";
+    if (notificationType === "followRequest" && requestStatus === "accepted")
+      return `accepted ${name}'s follow request`;
+    if (notificationType === "followRequest" && requestStatus === "rejected")
+      return `rejected ${name}'s follow request`;
+
     switch (notificationType) {
-      case "like":
-        return "has liked your post";
-        break;
-      case "comment":
-        return "has commented on your phone";
-        break;
-      case "petBuyRequest":
-        return "wants to buy your pet";
-        break;
-      case "reshelterRequest":
-        return "wants to reshelter your pet";
-        break;
-      case "breedRequest":
-        return "sent breed request for your pet";
-        break;
-      case "adoptionRequest":
-        return "wants adopt your pet";
-        break;
-      case "followRequest":
-        return "sent you follow request";
-        break;
+      // case "like":
+      //   return "has liked your post";
+      //   break;
+      // case "comment":
+      //   return "has commented on your phone";
+      //   break;
+      // case "petBuyRequest" && requestStatus === "waiting":
+      //   return "wants to buy your pet";
+      //   break;
+      // case "petBuyRequest" && requestStatus === "accepted":
+      //   return `accepted ${name}'s pet buy request`;
+      //   break;
+      // case "petBuyRequest" && requestStatus === "rejected":
+      //   return `rejected ${name}'s pet buy request`;
+      //   break;
+      // case "reshelterRequest" && requestStatus === "waiting":
+      //   return "wants to reshelter your pet";
+      //   break;
+      // case "reshelterRequest" && requestStatus === "accepted":
+      //   return `accepted ${name}'s impounding request`;
+      //   break;
+      // case "breedRequest":
+      //   return "sent breed request for your pet";
+      //   break;
+      // case "adoptionRequest":
+      //   return "wants to adopt your pet";
+      //   break;
+      // case "followRequest":
+      //   return "sent you follow request";
+      //   break;
       case "followRequestaccepted":
-        return "has accepted follow request";
+        return "has accepted your follow request";
         break;
       case "petBuyRequestaccepted":
         return "has accepted your pet buy request";
         break;
       case "reshelterRequestaccepted":
-        return "has accepted your pet reshelter request";
+        return "has accepted your pet impounding request";
         break;
       case "breedRequestaccepted":
         return "has accepted your pet breed request";
@@ -261,7 +313,7 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
         return "has rejected your pet buy request";
         break;
       case "reshelterRequestrejected":
-        return "has rejected your pet reshelter request";
+        return "has rejected your pet impounding request";
         break;
       case "breedRequestrejected":
         return "has rejected your pet breed request";
@@ -293,7 +345,13 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
       </View>
       <View style={styles.nameDescriptionStyle}>
         <Text style={styles.name}>{item.name}</Text>
-        <Text>{getDescriptionString(item.notificationType)}</Text>
+        <Text>
+          {getDescriptionString(
+            item.notificationType,
+            item.requestStatus ? item.requestStatus : "",
+            item.name
+          )}
+        </Text>
         <Text>
           {/* {"at " + moment(item.sendTime.toDate()).calendar(null, formats)} */}
         </Text>

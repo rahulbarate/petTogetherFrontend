@@ -204,6 +204,7 @@ const SinglePostCard = ({ item, profileImageLink }) => {
             source={{ uri: item.postImageLink }}
           />
         </View>
+          <Text style={{fontSize:16,marginLeft:5}}>{item.postDescription}</Text>
         <View style={styles.container3Style}>
           <View style={styles.likeIconViewStyle}>
             <TouchableNativeFeedback
@@ -267,15 +268,18 @@ const styles = StyleSheet.create({
   postCardStyle: {
     backgroundColor: "white",
     marginVertical: 10,
-    height: 500,
+    height: 300,
+    maxHeight:600,
     // height: "50%",
     width: Dimensions.get("window").width - 20,
     borderWidth: 5,
     borderRadius: 25,
     borderColor: "#3399ff",
+    // justifyContent: "center",
+    // alignItems: "center",
   },
   container1Style: {
-    height: "15%",
+    // height: "15%",
     borderBottomWidth: 2,
     borderColor: "#3399ff",
     flexDirection: "row",
@@ -284,14 +288,14 @@ const styles = StyleSheet.create({
   },
   profilePictureViewStyle: {
     marginHorizontal: 7,
-    height: 60,
-    width: 60,
-    borderRadius: 60 / 2,
+    height: 40,
+    width: 40,
+    borderRadius: 40 / 2,
   },
   profilePictureStyle: {
-    height: 60,
-    width: 60,
-    borderRadius: 60 / 2,
+    height: 40,
+    width: 40,
+    borderRadius: 40 / 2,
   },
   userNameAndPostTimeStyle: {
     marginHorizontal: 7,
@@ -324,8 +328,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   container2Style: {
-    // flex: 1,
-    height: "75%",
+    flex: 1,
+    // height: "75%",
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
@@ -333,9 +337,11 @@ const styles = StyleSheet.create({
     // aspectRatio: 1,
   },
   postImageStyle: {
+    flex:1,
     width: "100%",
     height: "100%",
     // aspectRatio: 1,
+    resizeMode:"contain"
 
     // height: "100%",
     // width: "100%",
@@ -346,11 +352,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    // alignSelf: "flex-end",
+    // marginBottom: 10
   },
   likeIconViewStyle: {
     marginHorizontal: 50,
+    // marginBottom: 10
   },
   commentIconViewStyle: {
     marginHorizontal: 50,
+    // marginBottom: 10
   },
+  // container4Style: {
+  //   // borderTopWidth: 2,
+  //   // borderColor: "#3399ff",
+  //   flexDirection: "row",
+  //   // justifyContent: "center",
+  //   alignItems: "center",
+  // },
 });

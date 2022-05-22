@@ -43,6 +43,8 @@ export default PostCard = ({ item }) => {
         : true
       : true
   );
+  const [isItAvailable, setIsItAvailable] = useState();
+  const [markPostString, setMarkPostString] = useState("");
   const sendRequest = async (
     postUserEmail,
     postUserType,
@@ -131,6 +133,50 @@ export default PostCard = ({ item }) => {
       clickedUsersEmail: item.item.postUserEmail,
     });
   };
+
+  const checkIsItAvailable = (item) => {
+    if (
+      item.userWhoBought ||
+      item.userWhoAdopted ||
+      item.organizationWhoResheltered ||
+      item.userWhosePetBreededWith
+    ) {
+      if (item.userWhoBought) setMarkPostString("Sold");
+      else if (item.userWhoAdopted) setMarkPostString("Adopted");
+      else if (item.organizationWhoResheltered) setMarkPostString("Impounded");
+      else setMarkPostString("");
+      //   console.log(item);
+      return false;
+    }
+    // console.log(false);
+    return true;
+  };
+  const getLatestDataAboutPost = () => {
+    try {
+      db.collection("Users")
+        .doc(getUserTypeDocString(item.item.postUserType))
+        .collection("accounts")
+        .doc(item.item.postUserEmail)
+        .collection("posts")
+        .doc(item.item.id)
+        .onSnapshot((snapshot) => {
+          if (snapshot.exists) {
+            if (checkIsItAvailable(snapshot.data())) {
+              setIsItAvailable(true);
+            } else {
+              setIsItAvailable(false);
+            }
+          }
+        });
+    } catch (error) {
+      console.log("getLatestDataAboutPost: " + error.message);
+    }
+  };
+
+  useEffect(() => {
+    getLatestDataAboutPost();
+  }, [item]);
+
   return (
     <Card style={styles.container}>
       <Card.Content>
@@ -156,20 +202,10 @@ export default PostCard = ({ item }) => {
             </View>
             <Text>{postInformation(item.item.postType)}</Text>
           </View>
-          <View
-            style={
-              canSendRequest
-                ? styles.requestButton
-                : { opacity: 0.1, ...styles.requestButton }
-            }
-          >
-            {(
-              checkIsItAlreadyDone(item.item) === true ? (
-                <View></View>
-              ) : (
-                item.item.postType !== "casual"
-              )
-            ) ? (
+          <View style={styles.requestButton}>
+            {item.item.postType === "casual" ? (
+              <View></View>
+            ) : isItAvailable ? (
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <Text>Send request</Text>
                 <TouchableNativeFeedback
@@ -186,14 +222,24 @@ export default PostCard = ({ item }) => {
                   }}
                 >
                   <View
-                    style={{ justifyContent: "center", alignItems: "center" }}
+                    style={
+                      canSendRequest
+                        ? { justifyContent: "center", alignItems: "center" }
+                        : {
+                            opacity: 0.1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }
+                    }
                   >
                     <Ionicons name={"add-circle-outline"} size={30} />
                   </View>
                 </TouchableNativeFeedback>
               </View>
             ) : (
-              <View></View>
+              <View style={styles.markPostString}>
+                <Text style={styles.markPostTextStyle}>{markPostString}</Text>
+              </View>
             )}
           </View>
         </View>
@@ -213,7 +259,7 @@ export default PostCard = ({ item }) => {
           postUserEmail={item.item.postUserEmail}
           postUserType={item.item.postUserType}
           postType={item.item.postType}
-          profileImageLink={item.item.profileImageLink}
+          profileImageLink={userDataContext.profileImageLink}
           postUserName={item.item.name}
           userWhoLikedIds={item.item.userWhoLikedIds}
         />
@@ -309,5 +355,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  markPostString: {
+    borderRadius: 25,
+    backgroundColor: "#DCDCDC",
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 10,
+  },
+  markPostTextStyle: {
+    fontSize: 18,
+    marginHorizontal: 15,
   },
 });
