@@ -4,6 +4,7 @@ import {
   View,
   Dimensions,
   TouchableNativeFeedback,
+  ToastAndroid,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import React, { useContext, useState, useEffect } from "react";
@@ -37,6 +38,7 @@ const AcceptUserDetails = () => {
   const [district, setDistrict] = useState();
   const [houseNo, setHouseNo] = useState();
   const [area, setArea] = useState();
+  const [placeholderColor, setPlaceholderColor] = useState("#C7C7CD");
 
   const [items, setItems] = useState([
     { label: "Pet Essentials", value: "essentials" },
@@ -97,7 +99,7 @@ const AcceptUserDetails = () => {
       district: district ? district : "",
       houseNo: houseNo ? houseNo : "",
       area: area ? area : "",
-      coordinate: userDataContext.coordinate,
+      coordinate: userDataContext.coordinate ? userDataContext.coordinate : "",
     };
 
     if (userDataContext.userType === "Shopkeeper")
@@ -110,13 +112,16 @@ const AcceptUserDetails = () => {
   };
 
   const handleShopSubmit = () => {
-    if (recievedUserLocation || name) {
+    if (name) {
       const enteredUserData = getEnteredUserData();
       setUserDataContext(enteredUserData);
       handleSignup(enteredUserData);
       // console.log(enteredUserData);
     } else {
-      alert("Please fill all details and set your current location");
+      setPlaceholderColor("red");
+      ToastAndroid.show("Please enter all details", ToastAndroid.SHORT);
+      return;
+      // alert("Please fill all details and set your current location");
     }
   };
   return (
@@ -133,10 +138,12 @@ const AcceptUserDetails = () => {
                 ? "Shop name here"
                 : userDataContext.userType === "Organization"
                 ? "Organization name here"
-                : "Your Name here"
+                : "Your name here"
             }
+            placeholderTextColor={placeholderColor}
             value={name}
             onChangeText={(text) => {
+              setPlaceholderColor("#C7C7CD");
               setName(text);
             }}
           />

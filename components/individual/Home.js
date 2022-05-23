@@ -349,6 +349,7 @@ export default function HomeScreen() {
         (data.length > 0 ? (
           <FlatList
             data={data}
+            style={{backgroundColor:"#BFFFF0"}}
             renderItem={renderEachPost}
             keyExtractor={(item) => item.id}
           />

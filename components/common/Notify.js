@@ -19,7 +19,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import NotificationCard from "./NotificationCard";
 import getUserTypeDocString from "../hooks/getUserTypeDocString";
 
-export default function NotifyScreen({displayDotOnNotification}) {
+export default function NotifyScreen({ displayDotOnNotification }) {
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
   const [notifications, setNotifications] = useState([]);
   // notifications.sort((a, b) => {
@@ -41,10 +41,10 @@ export default function NotifyScreen({displayDotOnNotification}) {
   const listenRealTime = async () => {
     try {
       db.collection("Users")
-      .doc(getUserTypeDocString(userDataContext.userType))
-      .collection("accounts")
-      .doc(userDataContext.email)
-      // console.log("running in background");
+        .doc(getUserTypeDocString(userDataContext.userType))
+        .collection("accounts")
+        .doc(userDataContext.email)
+        // console.log("running in background");
         .onSnapshot((snapshot) => {
           // const data = snapshot.data();
           if (snapshot.exists && "notification" in snapshot.data()) {
@@ -227,6 +227,7 @@ export default function NotifyScreen({displayDotOnNotification}) {
       </ScrollView> */}
       <FlatList
         data={notifications}
+        style={{ backgroundColor: "white",height:"100%" }}
         renderItem={oneProfile}
         keyExtractor={(item, index) => index.toString()}
       />

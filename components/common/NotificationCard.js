@@ -430,8 +430,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1.5,
     paddingLeft: 5,
-    // elevation: 3,
-    // backgroundColor:"red"
+    elevation: 3,
+    backgroundColor: "white",
+    shadowOffset: { width: -2, height: 4 },
+    shadowColor: "#171717",
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    borderColor: "#8CC0DE",
   },
   nameDescriptionStyle: {
     flex: 0.8,

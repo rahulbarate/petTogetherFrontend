@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Searchbar } from "react-native-paper";
 import {
@@ -16,8 +16,10 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { AntDesign } from "@expo/vector-icons";
 import { localhostBaseURL } from "../common/baseURLs";
 import axios from "axios";
+import AuthContext from "../hooks/useAuth";
 
 const SearchScreen = ({ navigation, state }) => {
+  const {userDataContext, setUserDataContext} = useContext(AuthContext);
   const [searchQuery, setSearchQuery] = useState("");
   const [data, setdata] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -41,7 +43,8 @@ const SearchScreen = ({ navigation, state }) => {
         return setLoading(false);
       }
 
-      setdata(res.data);
+      setdata(res.data.filter((element) => element.id != userDataContext.email));
+      
     } catch (error) {
       console.log(error);
     }
@@ -164,7 +167,7 @@ const styles = StyleSheet.create({
   backIcon: {
     height: 30,
     alignSelf: "center",
-    marginTop: 20,
+    marginTop: 5,
     marginRight: 4,
     backgroundColor: "#FFF",
     borderColor: "#FFF",

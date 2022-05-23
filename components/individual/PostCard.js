@@ -270,6 +270,8 @@ export default PostCard = ({ item }) => {
         source={{
           uri: item.item.image,
         }}
+        resizeMode="stretch"
+        style={{ height: 300 }}
       />
       <Card.Content>
         <Paragraph>
@@ -363,6 +365,7 @@ const styles = StyleSheet.create({
   container: {
     alignContent: "center",
     margin: 10,
+    backgroundColor: "white",
   },
   screen: {
     flex: 1,
@@ -404,6 +407,7 @@ const styles = StyleSheet.create({
   postContent: {
     flex: 1,
     flexDirection: "row",
+    backgroundColor: "white",
   },
   requestButton: {
     // width:30,

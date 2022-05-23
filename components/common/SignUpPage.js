@@ -19,11 +19,14 @@ import { useNavigation } from "@react-navigation/native";
 import AuthContext from "../hooks/useAuth";
 import { RadioButton } from "react-native-paper";
 import DropDownPicker from "react-native-dropdown-picker";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const SignUpPage = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("any@gmail.com");
   const [password, setPassword] = useState("any12345678");
+  const [hidePass, setHidePass] = useState(true);
+  const [placeholderColor, setPlaceholderColor] = useState("#C7C7CD");
   const [userType, setUserType] = useState("");
   const [open, setOpen] = useState(false);
   const [userTypes, setUserTypes] = useState([
@@ -53,7 +56,10 @@ const SignUpPage = () => {
     };
     // console.log(user);
     if (!userType || !email || !password) {
-      console.log("Please enter all details");
+      setPlaceholderColor("red");
+      ToastAndroid.show("Please enter all details", ToastAndroid.SHORT);
+      return;
+      // console.log("Please enter all details");
     } else {
       // console.log(userType);
       setUserDataContext(user);
@@ -78,12 +84,29 @@ const SignUpPage = () => {
             </View>
             <View style={styles.passwordTextInputViewStyle}>
               <TextInput
+                secureTextEntry={hidePass ? true : false}
+                keyboardType={"default"}
                 placeholder="Password"
+                placeholderTextColor={placeholderColor}
+                style={styles.passTextInputStyle}
                 value={password}
                 onChangeText={(text) => {
+                  setPlaceholderColor("#C7C7CD");
                   setPassword(text);
                 }}
               />
+              <View style={styles.eyeIconStyle}>
+                <TouchableNativeFeedback
+                  onPress={() => {
+                    setHidePass(!hidePass);
+                  }}
+                >
+                  <Ionicons
+                    name={hidePass ? "eye-off-outline" : "eye-outline"}
+                    size={25}
+                  />
+                </TouchableNativeFeedback>
+              </View>
             </View>
             <View
               style={{
@@ -211,6 +234,7 @@ const styles = StyleSheet.create({
     borderColor: "#3399ff",
     paddingLeft: "5%",
     justifyContent: "center",
+    flexDirection: "row",
   },
   buttonContainerStyle: {
     marginTop: "15%",
@@ -240,6 +264,16 @@ const styles = StyleSheet.create({
   radioButtonUncheckedTextStyle: {
     fontSize: 20,
     color: "black",
+  },
+  passTextInputStyle: {
+    flex: 1,
+  },
+  eyeIconStyle: {
+    flex: 0.1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 10,
+    padding: 5,
   },
 });
 

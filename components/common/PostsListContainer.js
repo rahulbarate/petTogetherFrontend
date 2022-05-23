@@ -119,9 +119,9 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
             >
               <View
                 style={{
+                  borderColor: "#8CC0DE",
                   backgroundColor: "white",
                   borderBottomWidth: 0.8,
-                  marginLeft: 5,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -130,9 +130,9 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
               </View>
               <View
                 style={{
+                  borderColor: "#8CC0DE",
                   backgroundColor: "white",
                   borderTopWidth: 0.8,
-                  marginLeft: 5,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -163,12 +163,12 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
           All posts
         </Text>
       </View>
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
+      <View style={{ justifyContent: "center", alignItems: "center",backgroundColor:"white" }}>
         <View
           style={{
-            width: Dimensions.get("window").width - 20,
+            width: Dimensions.get("window").width - 30,
             height: 1.5,
-            backgroundColor: "black",
+            backgroundColor: "#8CC0DE",
             marginBottom: 10,
           }}
         ></View>
@@ -178,7 +178,7 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
           data={listOfAllPosts}
           renderItem={renderCardItem}
           numColumns={2}
-          style={{ width: Dimensions.get("window").width }}
+          style={{ width: Dimensions.get("window").width,backgroundColor:"white" }}
           keyExtractor={(item, index) => index.toString()}
         />
         {!isItOtherUser && (
@@ -221,6 +221,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
+    backgroundColor:"white"
     // backgroundColor: "green",
   },
   postTypeStyle: {
@@ -228,6 +229,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginVertical: 10,
+    backgroundColor:"white"
   },
   spinner: {
     flex: 1,
@@ -253,10 +255,12 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   postCardStyle: {
+    borderWidth:0.8,
+    borderColor: "#8CC0DE",
     // flex: 1,
     width: Dimensions.get("window").width / 2 - 15,
     height: Dimensions.get("window").width / 2 - 15,
-    borderRadius: 20,
+    borderRadius: 10,
     marginHorizontal: "2%",
     marginVertical: "2%",
     justifyContent: "center",
@@ -280,7 +284,9 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width / 2 - 15,
     height: Dimensions.get("window").width / 2 - 15,
     justifyContent: "space-between",
-    borderRadius: 20,
+    borderRadius: 10,
+    borderWidth:0.8,
+    borderColor: "#8CC0DE",
   },
   postViewStyle: {
     flex: 1,

@@ -484,6 +484,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: Dimensions.get("window").width,
+    backgroundColor: "white"
   },
   container1Sub1Style: {
     width: Dimensions.get("window").width,

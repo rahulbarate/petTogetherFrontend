@@ -20,10 +20,13 @@ import {
 } from "firebase/auth";
 import { localhostBaseURL } from "../common/baseURLs";
 import AuthContext from "../hooks/useAuth";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("rahul@gmail.com");
-  const [password, setPassword] = useState("rahul12345678");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [hidePass, setHidePass] = useState(true);
+  const [placeholderColor, setPlaceholderColor] = useState("#C7C7CD");
   const [loginButtonText, setLoginButtonText] = useState("Login");
   //   const [userData, setUserData] = useState();
 
@@ -32,6 +35,11 @@ const LoginPage = () => {
   const navigation = useNavigation();
 
   const handleSignIn = () => {
+    if (!email || !password) {
+      setPlaceholderColor("red");
+      ToastAndroid.show("Please enter email and password", ToastAndroid.SHORT);
+      return;
+    }
     setLoginButtonText("Logging in...");
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -96,8 +104,10 @@ const LoginPage = () => {
           <View style={styles.emailTextInputViewStyle}>
             <TextInput
               placeholder="Email address"
+              placeholderTextColor={placeholderColor}
               value={email}
               onChangeText={(text) => {
+                setPlaceholderColor("#C7C7CD");
                 setEmail(text);
               }}
               keyboardType="email-address"
@@ -105,13 +115,31 @@ const LoginPage = () => {
           </View>
           <View style={styles.passwordTextInputViewStyle}>
             <TextInput
+              secureTextEntry={hidePass ? true : false}
+              // autoCapitalize={'none'}
+              keyboardType={"default"}
               placeholder="Password"
+              placeholderTextColor={placeholderColor}
+              style={styles.passTextInputStyle}
               value={password}
               onChangeText={(text) => {
+                setPlaceholderColor("#C7C7CD");
                 setPassword(text);
               }}
-              keyboardType="email-address"
-            />
+              // keyboardType="email-address"
+            ></TextInput>
+            <View style={styles.eyeIconStyle}>
+              <TouchableNativeFeedback
+                onPress={() => {
+                  setHidePass(!hidePass);
+                }}
+              >
+                <Ionicons
+                  name={hidePass ? "eye-off-outline" : "eye-outline"}
+                  size={25}
+                />
+              </TouchableNativeFeedback>
+            </View>
           </View>
           <View style={styles.signUpTextViewStyle}>
             <Text style={styles.noAccountTextStyle}>
@@ -243,6 +271,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   passwordTextInputViewStyle: {
+    // flex:1,
     marginTop: "5%",
     backgroundColor: "rgb(255,255,255)",
     width: "90%",
@@ -252,7 +281,18 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#3399ff",
     paddingLeft: "5%",
+    // justifyContent: "center",
+    flexDirection: "row",
+  },
+  passTextInputStyle: {
+    flex: 1,
+  },
+  eyeIconStyle: {
+    flex: 0.1,
     justifyContent: "center",
+    alignItems: "center",
+    marginRight: 10,
+    padding: 5,
   },
 });
 export default LoginPage;

@@ -73,14 +73,14 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height,
     width: Dimensions.get("window").width,
     // marginTop: 20,
-    backgroundColor: "#808080",
+    backgroundColor: "#BFFFF0",
     // marginBottom: 10,
     // paddingBottom: 100,
   },
   flatListStyle: {
     // paddingTop: 20,
     // paddingBottom: 100,
-    backgroundColor: "#808080",
+    backgroundColor: "#BFFFF0",
     // borderColor: "#3399ff",
     // backgroundColor: "#3399ff",
 
