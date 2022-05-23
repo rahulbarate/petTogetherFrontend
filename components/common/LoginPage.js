@@ -22,8 +22,8 @@ import { localhostBaseURL } from "../common/baseURLs";
 import AuthContext from "../hooks/useAuth";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("sayali@gmail.com");
-  const [password, setPassword] = useState("sayali12345678");
+  const [email, setEmail] = useState("rahul@gmail.com");
+  const [password, setPassword] = useState("rahul12345678");
   const [loginButtonText, setLoginButtonText] = useState("Login");
   //   const [userData, setUserData] = useState();
 

@@ -58,6 +58,12 @@ export default function HomeScreen() {
             postUserName: eachInEach.name,
             profileImageLink: eachInEach.profileImageLink,
             image: eachInEach.postData.postImageLink,
+            price: eachInEach.postData.price && eachInEach.postData.price,
+            petType: eachInEach.postData.petType && eachInEach.postData.petType,
+            breed: eachInEach.postData.breed && eachInEach.postData.breed,
+            dateOfBirth:
+              eachInEach.postData.dateOfBirth &&
+              eachInEach.postData.dateOfBirth,
             postType: eachInEach.postData.postType,
             postUserEmail: eachInEach.postData.userEmail,
             postUserType: eachInEach.postData.userType,
@@ -333,7 +339,7 @@ export default function HomeScreen() {
       // console.log(userDataContext.userType);
       return <View></View>;
     } else {
-    return <PostCard item={item} />;
+      return <PostCard item={item} />;
     }
   };
   return (

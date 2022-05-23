@@ -62,6 +62,7 @@ const ProfileComponent = ({
   //   ToastAndroid.show(text, ToastAndroid.SHORT);
   // };
   const fetchLatestData = () => {
+    // console.log("fetched Latest");
     db.collection("Users")
       .doc(getUserTypeDocString(profileType))
       .collection("accounts")

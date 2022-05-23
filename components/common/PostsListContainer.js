@@ -74,11 +74,12 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
       </View>
     );
   };
-  const displaySinglePost = (listOfAllPosts, index, profileImageLink) => {
+  const displaySinglePost = (listOfAllPosts, index, profileImageLink,isItOtherUser) => {
     navigation.navigate("SinglePostList", {
       allPosts: listOfAllPosts,
       initialScrollIndex: index,
       profileImageLink,
+      isItOtherUser
     });
   };
   const renderCardItem = ({ item, index }) => {
@@ -105,7 +106,8 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
             displaySinglePost(
               listOfAllPosts,
               index,
-              userDataContext.profileImageLink
+              userDataContext.profileImageLink,
+              isItOtherUser
             );
           }}
         >

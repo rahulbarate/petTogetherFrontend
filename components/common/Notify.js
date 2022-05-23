@@ -19,7 +19,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import NotificationCard from "./NotificationCard";
 import getUserTypeDocString from "../hooks/getUserTypeDocString";
 
-export default function NotifyScreen() {
+export default function NotifyScreen({displayDotOnNotification}) {
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
   const [notifications, setNotifications] = useState([]);
   // notifications.sort((a, b) => {
@@ -41,9 +41,10 @@ export default function NotifyScreen() {
   const listenRealTime = async () => {
     try {
       db.collection("Users")
-        .doc(getUserTypeDocString(userDataContext.userType))
-        .collection("accounts")
-        .doc(userDataContext.email)
+      .doc(getUserTypeDocString(userDataContext.userType))
+      .collection("accounts")
+      .doc(userDataContext.email)
+      // console.log("running in background");
         .onSnapshot((snapshot) => {
           // const data = snapshot.data();
           if (snapshot.exists && "notification" in snapshot.data()) {
@@ -69,7 +70,10 @@ export default function NotifyScreen() {
   };
   useEffect(() => {
     listenRealTime();
+    // userDataContext();
+    // displayDotOnNotification(false);
   }, []);
+
   useEffect(() => {
     notifications.sort((a, b) => {
       if (a.sendTime < b.sendTime) return -1;
@@ -78,6 +82,8 @@ export default function NotifyScreen() {
       // return new Date(b.sendTime) - new Date(a.sendTime);
     });
     notifications.reverse();
+    // displayDotOnNotification(true);
+
     // if (notifications.length !== 0) {
     //   let arrayToSort = notifications;
     //   arrayToSort.sort((a, b) => {
@@ -86,6 +92,10 @@ export default function NotifyScreen() {
     //   arrayToSort = arrayToSort.reverse();
     //   setNotifications(arrayToSort);
   }, [notifications]);
+
+  // useEffect(() => {
+
+  // },[])
 
   const getIndividualUsersData = async (email) => {
     const result = await sendRequestToServer("/profile/fetchUserDetails", {

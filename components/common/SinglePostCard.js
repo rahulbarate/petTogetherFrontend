@@ -18,7 +18,7 @@ import { localhostBaseURL } from "./baseURLs";
 import Modal from "react-native-modal";
 import FollowersFollowingList from "./FollowersFollowingList";
 
-const SinglePostCard = ({ item, profileImageLink }) => {
+const SinglePostCard = ({ item, profileImageLink,isItOtherUser }) => {
   // const navigation = useNavigation();
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
   const [modalVisibility, setModalVisibility] = useState(false);
@@ -48,6 +48,8 @@ const SinglePostCard = ({ item, profileImageLink }) => {
       ? "Up for  breeding"
       : ""
   );
+  const [infoText, setInfoText] = useState("more info");
+  const [displayMoreInfo, setDisplayMoreInfo] = useState(false);
   // const { userDataContext } = useContext(AuthContext);
   const [likes, setLikes] = useState(
     item.userWhoLikedIds ? item.userWhoLikedIds : []
@@ -146,6 +148,15 @@ const SinglePostCard = ({ item, profileImageLink }) => {
       console.log(error);
     }
   };
+  const handleMoreInfoButton = () => {
+    if (displayMoreInfo) {
+      setInfoText("more info");
+      setDisplayMoreInfo(false);
+    } else {
+      setInfoText("show less");
+      setDisplayMoreInfo(true);
+    }
+  };
 
   return modalVisibility ? (
     <View style={styles.container1Style}>
@@ -166,14 +177,15 @@ const SinglePostCard = ({ item, profileImageLink }) => {
     <View style={styles.mainContainerStyle}>
       <View style={styles.postCardStyle}>
         <View style={styles.container1Style}>
-          <View style={styles.profilePictureViewStyle}>
+          {/* <View style={styles.profilePictureViewStyle}>
             <Image
               style={styles.profilePictureStyle}
               source={{ uri: profileImageLink }}
             />
-          </View>
+          </View> */}
           <View style={styles.userNameAndPostTimeStyle}>
             <Text style={styles.userNameTextStyle}>{item.petName}</Text>
+            {/* <Text style={styles.userNameTextStyle}>{item.petName}</Text> */}
             <Text style={styles.timeTextStyle}>{postTypeTextString}</Text>
           </View>
           <View style={styles.deleteViewStyle}>
@@ -184,18 +196,19 @@ const SinglePostCard = ({ item, profileImageLink }) => {
             ) : (
               <View></View>
             )}
-
-            <View style={styles.deleteButtonStyle}>
-              <TouchableNativeFeedback
-                onPress={() => {
-                  handleDeleteButton(item.postId);
-                }}
-              >
-                <View>
-                  <Ionicons name={"trash-outline"} size={35} />
-                </View>
-              </TouchableNativeFeedback>
-            </View>
+            {!isItOtherUser && (
+              <View style={styles.deleteButtonStyle}>
+                <TouchableNativeFeedback
+                  onPress={() => {
+                    handleDeleteButton(item.postId);
+                  }}
+                >
+                  <View>
+                    <Ionicons name={"trash-outline"} size={35} />
+                  </View>
+                </TouchableNativeFeedback>
+              </View>
+            )}
           </View>
         </View>
         <View style={styles.container2Style}>
@@ -204,7 +217,7 @@ const SinglePostCard = ({ item, profileImageLink }) => {
             source={{ uri: item.postImageLink }}
           />
         </View>
-          <Text style={{fontSize:16,marginLeft:5}}>{item.postDescription}</Text>
+
         <View style={styles.container3Style}>
           <View style={styles.likeIconViewStyle}>
             <TouchableNativeFeedback
@@ -242,6 +255,50 @@ const SinglePostCard = ({ item, profileImageLink }) => {
             </TouchableNativeFeedback>
           </View>
         </View>
+        {/* {item.postType !== "casual" &&()} */}
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <View style={styles.descriptionDivider}></View>
+        </View>
+        <Text style={{ fontSize: 16, paddingLeft: 20, paddingTop: 10 }}>
+          {item.postDescription}
+        </Text>
+        {item.postType !== "casual" && (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "flex-end",
+              paddingRight: 10,
+            }}
+          >
+            <TouchableNativeFeedback onPress={handleMoreInfoButton}>
+              <Text style={{ color: "blue", textDecorationLine: "underline" }}>
+                {infoText}
+              </Text>
+            </TouchableNativeFeedback>
+          </View>
+        )}
+        {displayMoreInfo && (
+          <View style={styles.postDetailsStyle}>
+            <View style={{ flexDirection: "row" }}>
+              {item.price && (
+                <Text style={{ fontSize: 16,marginRight: "8%" }}>Price: {item.price}</Text>
+              )}
+              {item.petType && (
+                <Text style={{ fontSize: 16, marginRight: "8%" }}>
+                  Pet: {item.petType}
+                </Text>
+              )}
+              {item.breed && (
+                <Text style={{ fontSize: 16 }}>Breed: {item.breed}</Text>
+              )}
+            </View>
+            {item.dateOfBirth && (
+              <Text style={{ fontSize: 16 }}>
+                Date of birth: {item.dateOfBirth}
+              </Text>
+            )}
+          </View>
+        )}
       </View>
     </View>
   );
@@ -255,37 +312,66 @@ const styles = StyleSheet.create({
     marginTop: "15%",
     borderRadius: 30,
   },
-  container1Style: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: Dimensions.get("window").width,
-  },
   mainContainerStyle: {
     // flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  postCardStyle: {
-    backgroundColor: "white",
-    marginVertical: 10,
-    height: 300,
-    maxHeight:600,
-    // height: "50%",
-    width: Dimensions.get("window").width - 20,
-    borderWidth: 5,
-    borderRadius: 25,
-    borderColor: "#3399ff",
-    // justifyContent: "center",
-    // alignItems: "center",
-  },
   container1Style: {
-    // height: "15%",
+    flex: 0.2,
     borderBottomWidth: 2,
     borderColor: "#3399ff",
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
   },
+  container2Style: {
+    flex: 0.5,
+    // height: "75%",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+    // position: "relative",
+    // aspectRatio: 1,
+  },
+  descriptionDivider: {
+    borderTopWidth: 2,
+    borderColor: "#3399ff",
+    width: Dimensions.get("window").width - 200,
+    // alignItems: "center",
+  },
+  postDetailsStyle: {
+    flex: 0.1,
+
+    // paddingBottom: 10,
+    paddingLeft: 20,
+    // justifyContent: "flex-start",
+  },
+  container3Style: {
+    flex: 0.1,
+    borderTopWidth: 2,
+    borderColor: "#3399ff",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    // alignSelf: "flex-end",
+    // marginBottom: 10
+  },
+  postCardStyle: {
+    backgroundColor: "white",
+    marginVertical: 10,
+    // minHeight: 350,
+    // maxHeight: 500,
+    // height: "50%",
+    width: Dimensions.get("window").width - 20,
+    borderWidth: 5,
+    borderRadius: 25,
+    borderColor: "#3399ff",
+    paddingBottom: 10,
+    // justifyContent: "center",
+    // alignItems: "center",
+  },
+
   profilePictureViewStyle: {
     marginHorizontal: 7,
     height: 40,
@@ -299,6 +385,7 @@ const styles = StyleSheet.create({
   },
   userNameAndPostTimeStyle: {
     marginHorizontal: 7,
+    paddingLeft:10
   },
   deleteViewStyle: {
     marginHorizontal: 7,
@@ -318,6 +405,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   userNameTextStyle: {
+    paddingTop:5,
     fontSize: 20,
     justifyContent: "flex-start",
     marginVertical: 2,
@@ -327,33 +415,15 @@ const styles = StyleSheet.create({
     marginVertical: 2,
     justifyContent: "flex-start",
   },
-  container2Style: {
-    flex: 1,
-    // height: "75%",
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",
-    // position: "relative",
-    // aspectRatio: 1,
-  },
   postImageStyle: {
-    flex:1,
+    flex: 1,
     width: "100%",
-    height: "100%",
+    height: 200,
     // aspectRatio: 1,
-    resizeMode:"contain"
+    resizeMode: "contain",
 
     // height: "100%",
     // width: "100%",
-  },
-  container3Style: {
-    borderTopWidth: 2,
-    borderColor: "#3399ff",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    // alignSelf: "flex-end",
-    // marginBottom: 10
   },
   likeIconViewStyle: {
     marginHorizontal: 50,

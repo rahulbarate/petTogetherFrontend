@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import HomeScreen from "./Home";
 import SearchScreen from "./Search";
@@ -26,6 +26,31 @@ const Tab = createBottomTabNavigator();
 export default function MainContainer() {
   const { setUserDataContext } = useContext(AuthContext);
   const navigation = useNavigation();
+  const [dotOption, setDotOption] = useState({});
+
+  const displayDotOnNotification = (display) => {
+    if (display) {
+      setDotOption({
+        tabBarBadge: "",
+        tabBarBadgeStyle: {
+          minWidth: 14,
+          minHeight: 14,
+          maxWidth: 14,
+          maxHeight: 14,
+          borderRadius: 7,
+        },
+      });
+    } else {
+      setDotOption({});
+    }
+  };
+
+  // useEffect(() => {
+  //   setUserDataContext((prev) => ({
+  //     ...prev,
+  //     displayDotOnNotification,
+  //   }));
+  // }, []);
 
   const handleSignOut = () => {
     signOut(auth)
@@ -70,7 +95,14 @@ export default function MainContainer() {
       <Tab.Screen name="Search" component={SearchScreen} />
       {/* <Tab.Screen name="HighAlert" component={HighAlertScreen} /> */}
       <Tab.Screen name="Chat" component={Chat} />
-      <Tab.Screen name="Alerts" component={NotifyScreen} />
+      <Tab.Screen
+        name="Alerts"
+        // component={NotifyScreen}
+        options={dotOption}
+        children={() => (
+          <NotifyScreen displayDotOnNotification={displayDotOnNotification} />
+        )}
+      />
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}

@@ -35,9 +35,9 @@ const SinglePostList = ({ route }) => {
   //       postImageLink: require("../../static/images/post1.jpg"),
   //     },
   //   ];
-  const { allPosts, initialScrollIndex, profileImageLink } = route.params;
+  const { allPosts, initialScrollIndex, profileImageLink,isItOtherUser } = route.params;
   const renderEachPost = ({ item }) => {
-    return <SinglePostCard item={item} profileImageLink={profileImageLink} />;
+    return <SinglePostCard item={item} profileImageLink={profileImageLink} isItOtherUser={isItOtherUser} />;
   };
   const getItemLayout = (data, index) => {
     return {

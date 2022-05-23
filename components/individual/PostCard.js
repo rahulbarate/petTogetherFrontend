@@ -45,6 +45,8 @@ export default PostCard = ({ item }) => {
   );
   const [isItAvailable, setIsItAvailable] = useState();
   const [markPostString, setMarkPostString] = useState("");
+  const [displayMoreInfo, setDisplayMoreInfo] = useState(false);
+  const [infoText, setInfoText] = useState("more info");
   const sendRequest = async (
     postUserEmail,
     postUserType,
@@ -176,7 +178,27 @@ export default PostCard = ({ item }) => {
   useEffect(() => {
     getLatestDataAboutPost();
   }, [item]);
-
+  const handleDeleteButton = (postId) => {
+    Alert.alert("Alert", "Do you want to delete this post?", [
+      {
+        text: "Yes",
+        onPress: () => {
+          // console.log(postId + "in handleDeleteButton");
+          deletePost(postId);
+        },
+      },
+      { text: "No", onPress: null },
+    ]);
+  };
+  const handleMoreInfoButton = () => {
+    if (displayMoreInfo) {
+      setInfoText("more info");
+      setDisplayMoreInfo(false);
+    } else {
+      setInfoText("show less");
+      setDisplayMoreInfo(true);
+    }
+  };
   return (
     <Card style={styles.container}>
       <Card.Content>
@@ -250,7 +272,50 @@ export default PostCard = ({ item }) => {
         }}
       />
       <Card.Content>
-        <Paragraph>{item.item.postDescription}</Paragraph>
+        <Paragraph>
+          <Text style={{ fontSize: 16 }}>{item.item.postDescription}</Text>
+        </Paragraph>
+        {item.item.postType !== "casual" && (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "flex-end",
+              paddingRight: 10,
+            }}
+          >
+            <TouchableNativeFeedback onPress={handleMoreInfoButton}>
+              <Text style={{ color: "blue", textDecorationLine: "underline" }}>
+                {infoText}
+              </Text>
+            </TouchableNativeFeedback>
+          </View>
+        )}
+        {displayMoreInfo && (
+          <View>
+            <View style={{ flexDirection: "row" }}>
+              {item.item.price && (
+                <Paragraph style={{ fontSize: 16, marginRight: "2%" }}>
+                  Price: {item.item.price}
+                </Paragraph>
+              )}
+              {item.item.petType && (
+                <Paragraph style={{ fontSize: 16, marginHorizontal: "4%" }}>
+                  Pet: {item.item.petType}
+                </Paragraph>
+              )}
+              {item.item.breed && (
+                <Paragraph style={{ fontSize: 16 }}>
+                  Breed: {item.item.breed}
+                </Paragraph>
+              )}
+            </View>
+            {item.item.dateOfBirth && (
+              <Paragraph style={{ fontSize: 16 }}>
+                Date of birth: {item.item.dateOfBirth}
+              </Paragraph>
+            )}
+          </View>
+        )}
       </Card.Content>
       <Card.Actions>
         <Like
