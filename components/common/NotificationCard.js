@@ -92,11 +92,13 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
     }
   };
 
-  const sendOtherUserNotification = async (item, status) => {
+  const sendOtherUserNotification = async (item, status, isItFollowRequest) => {
     const dataToBeUpdated = {
       name: userDataContext.name,
       userId: userDataContext.email,
-      profileImageLink: userDataContext.profileImageLink,
+      profileImageLink: isItFollowRequest
+        ? userDataContext.profileImageLink
+        : item.profileImageLink,
       notificationType: `${item.notificationType}${status}`,
       requestStatus: status,
       sendTime: new Date(),
@@ -190,17 +192,26 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
     setRequestStatus("accepted");
     if (item.notificationType === "followRequest") {
       await acceptTheFollowRequest(item, index);
+      await updateWholeArrayForPost(
+        {
+          ...item,
+          requestStatus: "accepted",
+        },
+        index
+      );
+      await sendOtherUserNotification(item, "accepted", true);
     } else {
       await sendPostRequestAccpetedToServer(item);
+      await updateWholeArrayForPost(
+        {
+          ...item,
+          requestStatus: "accepted",
+        },
+        index
+      );
+      await sendOtherUserNotification(item, "accepted", false);
     }
-    await updateWholeArrayForPost(
-      {
-        ...item,
-        requestStatus: "accepted",
-      },
-      index
-    );
-    await sendOtherUserNotification(item, "accepted");
+    // await sendOtherUserNotification(item, "accepted",);
   };
 
   const rejectButtonHandle = async (item, index) => {

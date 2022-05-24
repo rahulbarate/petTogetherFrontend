@@ -34,7 +34,7 @@ const Comment = ({ route }) => {
         postId,
         profileImageLink: userDataContext.profileImageLink
           ? userDataContext.profileImageLink
-          : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+          : "",
         content: text,
         userType: userDataContext.userType,
       });
@@ -55,8 +55,10 @@ const Comment = ({ route }) => {
     }
   };
 
-  const onSubmitEditing = ({ nativeEvent: { text } }) =>
+  const onSubmitEditing = ({ nativeEvent: { text } }) => {
+    console.log(text);
     setText({ text }, submit());
+  };
 
   const submit = () => {
     if (text) {
@@ -109,12 +111,20 @@ const RenderItem = ({ item, loggedUserId }) => {
   return (
     <View style={styles.RenderItemcontainer}>
       <View style={styles.avatarContainer}>
-        {item.profileImageLink && (
+        {item.profileImageLink ? (
           <Image
             resizeMode="contain"
             style={styles.avatar}
-            source={{ uri: item.profileImageLink }}
+            source={
+              item.profileImageLink
+                ? {
+                    uri: item.profileImageLink,
+                  }
+                : {}
+            }
           />
+        ) : (
+          <View></View>
         )}
       </View>
       <View style={styles.contentContainer}>
