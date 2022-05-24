@@ -225,7 +225,9 @@ export default PostCard = ({ item }) => {
             <Text>{postInformation(item.item.postType)}</Text>
           </View>
           <View style={styles.requestButton}>
-            {item.item.postType === "casual" ? (
+            {item.item.postType === "casual" ||
+            item.item.postType === "productShowcasePost" ||
+            item.item.postType === "eventPost" ? (
               <View></View>
             ) : isItAvailable ? (
               <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -277,24 +279,30 @@ export default PostCard = ({ item }) => {
         <Paragraph>
           <Text style={{ fontSize: 16 }}>{item.item.postDescription}</Text>
         </Paragraph>
-        {item.item.postType !== "casual" && (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "flex-end",
-              paddingRight: 10,
-            }}
-          >
-            <TouchableNativeFeedback onPress={handleMoreInfoButton}>
-              <Text style={{ color: "blue", textDecorationLine: "underline" }}>
-                {infoText}
-              </Text>
-            </TouchableNativeFeedback>
-          </View>
-        )}
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "flex-end",
+            paddingRight: 10,
+          }}
+        >
+          <TouchableNativeFeedback onPress={handleMoreInfoButton}>
+            <Text style={{ color: "blue", textDecorationLine: "underline" }}>
+              {infoText}
+            </Text>
+          </TouchableNativeFeedback>
+        </View>
+        {/* {item.item.postType !== "casual" && (
+          
+        )} */}
         {displayMoreInfo && (
           <View>
             <View style={{ flexDirection: "row" }}>
+              {item.item.petName && (
+                <Paragraph style={{ fontSize: 16, marginRight: "2%" }}>
+                  Pet name: {item.item.petName}
+                </Paragraph>
+              )}
               {item.item.price && (
                 <Paragraph style={{ fontSize: 16, marginRight: "2%" }}>
                   Price: {item.item.price}

@@ -4,10 +4,12 @@ import {
   Image,
   StyleSheet,
   Text,
+  TouchableNativeFeedback,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Modal from "react-native-modal";
+import { useNavigation } from "@react-navigation/native";
 
 const UserDetailsCard = (props) => {
   const [userData, setUserData] = useState({});
@@ -19,20 +21,29 @@ const UserDetailsCard = (props) => {
   }, []);
   return (
     //outer container
-    <View style={styles.mainCardContainer}>
-      <View style={styles.profileImageContainer}>
-        <Image
-          style={styles.avatar}
-          source={
-            userData.profileImageLink && { uri: userData.profileImageLink }
-          }
-        />
+    <TouchableNativeFeedback
+      onPress={() => {
+        props.navigation.navigate("OtherUsersProfile", {
+          clickedUsersEmail: userData.email,
+          clickedUsersType: userData.userType,
+        });
+      }}
+    >
+      <View style={styles.mainCardContainer}>
+        <View style={styles.profileImageContainer}>
+          <Image
+            style={styles.avatar}
+            source={
+              userData.profileImageLink && { uri: userData.profileImageLink }
+            }
+          />
+        </View>
+        <View style={styles.userNameAndEmailContainer}>
+          <Text style={{ fontSize: 18 }}>{userData.name}</Text>
+          <Text>{userData.email}</Text>
+        </View>
       </View>
-      <View style={styles.userNameAndEmailContainer}>
-        <Text style={{ fontSize: 18 }}>{userData.name}</Text>
-        <Text>{userData.email}</Text>
-      </View>
-    </View>
+    </TouchableNativeFeedback>
   );
 };
 
@@ -44,14 +55,17 @@ const getUserData = async (email, setUserData) => {
     name: data.name,
     email: data.email,
     profileImageLink: data.profileImageLink,
+    userType: data.userType,
   };
   setUserData(item);
 };
 
 const FollowersFollowingList = (props) => {
+
+  const navigation = useNavigation();
   //renderSingleItem
   const renderCardItem = ({ item, index }) => {
-    return <UserDetailsCard item={item} index={index} />;
+    return <UserDetailsCard item={item} index={index} navigation={navigation} />;
   };
   // const [modalVisibility, setModalVisibility] = useState(props.modalVisibility);
   return (

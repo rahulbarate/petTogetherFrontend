@@ -148,7 +148,7 @@ const IndividualUserPostUpload = () => {
         }
       );
     } else {
-      ToastAndroid.show("Wait for image to be uploaded", ToastAndroid.SHORT);
+      ToastAndroid.show("Please choose image and enter other details", ToastAndroid.SHORT);
     }
   };
 
@@ -161,25 +161,43 @@ const IndividualUserPostUpload = () => {
       uploadedOn: new Date(),
     };
     if (postType == "petSellPost") {
+      if (!petName || !petType || !breed || !price || !dateOfBirth) {
+        ToastAndroid.show("Enter all details",ToastAndroid.SHORT);
+        return null;
+      }
       postData = { ...postData, petName, petType, price, breed, dateOfBirth };
     }
     if (postType == "casual") {
       postData = { ...postData, petName };
     }
     if (postType == "reshelter") {
+      if (!petName || !petType || !breed || !dateOfBirth) {
+        ToastAndroid.show("Enter all details",ToastAndroid.SHORT);
+        return null;
+      }
       postData = { ...postData, petName, petType, breed, dateOfBirth };
     }
     if (postType == "breedPost") {
+      if (!petName || !petType || !breed) {
+        ToastAndroid.show("Enter all details",ToastAndroid.SHORT);
+        return null;
+      }
       postData = { ...postData, petName, petType, breed };
     }
     return postData;
   };
 
   const uploadPost = async (url) => {
+    const enteredPostData = getEnteredData();
+    if (!enteredPostData) {
+      // ToastAndroid.show("Enter all details",ToastAndroid.SHORT);
+      return;
+    }
+    ToastAndroid.show("Uploading", ToastAndroid.SHORT);
     const postData = {
       userEmail: userDataContext.email,
       userType: userDataContext.userType,
-      ...getEnteredData(),
+      ...enteredPostData,
       postImageLink: url,
     };
 
@@ -191,7 +209,7 @@ const IndividualUserPostUpload = () => {
   };
 
   const handleUploadButton = () => {
-    ToastAndroid.show("Uploading", ToastAndroid.SHORT);
+    
     // console.log(getEnteredData());
     uploadImage(uploadPost);
     // navigation.navigate("MainComponent");

@@ -18,8 +18,14 @@ import { localhostBaseURL } from "./baseURLs";
 import Modal from "react-native-modal";
 import FollowersFollowingList from "./FollowersFollowingList";
 
-const SinglePostCard = ({ item, profileImageLink,isItOtherUser }) => {
+const SinglePostCard = ({
+  item,
+  profileImageLink,
+  isItOtherUser,
+  userData,
+}) => {
   // const navigation = useNavigation();
+  // console.log(userData);
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
   const [modalVisibility, setModalVisibility] = useState(false);
   const [whoseListIsPassed, setWhoseListIsPassed] = useState("userWhoLikedIds");
@@ -177,15 +183,16 @@ const SinglePostCard = ({ item, profileImageLink,isItOtherUser }) => {
     <View style={styles.mainContainerStyle}>
       <View style={styles.postCardStyle}>
         <View style={styles.container1Style}>
-          {/* <View style={styles.profilePictureViewStyle}>
+          <View style={styles.profilePictureViewStyle}>
             <Image
               style={styles.profilePictureStyle}
               source={{ uri: profileImageLink }}
             />
-          </View> */}
+          </View>
           <View style={styles.userNameAndPostTimeStyle}>
-            <Text style={styles.userNameTextStyle}>{item.petName}</Text>
             {/* <Text style={styles.userNameTextStyle}>{item.petName}</Text> */}
+            <Text style={styles.userNameTextStyle}>{userData.name}</Text>
+            {/* <Text style={styles.timeTextStyle}>pet name: {item.petName}</Text> */}
             <Text style={styles.timeTextStyle}>{postTypeTextString}</Text>
           </View>
           <View style={styles.deleteViewStyle}>
@@ -262,26 +269,34 @@ const SinglePostCard = ({ item, profileImageLink,isItOtherUser }) => {
         <Text style={{ fontSize: 16, paddingLeft: 20, paddingTop: 10 }}>
           {item.postDescription}
         </Text>
-        {item.postType !== "casual" && (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "flex-end",
-              paddingRight: 10,
-            }}
-          >
-            <TouchableNativeFeedback onPress={handleMoreInfoButton}>
-              <Text style={{ color: "blue", textDecorationLine: "underline" }}>
-                {infoText}
-              </Text>
-            </TouchableNativeFeedback>
-          </View>
-        )}
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "flex-end",
+            paddingRight: 10,
+          }}
+        >
+          <TouchableNativeFeedback onPress={handleMoreInfoButton}>
+            <Text style={{ color: "blue", textDecorationLine: "underline" }}>
+              {infoText}
+            </Text>
+          </TouchableNativeFeedback>
+        </View>
+        {/* {item.postType !== "casual" && (
+          
+        )} */}
         {displayMoreInfo && (
           <View style={styles.postDetailsStyle}>
+            {item.petName && (
+              <Text style={{ fontSize: 16, marginRight: "8%" }}>
+                Pet name: {item.petName}
+              </Text>
+            )}
             <View style={{ flexDirection: "row" }}>
               {item.price && (
-                <Text style={{ fontSize: 16,marginRight: "8%" }}>Price: {item.price}</Text>
+                <Text style={{ fontSize: 16, marginRight: "8%" }}>
+                  Price: {item.price}
+                </Text>
               )}
               {item.petType && (
                 <Text style={{ fontSize: 16, marginRight: "8%" }}>
@@ -359,8 +374,8 @@ const styles = StyleSheet.create({
   },
   postCardStyle: {
     backgroundColor: "white",
-    marginVertical: 10,
-    shadowOffset: {width: -2, height: 4},
+    marginVertical: 5,
+    shadowOffset: { width: -2, height: 4 },
     shadowColor: "#171717",
     shadowOpacity: 0.3,
     shadowRadius: 3,
@@ -390,7 +405,7 @@ const styles = StyleSheet.create({
   },
   userNameAndPostTimeStyle: {
     marginHorizontal: 7,
-    paddingLeft:10
+    paddingLeft: 10,
   },
   deleteViewStyle: {
     marginHorizontal: 7,
@@ -410,7 +425,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   userNameTextStyle: {
-    paddingTop:5,
+    paddingTop: 5,
     fontSize: 20,
     justifyContent: "flex-start",
     marginVertical: 2,

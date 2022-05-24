@@ -74,12 +74,13 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
       </View>
     );
   };
-  const displaySinglePost = (listOfAllPosts, index, profileImageLink,isItOtherUser) => {
+  const displaySinglePost = (listOfAllPosts, index, profileImageLink,isItOtherUser,userData) => {
     navigation.navigate("SinglePostList", {
       allPosts: listOfAllPosts,
       initialScrollIndex: index,
       profileImageLink,
-      isItOtherUser
+      isItOtherUser,
+      userData
     });
   };
   const renderCardItem = ({ item, index }) => {
@@ -107,7 +108,8 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
               listOfAllPosts,
               index,
               userDataContext.profileImageLink,
-              isItOtherUser
+              isItOtherUser,
+              userData
             );
           }}
         >
@@ -262,7 +264,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").width / 2 - 15,
     borderRadius: 10,
     marginHorizontal: "2%",
-    marginVertical: "2%",
+    marginVertical: "1%",
     justifyContent: "center",
     alignItems: "center",
     elevation: 3,

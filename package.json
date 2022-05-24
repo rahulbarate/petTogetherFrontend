@@ -1,7 +1,10 @@
 {
   "name": "pettogether",
+  "displayName": "Pet Together",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
+  "icon":"./static/images/post1.jpg",
+
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",

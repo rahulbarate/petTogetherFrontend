@@ -56,6 +56,9 @@ const LoginPage = () => {
         }, 1000);
       })
       .catch((error) => {
+        setLoginButtonText("Login");
+        // setPlaceholderColor("red");
+        ToastAndroid.show("Incorrect email and password", ToastAndroid.SHORT);
         console.log(error.message);
       });
   };
