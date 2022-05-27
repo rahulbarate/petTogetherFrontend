@@ -65,7 +65,7 @@ export default function MainContainer() {
   };
   return (
     <Tab.Navigator
-      initialRouteName={profileName}
+      initialRouteName={homeName}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -92,6 +92,9 @@ export default function MainContainer() {
       }}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
+      {/* <Tab.Screen name="Home" children={()=>{
+        <HomeScreen email={userDataContext.email} />
+      }} /> */}
       <Tab.Screen name="Search" component={SearchScreen} />
       {/* <Tab.Screen name="HighAlert" component={HighAlertScreen} /> */}
       <Tab.Screen name="Chat" component={Chat} />

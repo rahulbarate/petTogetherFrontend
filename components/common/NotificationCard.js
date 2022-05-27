@@ -221,19 +221,20 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
       { ...item, requestStatus: "rejected" },
       index
     );
-    await sendOtherUserNotification(item, "rejected");
+    await sendOtherUserNotification(item, "rejected", true);
     if (item.notificationType === "followRequest") {
       await updateFollowRequestsSentArray(item, index);
     }
   };
 
   const getDescriptionString = (notificationType, requestStatus, name) => {
-    if (notificationType === "like") return "has liked your post";
-    if (notificationType === "comment") return "has commented on your post";
+    if (notificationType === "like") return `${name} has liked your post`;
+    if (notificationType === "comment")
+      return `${name} has commented on your post`;
 
     //pet buy request string
     if (notificationType === "petBuyRequest" && requestStatus === "waiting")
-      return "wants to buy your pet";
+      return `${name} wants to buy your pet`;
     if (notificationType === "petBuyRequest" && requestStatus === "accepted")
       return `accepted ${name}'s pet buy request`;
     if (notificationType === "petBuyRequest" && requestStatus === "rejected")
@@ -241,7 +242,7 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
 
     //pet reshelter string
     if (notificationType === "reshelterRequest" && requestStatus === "waiting")
-      return "wants to impound your pet";
+      return `${name} wants to impound your pet`;
     if (notificationType === "reshelterRequest" && requestStatus === "accepted")
       return `accepted ${name}'s impounding request`;
     if (notificationType === "reshelterRequest" && requestStatus === "rejected")
@@ -249,7 +250,7 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
 
     //pet breed request
     if (notificationType === "breedRequest" && requestStatus === "waiting")
-      return "sent breed request for your pet";
+      return `${name} sent breed request for your pet`;
     if (notificationType === "breedRequest" && requestStatus === "accepted")
       return `accepted ${name}'s breed request`;
     if (notificationType === "breedRequest" && requestStatus === "rejected")
@@ -257,7 +258,7 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
 
     //pet adoption reqeust
     if (notificationType === "adoptionRequest" && requestStatus === "waiting")
-      return "wants to adopt your pet";
+      return `${name} wants to adopt your pet`;
     if (notificationType === "adoptionRequest" && requestStatus === "accepted")
       return `accepted ${name}'s pet adoption request`;
     if (notificationType === "adoptionRequest" && requestStatus === "rejected")
@@ -265,72 +266,42 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
 
     //follow request
     if (notificationType === "followRequest" && requestStatus === "waiting")
-      return "sent you a follow request";
+      return `${name} sent you a follow request`;
     if (notificationType === "followRequest" && requestStatus === "accepted")
-      return `accepted ${name}'s follow request`;
+      return `${name} started following you`;
     if (notificationType === "followRequest" && requestStatus === "rejected")
       return `rejected ${name}'s follow request`;
 
     switch (notificationType) {
-      // case "like":
-      //   return "has liked your post";
-      //   break;
-      // case "comment":
-      //   return "has commented on your phone";
-      //   break;
-      // case "petBuyRequest" && requestStatus === "waiting":
-      //   return "wants to buy your pet";
-      //   break;
-      // case "petBuyRequest" && requestStatus === "accepted":
-      //   return `accepted ${name}'s pet buy request`;
-      //   break;
-      // case "petBuyRequest" && requestStatus === "rejected":
-      //   return `rejected ${name}'s pet buy request`;
-      //   break;
-      // case "reshelterRequest" && requestStatus === "waiting":
-      //   return "wants to reshelter your pet";
-      //   break;
-      // case "reshelterRequest" && requestStatus === "accepted":
-      //   return `accepted ${name}'s impounding request`;
-      //   break;
-      // case "breedRequest":
-      //   return "sent breed request for your pet";
-      //   break;
-      // case "adoptionRequest":
-      //   return "wants to adopt your pet";
-      //   break;
-      // case "followRequest":
-      //   return "sent you follow request";
-      //   break;
       case "followRequestaccepted":
-        return "has accepted your follow request";
+        return `${name} has accepted your follow request`;
         break;
       case "petBuyRequestaccepted":
-        return "has accepted your pet buy request";
+        return `${name} has accepted your pet buy request`;
         break;
       case "reshelterRequestaccepted":
-        return "has accepted your pet impounding request";
+        return `${name} has accepted your pet impounding request`;
         break;
       case "breedRequestaccepted":
-        return "has accepted your pet breed request";
+        return `${name} has accepted your pet breed request`;
         break;
       case "adoptionRequestaccepted":
-        return "has accepted your pet adoption request";
+        return `${name} has accepted your pet adoption request`;
         break;
       case "followRequestrejected":
-        return "has rejected your follow request";
+        return `${name} has rejected your follow request`;
         break;
       case "petBuyRequestrejected":
-        return "has rejected your pet buy request";
+        return `${name} has rejected your pet buy request`;
         break;
       case "reshelterRequestrejected":
-        return "has rejected your pet impounding request";
+        return `${name} has rejected your pet impounding request`;
         break;
       case "breedRequestrejected":
-        return "has rejected your pet breed request";
+        return `${name} has rejected your pet breed request`;
         break;
       case "adoptionRequestrejected":
-        return "has rejected your pet adoption request";
+        return `${name} has rejected your pet adoption request`;
         break;
     }
   };
@@ -346,17 +317,20 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
       return true;
     else return false;
   };
+
   return (
     <View style={styles.item}>
-      <View style={styles.avatarContainer}>
-        <Image
-          style={styles.avatar}
-          source={item.profileImageLink && { uri: item.profileImageLink }}
-        ></Image>
+      <View style={{ flex: 1 }}>
+        <View style={styles.avatarContainer}>
+          <Image
+            style={styles.avatar}
+            source={item.profileImageLink && { uri: item.profileImageLink }}
+          ></Image>
+        </View>
       </View>
       <View style={styles.nameDescriptionStyle}>
-        <Text style={styles.name}>{item.name}</Text>
-        <Text>
+        {/* <Text style={styles.name}>{item.name}</Text> */}
+        <Text style={{ fontSize: 16 }}>
           {getDescriptionString(
             item.notificationType,
             item.requestStatus ? item.requestStatus : "",
@@ -367,56 +341,76 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
           {/* {"at " + moment(item.sendTime.toDate()).calendar(null, formats)} */}
         </Text>
       </View>
-      {isItRequest(item.notificationType) && (
+      {isItRequest(item.notificationType) ? (
         <View style={{ flexDirection: "row" }}>
-          <View>
-            <TouchableNativeFeedback
-              disabled={
-                item.requestStatus === "accepted" ||
-                item.requestStatus === "rejected"
-                  ? true
-                  : false
-              }
-              onPress={() => {
-                acceptButtonHandle(item, index);
-              }}
-            >
-              <View
-                style={
+          {item.requestStatus === "accepted" ||
+          item.requestStatus == "rejected" ? (
+            <View></View>
+          ) : (
+            <View>
+              <TouchableNativeFeedback
+                disabled={
                   item.requestStatus === "accepted" ||
                   item.requestStatus === "rejected"
-                    ? { opacity: 0.1 }
-                    : {}
+                    ? true
+                    : false
                 }
+                onPress={() => {
+                  acceptButtonHandle(item, index);
+                }}
               >
-                <Ionicons name={"checkmark-circle-outline"} size={40} />
-              </View>
-            </TouchableNativeFeedback>
-          </View>
-          <View>
-            <TouchableNativeFeedback
-              disabled={
-                item.requestStatus === "accepted" ||
-                item.requestStatus === "rejected"
-                  ? true
-                  : false
-              }
-              onPress={() => {
-                rejectButtonHandle(item, index);
-              }}
-            >
-              <View
-                style={
+                <View
+                  style={
+                    item.requestStatus === "accepted" ||
+                    item.requestStatus === "rejected"
+                      ? { opacity: 0.1 }
+                      : {}
+                  }
+                >
+                  <Ionicons name={"checkmark-circle-outline"} size={40} />
+                </View>
+              </TouchableNativeFeedback>
+            </View>
+          )}
+
+          {item.requestStatus === "accepted" ||
+          item.requestStatus == "rejected" ? (
+            <View></View>
+          ) : (
+            <View>
+              <TouchableNativeFeedback
+                disabled={
                   item.requestStatus === "accepted" ||
                   item.requestStatus === "rejected"
-                    ? { opacity: 0.1 }
-                    : {}
+                    ? true
+                    : false
                 }
+                onPress={() => {
+                  rejectButtonHandle(item, index);
+                }}
               >
-                <Ionicons name={"close-circle-outline"} size={40} />
-              </View>
-            </TouchableNativeFeedback>
-          </View>
+                <View
+                  style={
+                    item.requestStatus === "accepted" ||
+                    item.requestStatus === "rejected"
+                      ? { opacity: 0.1 }
+                      : {}
+                  }
+                >
+                  <Ionicons name={"close-circle-outline"} size={40} />
+                </View>
+              </TouchableNativeFeedback>
+            </View>
+          )}
+        </View>
+      ) : (
+        <View style={{ flex: 1 }}>
+          {/* <View style={styles.avatarContainer}>
+            <Image
+              style={styles.avatar}
+              source={item.postImageLink && { uri: item.postImageLink }}
+            ></Image>
+          </View> */}
         </View>
       )}
     </View>
@@ -450,27 +444,28 @@ const styles = StyleSheet.create({
     borderColor: "#8CC0DE",
   },
   nameDescriptionStyle: {
-    flex: 0.8,
+    flex: 4,
     flexDirection: "column",
     marginLeft: "2%",
     // backgroundColor:"white"
   },
   avatar: {
-    borderRadius: 60 / 2,
-    height: 60,
-    width: 60,
+    flex: 1,
+    borderRadius: 50 / 2,
+    height: 50,
+    width: 50,
+  },
+  avatarContainer: {
+    backgroundColor: "#D9D9D9",
+    borderRadius: 50 / 2,
+    height: 50,
+    width: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
   name: {
     fontWeight: "600",
     fontSize: 20,
-  },
-  avatarContainer: {
-    backgroundColor: "#D9D9D9",
-    borderRadius: 60 / 2,
-    height: 60,
-    width: 60,
-    justifyContent: "center",
-    alignItems: "center",
   },
   area: {
     backgroundColor: "#CCCCCC",

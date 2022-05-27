@@ -29,7 +29,7 @@ const SinglePostCard = ({
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
   const [modalVisibility, setModalVisibility] = useState(false);
   const [whoseListIsPassed, setWhoseListIsPassed] = useState("userWhoLikedIds");
-  const [followersOrFollowingsArray, setFollowersOrFollowingsArray] = useState(
+  const [userWhoLikedIdsArray, setUserWhoLikedIdsArray] = useState(
     item.userWhoLikedIds ? item.userWhoLikedIds : []
   );
   const [markPostString, setMarkPostString] = useState(
@@ -54,12 +54,19 @@ const SinglePostCard = ({
       ? "Up for  breeding"
       : ""
   );
-  const [infoText, setInfoText] = useState("more info");
+  const [infoText, setInfoText] = useState("show more");
   const [displayMoreInfo, setDisplayMoreInfo] = useState(false);
   // const { userDataContext } = useContext(AuthContext);
   const [likes, setLikes] = useState(
     item.userWhoLikedIds ? item.userWhoLikedIds : []
   );
+  const shouldDisplayInfoText = (item) => {
+    if (item.petType || item.price || item.petName || item.dateOfBirth) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   const isLiked =
     likes.length > 0 &&
     likes.filter((like) => {
@@ -111,7 +118,11 @@ const SinglePostCard = ({
   const handleLikeButton = (item) => {
     if (item.userEmail === userDataContext.email) {
       //display list
-      setModalVisibility(true);
+      navigation.navigate("UsersList", {
+        whoseListIsPassed: "userWhoLikedIds",
+        usersList: userWhoLikedIdsArray,
+      });
+      // setModalVisibility(true);
     } else {
       //
       setPostLike(
@@ -156,7 +167,7 @@ const SinglePostCard = ({
   };
   const handleMoreInfoButton = () => {
     if (displayMoreInfo) {
-      setInfoText("more info");
+      setInfoText("show more");
       setDisplayMoreInfo(false);
     } else {
       setInfoText("show less");
@@ -164,22 +175,7 @@ const SinglePostCard = ({
     }
   };
 
-  return modalVisibility ? (
-    <View style={styles.container1Style}>
-      <Modal
-        isVisible={modalVisibility}
-        style={styles.modalStyle}
-        onSwipeComplete={() => setModalVisibility(false)}
-        onBackButtonPress={() => setModalVisibility(false)}
-        swipeDirection="down"
-      >
-        <FollowersFollowingList
-          whoseListIsPassed={whoseListIsPassed}
-          followersOrFollowingsArray={followersOrFollowingsArray}
-        />
-      </Modal>
-    </View>
-  ) : (
+  return (
     <View style={styles.mainContainerStyle}>
       <View style={styles.postCardStyle}>
         <View style={styles.container1Style}>
@@ -261,6 +257,16 @@ const SinglePostCard = ({
               </View>
             </TouchableNativeFeedback>
           </View>
+          <View style={styles.showMoreTextViewStyle}>
+            <TouchableNativeFeedback
+              onPress={handleMoreInfoButton}
+              disabled={!shouldDisplayInfoText(item)}
+            >
+              <Text style={{ color: "blue", textDecorationLine: "underline" }}>
+                {shouldDisplayInfoText(item) ? infoText : ""}
+              </Text>
+            </TouchableNativeFeedback>
+          </View>
         </View>
         {/* {item.postType !== "casual" &&()} */}
         <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -269,19 +275,7 @@ const SinglePostCard = ({
         <Text style={{ fontSize: 16, paddingLeft: 20, paddingTop: 10 }}>
           {item.postDescription}
         </Text>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "flex-end",
-            paddingRight: 10,
-          }}
-        >
-          <TouchableNativeFeedback onPress={handleMoreInfoButton}>
-            <Text style={{ color: "blue", textDecorationLine: "underline" }}>
-              {infoText}
-            </Text>
-          </TouchableNativeFeedback>
-        </View>
+
         {/* {item.postType !== "casual" && (
           
         )} */}
@@ -352,7 +346,7 @@ const styles = StyleSheet.create({
   descriptionDivider: {
     borderTopWidth: 2,
     borderColor: "#8CC0DE",
-    width: Dimensions.get("window").width - 200,
+    width: Dimensions.get("window").width - 300,
     // alignItems: "center",
   },
   postDetailsStyle: {
@@ -385,7 +379,7 @@ const styles = StyleSheet.create({
     // height: "50%",
     width: Dimensions.get("window").width - 20,
     // borderWidth: 3,
-    borderRadius: 10,
+    borderRadius: 5,
     borderColor: "#3399ff",
     paddingBottom: 10,
     // justifyContent: "center",
@@ -446,12 +440,18 @@ const styles = StyleSheet.create({
     // width: "100%",
   },
   likeIconViewStyle: {
-    marginHorizontal: 50,
+    flex: 1,
     // marginBottom: 10
   },
   commentIconViewStyle: {
-    marginHorizontal: 50,
+    flex: 1,
     // marginBottom: 10
+  },
+  showMoreTextViewStyle: {
+    flex: 1.5,
+    justifyContent: "center",
+    alignItems: "flex-end",
+    paddingRight: 10,
   },
   // container4Style: {
   //   // borderTopWidth: 2,
@@ -461,3 +461,20 @@ const styles = StyleSheet.create({
   //   alignItems: "center",
   // },
 });
+
+// modalVisibility ? (
+//   <View style={styles.container1Style}>
+//     <Modal
+//       isVisible={modalVisibility}
+//       style={styles.modalStyle}
+//       onSwipeComplete={() => setModalVisibility(false)}
+//       onBackButtonPress={() => setModalVisibility(false)}
+//       swipeDirection="down"
+//     >
+//       <FollowersFollowingList
+//         whoseListIsPassed={whoseListIsPassed}
+//         followersOrFollowingsArray={followersOrFollowingsArray}
+//       />
+//     </Modal>
+//   </View>
+// ) :

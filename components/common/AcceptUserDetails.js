@@ -135,10 +135,10 @@ const AcceptUserDetails = () => {
             textInputStyle={styles.longTextInputStyle}
             placeholder={
               userDataContext.userType === "Shopkeeper"
-                ? "Shop name here"
+                ? "Shop name"
                 : userDataContext.userType === "Organization"
-                ? "Organization name here"
-                : "Your name here"
+                ? "Organization name"
+                : "Your name"
             }
             placeholderTextColor={placeholderColor}
             value={name}
@@ -151,7 +151,7 @@ const AcceptUserDetails = () => {
           userDataContext.userType === "Organization" ? (
             <TextInputComponent
               textInputStyle={styles.longTextInputStyle}
-              placeholder={"Owner name here"}
+              placeholder={"Owner name"}
               value={ownerName}
               onChangeText={(text) => {
                 setOwnerName(text);
@@ -162,7 +162,7 @@ const AcceptUserDetails = () => {
           )}
           <TextInputComponent
             textInputStyle={styles.longTextInputStyle}
-            placeholder={"Phone no here"}
+            placeholder={"Phone number"}
             keyboardType={"phone-pad"}
             value={phoneNumber}
             onChangeText={(text) => {
@@ -196,7 +196,7 @@ const AcceptUserDetails = () => {
                       : styles.radioButtonUncheckedTextStyle
                   }
                 >
-                  Pet's essentials
+                  Pet essentials
                 </Text>
               </View>
               <View
@@ -314,6 +314,7 @@ const AcceptUserDetails = () => {
               textInputStyle={{
                 width: "80%",
                 height: 50,
+                paddingLeft: "10%"
               }}
               placeholder={"District"}
               value={district}

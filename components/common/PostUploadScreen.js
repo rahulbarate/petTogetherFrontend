@@ -409,7 +409,7 @@ const PostUploadScreen = () => {
         <View style={styles.bottomButtonGroupStyle}>
           <ButtonComponent
             buttonStyle={{ width: 150, height: 50, borderRadius: 25 }}
-            buttonText={"Upload"}
+            buttonText={"Post"}
             handleButton={handleUploadButton}
           />
           <ButtonComponent

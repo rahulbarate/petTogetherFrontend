@@ -32,7 +32,7 @@ const TopTabBar = ({ navigation, state }) => (
               fontWeight: "bold",
             }}
           >
-            All User
+            All users
           </Text>
         )}
       />
@@ -44,7 +44,7 @@ const TopTabBar = ({ navigation, state }) => (
               fontWeight: "bold",
             }}
           >
-            Shop
+            Shops
           </Text>
         )}
       />
@@ -56,7 +56,7 @@ const TopTabBar = ({ navigation, state }) => (
               fontWeight: "bold",
             }}
           >
-            NGO
+            NGOs
           </Text>
         )}
       />
@@ -68,7 +68,7 @@ const TopTabBar = ({ navigation, state }) => (
               fontWeight: "bold",
             }}
           >
-            Individual User
+            Individual users
           </Text>
         )}
       />

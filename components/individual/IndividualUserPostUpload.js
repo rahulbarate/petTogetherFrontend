@@ -148,7 +148,10 @@ const IndividualUserPostUpload = () => {
         }
       );
     } else {
-      ToastAndroid.show("Please choose image and enter other details", ToastAndroid.SHORT);
+      ToastAndroid.show(
+        "Please choose image and enter other details",
+        ToastAndroid.SHORT
+      );
     }
   };
 
@@ -162,7 +165,7 @@ const IndividualUserPostUpload = () => {
     };
     if (postType == "petSellPost") {
       if (!petName || !petType || !breed || !price || !dateOfBirth) {
-        ToastAndroid.show("Enter all details",ToastAndroid.SHORT);
+        ToastAndroid.show("Enter all details", ToastAndroid.SHORT);
         return null;
       }
       postData = { ...postData, petName, petType, price, breed, dateOfBirth };
@@ -172,14 +175,14 @@ const IndividualUserPostUpload = () => {
     }
     if (postType == "reshelter") {
       if (!petName || !petType || !breed || !dateOfBirth) {
-        ToastAndroid.show("Enter all details",ToastAndroid.SHORT);
+        ToastAndroid.show("Enter all details", ToastAndroid.SHORT);
         return null;
       }
       postData = { ...postData, petName, petType, breed, dateOfBirth };
     }
     if (postType == "breedPost") {
       if (!petName || !petType || !breed) {
-        ToastAndroid.show("Enter all details",ToastAndroid.SHORT);
+        ToastAndroid.show("Enter all details", ToastAndroid.SHORT);
         return null;
       }
       postData = { ...postData, petName, petType, breed };
@@ -209,7 +212,6 @@ const IndividualUserPostUpload = () => {
   };
 
   const handleUploadButton = () => {
-    
     // console.log(getEnteredData());
     uploadImage(uploadPost);
     // navigation.navigate("MainComponent");
@@ -217,7 +219,11 @@ const IndividualUserPostUpload = () => {
   return (
     <View style={styles.mainContainerStyle}>
       <KeyboardAwareScrollView
-        style={{ flex: 1, height: deviceHeight, width: deviceWidth }}
+        style={{
+          flex: 1,
+          height: deviceHeight,
+          width: deviceWidth,
+        }}
       >
         <View style={styles.cotainter1Style}>
           <View style={styles.postImageViewStyle}>
@@ -336,7 +342,7 @@ const IndividualUserPostUpload = () => {
         <View style={styles.container2Style}>
           <TextInputComponent
             textInputStyle={{ height: 50, marginVertical: 8 }}
-            placeholder={"Pet name here"}
+            placeholder={"Pet name"}
             value={petName}
             onChangeText={setPetName}
           />
@@ -359,7 +365,9 @@ const IndividualUserPostUpload = () => {
                     borderWidth: 2,
                     borderRadius: 25,
                   }}
-                  placeholder="Choose pet type"
+                  placeholder="Pet type"
+                  placeholderStyle={{ paddingLeft: 5 }}
+                  textStyle={{ marginLeft: "3%" }}
                   onChangeValue={(text) => {
                     setPetType(text);
                   }}
@@ -379,7 +387,9 @@ const IndividualUserPostUpload = () => {
                       borderWidth: 2,
                       borderRadius: 25,
                     }}
-                    placeholder="Choose breed"
+                    placeholder="Pet breed"
+                    placeholderStyle={{ paddingLeft: 5 }}
+                    textStyle={{ marginLeft: "3%" }}
                     onChangeValue={(text) => {
                       setBreed(text);
                     }}
@@ -395,6 +405,7 @@ const IndividualUserPostUpload = () => {
               <TextInputComponent
                 textInputStyle={{
                   height: 50,
+                  paddingLeft: 20,
                 }}
                 placeholder={"Date of birth"}
                 keyboardType={"phone-pad"}
@@ -406,8 +417,8 @@ const IndividualUserPostUpload = () => {
           {postType === "petSellPost" && (
             <View style={{ flex: 1 / 2, marginHorizontal: 10 }}>
               <TextInputComponent
-                textInputStyle={{ height: 50 }}
-                placeholder={"Enter price"}
+                textInputStyle={{ height: 50, paddingLeft: 20 }}
+                placeholder={"Price"}
                 keyboardType={"phone-pad"}
                 value={price}
                 onChangeText={setPrice}
@@ -415,21 +426,31 @@ const IndividualUserPostUpload = () => {
             </View>
           )}
         </View>
-        <View style={styles.bottomButtonGroupStyle}>
-          <ButtonComponent
-            buttonStyle={{ width: 150, height: 50, borderRadius: 25 }}
-            buttonText={"Upload"}
-            handleButton={handleUploadButton}
-          />
-          <ButtonComponent
-            buttonStyle={{ width: 150, height: 50, borderRadius: 25 }}
-            buttonText={"Go Back"}
-            handleButton={() => {
-              navigation.goBack();
-            }}
-          />
-        </View>
       </KeyboardAwareScrollView>
+      <View style={styles.bottomButtonGroupStyle}>
+        <ButtonComponent
+          buttonStyle={{
+            width: 150,
+            height: 50,
+            borderRadius: 25,
+            marginHorizontal: 15,
+          }}
+          buttonText={"Post"}
+          handleButton={handleUploadButton}
+        />
+        <ButtonComponent
+          buttonStyle={{
+            width: 150,
+            height: 50,
+            borderRadius: 25,
+            marginHorizontal: 15,
+          }}
+          buttonText={"Go Back"}
+          handleButton={() => {
+            navigation.goBack();
+          }}
+        />
+      </View>
     </View>
   );
 };
@@ -445,7 +466,7 @@ const styles = StyleSheet.create({
     height: deviceHeight,
   },
   cotainter1Style: {
-    flex: 0.5,
+    flex: 1,
     flexDirection: "row",
     marginVertical: 8,
   },
@@ -465,12 +486,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   descriptionBoxStyle: {
-    flex: 1,
     height: "100%",
     marginRight: 8,
   },
   radioButtonGroupStyle: {
-    flex: 0.5,
+    flex: 1,
     flexDirection: "row",
     justifyContent: "center",
     marginVertical: 8,
@@ -504,11 +524,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
+    marginBottom: 100,
   },
   bottomButtonGroupStyle: {
-    marginTop: 100,
-    justifyContent: "space-around",
-    alignItems: "flex-end",
+    flex: 0.1,
+    marginVertical: 10,
+    alignItems: "center",
     flexDirection: "row",
   },
 });

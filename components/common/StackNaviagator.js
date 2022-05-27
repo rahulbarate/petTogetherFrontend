@@ -23,6 +23,7 @@ import IndividualUserPostUpload from "../individual/IndividualUserPostUpload";
 import SinglePostCard from "./SinglePostCard";
 import SinglePostList from "./SinglePostList";
 import Comment from "../../Helper/homeHelper/Comment";
+import UsersList from "./UsersList";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +49,11 @@ const StackNaviagator = () => {
         options={{ headerShown: false }}
         name="PostUploadScreen"
         component={PostUploadScreen}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="UsersList"
+        component={UsersList}
       />
       <Stack.Screen
         options={{ headerShown: false }}

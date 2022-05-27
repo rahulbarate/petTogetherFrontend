@@ -44,14 +44,17 @@ export default function HomeScreen() {
     }
 
     try {
+      // console.log(userDataContext.email);
+      // console.log(userDataContext.userType);
       const res = await localhostBaseURL.post("/home/fetchPostDetails", {
         emailId: userDataContext.email,
         userType: userDataContext.userType,
       });
       setResponse(res);
-
+      // console.log(res.data);
       let extractedData = [];
       for (each of res.data) {
+        // console.log(each);
         for (eachInEach of each) {
           const retArray = {
             id: eachInEach.postId,
@@ -60,6 +63,7 @@ export default function HomeScreen() {
             image: eachInEach.postData.postImageLink,
             price: eachInEach.postData.price && eachInEach.postData.price,
             petType: eachInEach.postData.petType && eachInEach.postData.petType,
+            petName: eachInEach.postData.petName && eachInEach.postData.petName,
             breed: eachInEach.postData.breed && eachInEach.postData.breed,
             dateOfBirth:
               eachInEach.postData.dateOfBirth &&
@@ -106,7 +110,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     getDataFromServer();
-  }, [isFocused]);
+  },[]);
 
   const sendRequest = async (
     postUserEmail,
@@ -209,127 +213,6 @@ export default function HomeScreen() {
     }
   };
 
-  // const RenderCard = (item) => {
-  //   // if(item.item.petName==="Juliet")
-  //   // {
-  //   //   console.log(item.item);
-  //   // }
-  //   const navigation = useNavigation();
-  //   const [canSendRequest, setCanSendRequest] = useState(true);
-  //   let isDisabled;
-  //   // console.log(item.petName);
-  //   // console.log(item.item.use);
-  //   // if(item.item.userWhoBought) {
-  //   //   isDisabled = true;
-  //   // }
-  //   // const isDisabled = item.item.userWhoBought
-  //   //   ? false
-  //   //   : item.item.organizationWhoResheltered
-  //   //   ? false
-  //   //   : item.item.userWhoAdopted
-  //   //   ? false
-  //   //   : true;
-  //   // useEffect(() => {
-
-  //   // }, [canSendRequest]);
-
-  //   const handleItemClicked = () => {
-  //     navigation.navigate("OtherUsersProfile", {
-  //       clickedUsersEmail: item.item.postUserEmail,
-  //     });
-  //   };
-  //   return (
-  //     <Card style={styles.container}>
-  //       <Card.Content>
-  //         <View style={styles.postContent}>
-  //           <View>
-  //             <View style={{ flexDirection: "row", marginBottom: 5 }}>
-  //               <Avatar
-  //                 source={{
-  //                   uri: item.item.profileImageLink
-  //                     ? item.item.profileImageLink
-  //                     : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-  //                 }}
-  //                 size="tiny"
-  //                 style={styles.profilePic}
-  //               />
-  //               <View style={{ marginLeft: 8 }}>
-  //                 <TouchableOpacity onPress={handleItemClicked}>
-  //                   <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-  //                     {item.item.postUserName}
-  //                   </Text>
-  //                 </TouchableOpacity>
-  //               </View>
-  //             </View>
-  //             <Text>{postInformation(item.item.postType)}</Text>
-  //           </View>
-  //           <View style={styles.requestButton}>
-  //             {item.item.postType !== "casual" && (
-  //               <View
-  //                 style={{ justifyContent: "center", alignItems: "center" }}
-  //               >
-  //                 <Text>Send request</Text>
-  //                 <TouchableNativeFeedback
-  //                   disabled={!canSendRequest}
-  //                   onPress={() => {
-  //                     setCanSendRequest(false);
-  //                     handleSendRequestButton(
-  //                       item.item.postUserEmail,
-  //                       item.item.postUserType,
-  //                       item.item.id,
-  //                       item.item.profileImageLink,
-  //                       item.item.postType
-  //                     );
-  //                   }}
-  //                 >
-  //                   <View
-  //                     style={{ justifyContent: "center", alignItems: "center" }}
-  //                   >
-  //                     <Ionicons name={"add-circle-outline"} size={30} />
-  //                   </View>
-  //                 </TouchableNativeFeedback>
-  //               </View>
-  //             )}
-  //             {/* {viewButton(
-  //               item.item.postUserEmail,
-  //               item.item.postUserType,
-  //               item.item.id,
-  //               item.item.profileImageLink,
-  //               item.item.postType
-  //             )} */}
-  //           </View>
-  //         </View>
-  //       </Card.Content>
-  //       <Card.Cover
-  //         source={{
-  //           uri: item.item.image,
-  //         }}
-  //       />
-  //       <Card.Content>
-  //         <Paragraph>{item.item.postDescription}</Paragraph>
-  //       </Card.Content>
-  //       <Card.Actions>
-  //         <Like
-  //           name="heart"
-  //           postId={item.item.id}
-  //           postUserEmail={item.item.postUserEmail}
-  //           postUserType={item.item.postUserType}
-  //           postType={item.item.postType}
-  //           profileImageLink={item.item.profileImageLink}
-  //           postUserName={item.item.name}
-  //           userWhoLikedIds={item.item.userWhoLikedIds}
-  //         />
-  //         <Comment
-  //           postId={item.item.id}
-  //           postUserEmail={item.item.postUserEmail}
-  //           postUserType={item.item.postUserType}
-  //           postComments={item.item.postComments}
-  //         />
-  //       </Card.Actions>
-  //     </Card>
-  //   );
-  // };
-
   const renderEachPost = (item) => {
     if (
       item.item.postType === "reshelter" &&
@@ -349,7 +232,7 @@ export default function HomeScreen() {
         (data.length > 0 ? (
           <FlatList
             data={data}
-            style={{backgroundColor:"#BFFFF0"}}
+            style={{ backgroundColor: "#BFFFF0" }}
             renderItem={renderEachPost}
             keyExtractor={(item) => item.id}
           />
@@ -392,7 +275,7 @@ const NoPostFound = () => {
   return (
     <View style={styles.spinner}>
       <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-        No Post Available
+        No post available
       </Text>
     </View>
   );

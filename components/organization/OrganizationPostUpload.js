@@ -266,9 +266,7 @@ const OrganizationPostUpload = () => {
           <TextInputComponent
             textInputStyle={{ height: 50, marginVertical: 8 }}
             placeholder={
-              postType === "petForAdoption"
-                ? "Pet name here"
-                : "Event name here"
+              postType === "petForAdoption" ? "Pet name" : "Event name"
             }
             value={postType === "petForAdoption" ? petName : eventName}
             onChangeText={
@@ -292,7 +290,9 @@ const OrganizationPostUpload = () => {
                     borderWidth: 2,
                     borderRadius: 25,
                   }}
-                  placeholder="Choose pet type"
+                  placeholder="Pet type"
+                  placeholderStyle={{ paddingLeft: 5 }}
+                  textStyle={{ paddingLeft: 5 }}
                   onChangeValue={(text) => {
                     setPetType(text);
                   }}
@@ -312,7 +312,9 @@ const OrganizationPostUpload = () => {
                       borderWidth: 2,
                       borderRadius: 25,
                     }}
-                    placeholder="Choose pet breed"
+                    placeholder="Pet breed"
+                    placeholderStyle={{ paddingLeft: 5 }}
+                    textStyle={{ paddingLeft: 5 }}
                     onChangeValue={(text) => {
                       setBreed(text);
                     }}
@@ -322,7 +324,7 @@ const OrganizationPostUpload = () => {
             </SafeAreaView>
           )}
         </View>
-        <View style={{ flex: 1, paddingHorizontal: 10 }}>
+        <View style={{ flex: 1, paddingHorizontal: 10, marginBottom: 100 }}>
           <TextInputComponent
             textInputStyle={{
               height: 50,
@@ -338,21 +340,31 @@ const OrganizationPostUpload = () => {
             }
           />
         </View>
-        <View style={styles.bottomButtonGroupStyle}>
-          <ButtonComponent
-            buttonStyle={{ width: 150, height: 50, borderRadius: 25 }}
-            buttonText={"Upload"}
-            handleButton={handleUploadButton}
-          />
-          <ButtonComponent
-            buttonStyle={{ width: 150, height: 50, borderRadius: 25 }}
-            buttonText={"Go Back"}
-            handleButton={() => {
-              navigation.goBack();
-            }}
-          />
-        </View>
       </KeyboardAwareScrollView>
+      <View style={styles.bottomButtonGroupStyle}>
+        <ButtonComponent
+          buttonStyle={{
+            width: 150,
+            height: 50,
+            borderRadius: 25,
+            marginHorizontal: 15,
+          }}
+          buttonText={"Post"}
+          handleButton={handleUploadButton}
+        />
+        <ButtonComponent
+          buttonStyle={{
+            width: 150,
+            height: 50,
+            borderRadius: 25,
+            marginHorizontal: 15,
+          }}
+          buttonText={"Go Back"}
+          handleButton={() => {
+            navigation.goBack();
+          }}
+        />
+      </View>
     </View>
   );
 };
@@ -424,9 +436,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   bottomButtonGroupStyle: {
-    marginTop: 100,
-    justifyContent: "space-around",
-    alignItems: "flex-end",
+    justifyContent: "center",
+    alignItems: "center",
     flexDirection: "row",
+    marginBottom:15
   },
 });

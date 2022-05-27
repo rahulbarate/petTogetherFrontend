@@ -196,7 +196,7 @@ const EditProfileComponent = (props) => {
       <KeyboardAwareScrollView style={styles.scrollViewStyle}>
         <View style={styles.shopUserContainerStyle}>
           <View style={{ alignItems: "center" }}>
-            <Text style={styles.titleTextStyle}>Edit Details: </Text>
+            <Text style={styles.titleTextStyle}>Edit Details </Text>
           </View>
           <View style={styles.profilePictureViewStyle}>
             <TouchableNativeFeedback onPress={pickImage}>
@@ -212,10 +212,10 @@ const EditProfileComponent = (props) => {
             textInputStyle={styles.longTextInputStyle}
             placeholder={
               userDataContext.userType === "Shopkeeper"
-                ? "Enter Shop Name"
+                ? "Shop name"
                 : userDataContext.userType === "Organization"
-                ? "Enter Organization Name"
-                : "Enter Your Name"
+                ? "Organization name"
+                : "Your name"
             }
             value={name}
             onChangeText={(text) => {
@@ -226,7 +226,7 @@ const EditProfileComponent = (props) => {
           userDataContext.userType === "Organization" ? (
             <TextInputComponent
               textInputStyle={styles.longTextInputStyle}
-              placeholder={"Enter Owner Name Here"}
+              placeholder={"Owner name here"}
               value={ownerName}
               onChangeText={(text) => {
                 setOwnerName(text);
@@ -237,7 +237,7 @@ const EditProfileComponent = (props) => {
           )}
           <TextInputComponent
             textInputStyle={styles.longTextInputStyle}
-            placeholder={"Enter Phone no here"}
+            placeholder={"Phone number"}
             keyboardType={"phone-pad"}
             value={phoneNumber}
             onChangeText={(text) => {
@@ -245,8 +245,15 @@ const EditProfileComponent = (props) => {
             }}
           />
           <TextInputComponent
-            textInputStyle={styles.bioTextStyle}
-            placeholder={"Enter About you here"}
+            // textInputStyle={styles.bioTextStyle}
+            textInputStyle={{
+              height: 100,
+              width: "90%",
+              justifyContent: "flex-start",
+              padding: 10,
+            }}
+            placeholder={"About you"}
+            textAlignVertical={"top"}
             value={bio}
             onChangeText={(text) => {
               setBio(text);
@@ -260,9 +267,16 @@ const EditProfileComponent = (props) => {
               setOpen={setOpen}
               setValue={setSellerType}
               setItems={setItems}
-              style={{ width: 200, marginVertical: 5 }}
+              style={{
+                borderColor: "#3399ff",
+                borderWidth: 2,
+                borderRadius: 25,
+                marginVertical: 5,
+              }}
               containerStyle={{ width: 200 }}
-              placeholder="What Do you Sell?"
+              placeholder="What do you sell?"
+              placeholderStyle={{ paddingLeft: 10 }}
+              textStyle={{ paddingLeft: 10 }}
               onChangeValue={(text) => {
                 setSellerType(text);
               }}
@@ -271,15 +285,33 @@ const EditProfileComponent = (props) => {
             <View></View>
           )}
         </View>
+        <View>
+          <TextInputComponent
+            textInputStyle={styles.longTextInputStyle}
+            placeholder={"House no, Building no, Street, etc"}
+            value={houseNo}
+            onChangeText={(text) => {
+              setHouseNo(text);
+            }}
+          />
+          <TextInputComponent
+            textInputStyle={styles.longTextInputStyle}
+            placeholder={"Area, Colony, Road name, etc"}
+            value={area}
+            onChangeText={(text) => {
+              setArea(text);
+            }}
+          />
+        </View>
         <View style={{ flexDirection: "row" }}>
           <TextInputComponent
             textInputStyle={{
-              width: "40%",
+              width: "43%",
               height: 50,
               marginVertical: 5,
               marginHorizontal: 5,
             }}
-            placeholder={"Enter pincode"}
+            placeholder={"pincode"}
             keyboardType={"phone-pad"}
             value={pincode}
             onChangeText={(text) => {
@@ -288,56 +320,43 @@ const EditProfileComponent = (props) => {
           />
           <TextInputComponent
             textInputStyle={{
-              width: "40%",
+              width: "43%",
               height: 50,
               marginVertical: 5,
               marginHorizontal: 5,
             }}
-            placeholder={"Enter State"}
+            placeholder={"State"}
             value={state}
             onChangeText={(text) => {
               setState(text);
             }}
           />
         </View>
-        <View>
-          <TextInputComponent
-            textInputStyle={{
-              width: "40%",
-              height: 50,
-              marginVertical: 5,
-              marginHorizontal: 5,
-            }}
-            placeholder={"Enter District"}
-            value={district}
-            onChangeText={(text) => {
-              setDistrict(text);
-            }}
+        <TextInputComponent
+          textInputStyle={{
+            width: "43%",
+            height: 50,
+            marginVertical: 5,
+            marginHorizontal: 5,
+          }}
+          placeholder={"District"}
+          value={district}
+          onChangeText={(text) => {
+            setDistrict(text);
+          }}
+        />
+        <View
+          style={{
+            alignItems: "center",
+            marginBottom: 20,
+          }}
+        >
+          <ButtonComponent
+            buttonStyle={styles.submitButtonStyle}
+            textStyle={styles.buttonTextStyle}
+            buttonText={"Save"}
+            handleButton={updateUserDetails}
           />
-          <TextInputComponent
-            textInputStyle={styles.longTextInputStyle}
-            placeholder={"House no,Building no,Street,etc"}
-            value={houseNo}
-            onChangeText={(text) => {
-              setHouseNo(text);
-            }}
-          />
-          <TextInputComponent
-            textInputStyle={styles.longTextInputStyle}
-            placeholder={"Area,Colony,Road Name,etc"}
-            value={area}
-            onChangeText={(text) => {
-              setArea(text);
-            }}
-          />
-          <View style={{ alignItems: "center", marginBottom: 20 }}>
-            <ButtonComponent
-              buttonStyle={styles.submitButtonStyle}
-              textStyle={styles.buttonTextStyle}
-              buttonText={"Update"}
-              handleButton={updateUserDetails}
-            />
-          </View>
         </View>
       </KeyboardAwareScrollView>
     </View>
@@ -365,7 +384,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   longTextInputStyle: {
-    width: 300,
+    width: "90%",
     height: 50,
     marginVertical: 5,
   },

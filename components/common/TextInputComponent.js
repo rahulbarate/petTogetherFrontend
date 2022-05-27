@@ -7,6 +7,9 @@ const TextInputComponent = (props) => {
       <TextInput
         multiline={true}
         placeholder={props.placeholder}
+        placeholderStyle={
+          props.placeholderStyle ? props.placeholderStyle : { paddingLeft: 5 }
+        }
         keyboardType={props.keyboardType ? props.keyboardType : "default"}
         value={props.value}
         onChangeText={props.onChangeText}
@@ -15,7 +18,9 @@ const TextInputComponent = (props) => {
           flexWrap: "wrap",
           fontSize: props.fontSize && props.fontSize,
           // backgroundColor: "yellow",
-          textAlignVertical:props.textAlignVertical?props.textAlignVertical:"center"
+          textAlignVertical: props.textAlignVertical
+            ? props.textAlignVertical
+            : "center",
         }}
       />
     </View>

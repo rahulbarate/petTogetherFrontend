@@ -46,7 +46,7 @@ export default PostCard = ({ item }) => {
   const [isItAvailable, setIsItAvailable] = useState();
   const [markPostString, setMarkPostString] = useState("");
   const [displayMoreInfo, setDisplayMoreInfo] = useState(false);
-  const [infoText, setInfoText] = useState("more info");
+  const [infoText, setInfoText] = useState("show more");
   const sendRequest = async (
     postUserEmail,
     postUserType,
@@ -192,13 +192,22 @@ export default PostCard = ({ item }) => {
   };
   const handleMoreInfoButton = () => {
     if (displayMoreInfo) {
-      setInfoText("more info");
+      setInfoText("show more");
       setDisplayMoreInfo(false);
     } else {
       setInfoText("show less");
       setDisplayMoreInfo(true);
     }
   };
+
+  const shouldDisplayInfoText = (item) => {
+    if (item.petType || item.price || item.petName || item.dateOfBirth) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <Card style={styles.container}>
       <Card.Content>
@@ -231,7 +240,6 @@ export default PostCard = ({ item }) => {
               <View></View>
             ) : isItAvailable ? (
               <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <Text>Send request</Text>
                 <TouchableNativeFeedback
                   disabled={!canSendRequest}
                   onPress={() => {
@@ -256,9 +264,17 @@ export default PostCard = ({ item }) => {
                           }
                     }
                   >
-                    <Ionicons name={"add-circle-outline"} size={30} />
+                    <Ionicons
+                      name={
+                        canSendRequest
+                          ? "send-outline"
+                          : "checkmark-circle-outline"
+                      }
+                      size={25}
+                    />
                   </View>
                 </TouchableNativeFeedback>
+                <Text>Send request</Text>
               </View>
             ) : (
               <View style={styles.markPostString}>
@@ -273,77 +289,98 @@ export default PostCard = ({ item }) => {
           uri: item.item.image,
         }}
         resizeMode="stretch"
-        style={{ height: 300 }}
+        style={{
+          height: 300,
+          borderTopWidth: 2,
+          borderBottomWidth: 2,
+          borderColor: "#8CC0DE",
+        }}
       />
-      <Card.Content>
-        <Paragraph>
-          <Text style={{ fontSize: 16 }}>{item.item.postDescription}</Text>
-        </Paragraph>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "flex-end",
-            paddingRight: 10,
-          }}
-        >
-          <TouchableNativeFeedback onPress={handleMoreInfoButton}>
-            <Text style={{ color: "blue", textDecorationLine: "underline" }}>
-              {infoText}
-            </Text>
-          </TouchableNativeFeedback>
-        </View>
-        {/* {item.item.postType !== "casual" && (
-          
-        )} */}
-        {displayMoreInfo && (
-          <View>
-            <View style={{ flexDirection: "row" }}>
-              {item.item.petName && (
-                <Paragraph style={{ fontSize: 16, marginRight: "2%" }}>
-                  Pet name: {item.item.petName}
-                </Paragraph>
-              )}
-              {item.item.price && (
-                <Paragraph style={{ fontSize: 16, marginRight: "2%" }}>
-                  Price: {item.item.price}
-                </Paragraph>
-              )}
-              {item.item.petType && (
-                <Paragraph style={{ fontSize: 16, marginHorizontal: "4%" }}>
-                  Pet: {item.item.petType}
-                </Paragraph>
-              )}
-              {item.item.breed && (
-                <Paragraph style={{ fontSize: 16 }}>
-                  Breed: {item.item.breed}
-                </Paragraph>
-              )}
+      {/* <Card.Content>
+        
+      </Card.Content> */}
+      <Card.Actions>
+        <View style={{ flex: 1 }}>
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+              <Like
+                name="heart"
+                postId={item.item.id}
+                postUserEmail={item.item.postUserEmail}
+                postUserType={item.item.postUserType}
+                postType={item.item.postType}
+                profileImageLink={userDataContext.profileImageLink}
+                postUserName={item.item.name}
+                userWhoLikedIds={item.item.userWhoLikedIds}
+              />
             </View>
-            {item.item.dateOfBirth && (
-              <Paragraph style={{ fontSize: 16 }}>
-                Date of birth: {item.item.dateOfBirth}
-              </Paragraph>
+            <View style={{ flex: 1 }}>
+              <Comment
+                postId={item.item.id}
+                postUserEmail={item.item.postUserEmail}
+                postUserType={item.item.postUserType}
+                postComments={item.item.postComments}
+              />
+            </View>
+            <View
+              style={{
+                flex: 2.5,
+                justifyContent: "center",
+                alignItems: "flex-end",
+                paddingRight: 10,
+              }}
+            >
+              <TouchableNativeFeedback
+                onPress={handleMoreInfoButton}
+                disabled={!shouldDisplayInfoText(item.item)}
+              >
+                <Text
+                  style={{ color: "blue", textDecorationLine: "underline" }}
+                >
+                  {shouldDisplayInfoText(item.item) ? infoText : ""}
+                </Text>
+              </TouchableNativeFeedback>
+            </View>
+          </View>
+          <View style={{ paddingLeft: 10 }}>
+            <Paragraph>
+              <Text style={{ fontSize: 16 }}>{item.item.postDescription}</Text>
+            </Paragraph>
+            {displayMoreInfo && (
+              <View>
+                <View style={{ flexDirection: "row" }}>
+                  {item.item.petName && (
+                    <Paragraph style={{ fontSize: 16, marginRight: "5%" }}>
+                      Pet name: {item.item.petName}
+                    </Paragraph>
+                  )}
+                  {item.item.price && (
+                    <Paragraph style={{ fontSize: 16, marginRight: "5%" }}>
+                      Price: {item.item.price}
+                    </Paragraph>
+                  )}
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  {item.item.petType && (
+                    <Paragraph style={{ fontSize: 16, marginRight: "5%" }}>
+                      Pet: {item.item.petType}
+                    </Paragraph>
+                  )}
+                  {item.item.breed && (
+                    <Paragraph style={{ fontSize: 16 }}>
+                      Breed: {item.item.breed}
+                    </Paragraph>
+                  )}
+                </View>
+                {item.item.dateOfBirth && (
+                  <Paragraph style={{ fontSize: 16 }}>
+                    Date of birth: {item.item.dateOfBirth}
+                  </Paragraph>
+                )}
+              </View>
             )}
           </View>
-        )}
-      </Card.Content>
-      <Card.Actions>
-        <Like
-          name="heart"
-          postId={item.item.id}
-          postUserEmail={item.item.postUserEmail}
-          postUserType={item.item.postUserType}
-          postType={item.item.postType}
-          profileImageLink={userDataContext.profileImageLink}
-          postUserName={item.item.name}
-          userWhoLikedIds={item.item.userWhoLikedIds}
-        />
-        <Comment
-          postId={item.item.id}
-          postUserEmail={item.item.postUserEmail}
-          postUserType={item.item.postUserType}
-          postComments={item.item.postComments}
-        />
+        </View>
       </Card.Actions>
     </Card>
   );

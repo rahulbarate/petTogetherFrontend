@@ -73,6 +73,7 @@ const ProfileComponent = ({
         }
       });
   };
+
   const fetchCurrentUserLatestData = () => {
     db.collection("Users")
       .doc(getUserTypeDocString(userDataContext.userType))
@@ -245,22 +246,7 @@ const ProfileComponent = ({
   //   }
   // }, [followButtonText]);
 
-  return modalVisibility ? (
-    <View style={styles.container1Style}>
-      <Modal
-        isVisible={modalVisibility}
-        style={styles.modalStyle}
-        onSwipeComplete={() => setModalVisibility(false)}
-        onBackButtonPress={() => setModalVisibility(false)}
-        swipeDirection="down"
-      >
-        <FollowersFollowingList
-          whoseListIsPassed={whoseListIsPassed}
-          followersOrFollowingsArray={followersOrFollowingsArray}
-        />
-      </Modal>
-    </View>
-  ) : (
+  return (
     <View style={styles.container1Style}>
       {isItOtherUser ? (
         <View style={styles.container1Sub1Style}>
@@ -283,10 +269,18 @@ const ProfileComponent = ({
             </TouchableNativeFeedback>
           </View>
           <TouchableNativeFeedback
+            disabled={
+              "followersArray" in profileData
+                ? profileData.followersArray.length > 0
+                  ? false
+                  : true
+                : true
+            }
             onPress={() => {
-              setWhoseListIsPassed("followers");
-              setFollowersOrFollowingsArray(profileData.followersArray);
-              setModalVisibility(true);
+              navigation.navigate("UsersList", {
+                whoseListIsPassed: "followers",
+                usersList: profileData.followersArray,
+              });
             }}
           >
             <View style={styles.followerFollowingContainerStyle}>
@@ -296,15 +290,27 @@ const ProfileComponent = ({
                   : ""}
               </Text>
               <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                {"followersArray" in profileData ? "Followers" : ""}
+                {"followersArray" in profileData
+                  ? profileData.followersArray.length === 1
+                    ? "Follower"
+                    : "Followers"
+                  : ""}
               </Text>
             </View>
           </TouchableNativeFeedback>
           <TouchableNativeFeedback
+            disabled={
+              "followingArray" in profileData
+                ? profileData.followingArray.length > 0
+                  ? false
+                  : true
+                : true
+            }
             onPress={() => {
-              setWhoseListIsPassed("followings");
-              setFollowersOrFollowingsArray(profileData.followingArray);
-              setModalVisibility(true);
+              navigation.navigate("UsersList", {
+                whoseListIsPassed: "following",
+                usersList: profileData.followingArray,
+              });
             }}
           >
             <View style={styles.followerFollowingContainerStyle}>
@@ -314,7 +320,7 @@ const ProfileComponent = ({
                   : ""}
               </Text>
               <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                {"followingArray" in profileData ? "Followings" : ""}
+                {"followingArray" in profileData ? "Following" : ""}
               </Text>
             </View>
           </TouchableNativeFeedback>
@@ -322,10 +328,18 @@ const ProfileComponent = ({
       ) : (
         <View style={styles.container1Sub1Style}>
           <TouchableNativeFeedback
+            disabled={
+              "followersArray" in profileData
+                ? profileData.followersArray.length > 0
+                  ? false
+                  : true
+                : true
+            }
             onPress={() => {
-              setWhoseListIsPassed("followers");
-              setFollowersOrFollowingsArray(profileData.followersArray);
-              setModalVisibility(true);
+              navigation.navigate("UsersList", {
+                whoseListIsPassed: "followers",
+                usersList: profileData.followersArray,
+              });
             }}
           >
             <View style={styles.followerFollowingContainerStyle}>
@@ -335,7 +349,11 @@ const ProfileComponent = ({
                   : ""}
               </Text>
               <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                {"followersArray" in profileData ? "Followers" : ""}
+                {"followersArray" in profileData
+                  ? profileData.followersArray.length === 1
+                    ? "Follower"
+                    : "Followers"
+                  : ""}
               </Text>
             </View>
           </TouchableNativeFeedback>
@@ -358,10 +376,18 @@ const ProfileComponent = ({
             </TouchableNativeFeedback>
           </View>
           <TouchableNativeFeedback
+            disabled={
+              "followingArray" in profileData
+                ? profileData.followingArray.length > 0
+                  ? false
+                  : true
+                : true
+            }
             onPress={() => {
-              setWhoseListIsPassed("followings");
-              setFollowersOrFollowingsArray(profileData.followingArray);
-              setModalVisibility(true);
+              navigation.navigate("UsersList", {
+                whoseListIsPassed: "following",
+                usersList: profileData.followingArray,
+              });
             }}
           >
             <View style={styles.followerFollowingContainerStyle}>
@@ -371,7 +397,7 @@ const ProfileComponent = ({
                   : ""}
               </Text>
               <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                {"followingArray" in profileData ? "Followings" : ""}
+                {"followingArray" in profileData ? "Following" : ""}
               </Text>
             </View>
           </TouchableNativeFeedback>
@@ -484,7 +510,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: Dimensions.get("window").width,
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   container1Sub1Style: {
     width: Dimensions.get("window").width,

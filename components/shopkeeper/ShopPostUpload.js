@@ -252,7 +252,7 @@ const ShopPostUpload = () => {
                 padding: 10,
               }}
               fontSize={18}
-              placeholder={"Enter post description here..."}
+              placeholder={"Post description here..."}
               textAlignVertical={"top"}
               value={postDescription}
               onChangeText={setPostDescription}
@@ -301,9 +301,7 @@ const ShopPostUpload = () => {
           <TextInputComponent
             textInputStyle={{ height: 50, marginVertical: 8 }}
             placeholder={
-              postType === "petSellPost"
-                ? "Enter pet name"
-                : "Enter product name"
+              postType === "petSellPost" ? "Pet name" : "Product name"
             }
             value={postType === "petSellPost" ? petName : productName}
             onChangeText={
@@ -319,8 +317,8 @@ const ShopPostUpload = () => {
           >
             <View style={{ flex: 1, paddingRight: 5 }}>
               <TextInputComponent
-                textInputStyle={{ height: 50 }}
-                placeholder={"Enter price"}
+                textInputStyle={{ height: 50, paddingLeft: 20 }}
+                placeholder={"Price"}
                 keyboardType={"phone-pad"}
                 value={price}
                 onChangeText={setPrice}
@@ -331,6 +329,7 @@ const ShopPostUpload = () => {
                 <TextInputComponent
                   textInputStyle={{
                     height: 50,
+                    paddingLeft: 20,
                   }}
                   placeholder={"Date of birth"}
                   keyboardType={"phone-pad"}
@@ -350,8 +349,10 @@ const ShopPostUpload = () => {
                     borderColor: "#3399ff",
                     borderWidth: 2,
                     borderRadius: 25,
+                    marginBottom: 200,
                   }}
                   placeholder="Product type"
+                  placeholderStyle={{ paddingLeft: 5 }}
                   onChangeValue={(text) => {
                     setProductCategory(text);
                   }}
@@ -360,7 +361,9 @@ const ShopPostUpload = () => {
             </View>
           </View>
           {postType === "petSellPost" && (
-            <SafeAreaView style={{ flex: 1, flexDirection: "row" }}>
+            <SafeAreaView
+              style={{ flex: 1, flexDirection: "row", marginBottom: 200 }}
+            >
               <View style={{ flex: 1, paddingRight: 5 }}>
                 <DropDownPicker
                   open={open}
@@ -374,7 +377,8 @@ const ShopPostUpload = () => {
                     borderWidth: 2,
                     borderRadius: 25,
                   }}
-                  placeholder="Choose pet type"
+                  placeholder="Pet type"
+                  placeholderStyle={{ paddingLeft: 5 }}
                   onChangeValue={(text) => {
                     setPetType(text);
                   }}
@@ -394,7 +398,8 @@ const ShopPostUpload = () => {
                       borderWidth: 2,
                       borderRadius: 25,
                     }}
-                    placeholder="Choose breed"
+                    placeholder="Pet breed"
+                    placeholderStyle={{ paddingLeft: 5 }}
                     onChangeValue={(text) => {
                       setBreed(text);
                     }}
@@ -404,21 +409,31 @@ const ShopPostUpload = () => {
             </SafeAreaView>
           )}
         </View>
-        <View style={styles.bottomButtonGroupStyle}>
-          <ButtonComponent
-            buttonStyle={{ width: 150, height: 50, borderRadius: 25 }}
-            buttonText={"Upload"}
-            handleButton={handleUploadButton}
-          />
-          <ButtonComponent
-            buttonStyle={{ width: 150, height: 50, borderRadius: 25 }}
-            buttonText={"Go Back"}
-            handleButton={() => {
-              navigation.goBack();
-            }}
-          />
-        </View>
       </KeyboardAwareScrollView>
+      <View style={styles.bottomButtonGroupStyle}>
+        <ButtonComponent
+          buttonStyle={{
+            width: 150,
+            height: 50,
+            borderRadius: 25,
+            marginHorizontal: 15,
+          }}
+          buttonText={"Post"}
+          handleButton={handleUploadButton}
+        />
+        <ButtonComponent
+          buttonStyle={{
+            width: 150,
+            height: 50,
+            borderRadius: 25,
+            marginHorizontal: 15,
+          }}
+          buttonText={"Go Back"}
+          handleButton={() => {
+            navigation.goBack();
+          }}
+        />
+      </View>
     </View>
   );
 };
@@ -484,9 +499,9 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   bottomButtonGroupStyle: {
-    marginTop: 100,
-    justifyContent: "space-around",
-    alignItems: "flex-end",
+    marginVertical: 15,
+    justifyContent: "center",
+    alignItems: "center",
     flexDirection: "row",
   },
 });

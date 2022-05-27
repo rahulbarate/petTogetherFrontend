@@ -8,7 +8,7 @@ const RenderFooterComponent = ({ setvisibleComponent }) => {
         onPress={() => setvisibleComponent("topTab")}
         style={styles.resultButton}
       >
-        <Text style={styles.resultButtonText}>See All Results</Text>
+        <Text style={styles.resultButtonText}>See all results</Text>
       </TouchableOpacity>
     </View>
   );

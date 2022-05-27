@@ -11,7 +11,7 @@ import {
   ToastAndroid,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../firebase";
 import {
@@ -23,14 +23,14 @@ import AuthContext from "../hooks/useAuth";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("arjun@gmail.com");
+  const [password, setPassword] = useState("arjun12345678");
   const [hidePass, setHidePass] = useState(true);
   const [placeholderColor, setPlaceholderColor] = useState("#C7C7CD");
   const [loginButtonText, setLoginButtonText] = useState("Login");
   //   const [userData, setUserData] = useState();
 
-  const { setUserDataContext } = useContext(AuthContext);
+  const { userDataContext, setUserDataContext } = useContext(AuthContext);
   //   const {setUser} = useAuth();
   const navigation = useNavigation();
 
@@ -49,11 +49,11 @@ const LoginPage = () => {
       .then((user) => {
         getDataFromServer(user.email);
         // setUserDataContext(user);
-        ToastAndroid.show("Logged In", ToastAndroid.SHORT);
-        navigation.navigate("MainComponent");
-        setTimeout(() => {
-          setLoginButtonText("Login");
-        }, 1000);
+        // ToastAndroid.show("Logged In", ToastAndroid.SHORT);
+        // navigation.navigate("MainComponent");
+        // setTimeout(() => {
+        //   setLoginButtonText("Login");
+        // }, 1000);
       })
       .catch((error) => {
         setLoginButtonText("Login");
@@ -87,6 +87,14 @@ const LoginPage = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (userDataContext.email && userDataContext.email)
+      navigation.navigate("MainComponent");
+    setTimeout(() => {
+      setLoginButtonText("Login");
+    }, 1000);
+  }, [userDataContext]);
 
   return (
     // <AuthContext.Provider value={{userData}}>

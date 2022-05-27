@@ -108,6 +108,7 @@ const RenderItem = ({ item, loggedUserId }) => {
         clickedUsersEmail: item.commentUserId,
       });
   };
+  
   return (
     <View style={styles.RenderItemcontainer}>
       <View style={styles.avatarContainer}>

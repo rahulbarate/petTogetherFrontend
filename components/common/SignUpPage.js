@@ -129,6 +129,8 @@ const SignUpPage = () => {
                 }}
                 containerStyle={{ width: "90%" }}
                 placeholder="Choose your role"
+                placeholderStyle={{marginLeft: "3%"}}
+                textStyle={{ marginLeft: "3%"}}
                 onChangeValue={(text) => {
                   setUserType(text);
                 }}
