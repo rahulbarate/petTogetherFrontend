@@ -9,6 +9,7 @@ import {
   Image,
   TouchableNativeFeedback,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import AuthContext from "../hooks/useAuth";
@@ -25,6 +26,7 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
   const navigation = useNavigation();
   const [listOfAllPosts, setListOfAllPosts] = useState([]);
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
 
   const listenRealTimePostUpdate = () => {
     const userTypeDoc = getUserTypeDocString(userData.userType);
@@ -43,6 +45,9 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
           });
 
           setListOfAllPosts(postArr);
+          setLoading(false);
+        } else {
+          setLoading(false);
         }
       });
   };
@@ -74,13 +79,19 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
       </View>
     );
   };
-  const displaySinglePost = (listOfAllPosts, index, profileImageLink,isItOtherUser,userData) => {
+  const displaySinglePost = (
+    listOfAllPosts,
+    index,
+    profileImageLink,
+    isItOtherUser,
+    userData
+  ) => {
     navigation.navigate("SinglePostList", {
       allPosts: listOfAllPosts,
       initialScrollIndex: index,
       profileImageLink,
       isItOtherUser,
-      userData
+      userData,
     });
   };
   const renderCardItem = ({ item, index }) => {
@@ -139,7 +150,12 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 18 }}>{item.petName}</Text>
+                {/* <Text style={{ fontSize: 18,paddingLeft:5 }} numberOfLines={1}>
+                  {item.petName + " " + item.postDescription}
+                </Text> */}
+                <Text style={{ fontSize: 18}}>
+                  {item.petName}
+                </Text>
               </View>
             </ImageBackground>
           </View>
@@ -165,7 +181,13 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
           All posts
         </Text>
       </View>
-      <View style={{ justifyContent: "center", alignItems: "center",backgroundColor:"white" }}>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "white",
+        }}
+      >
         <View
           style={{
             width: Dimensions.get("window").width - 30,
@@ -176,39 +198,75 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
         ></View>
       </View>
       <View style={styles.postViewStyle}>
-        <FlatList
-          data={listOfAllPosts}
-          renderItem={renderCardItem}
-          numColumns={2}
-          style={{ width: Dimensions.get("window").width,backgroundColor:"white" }}
-          keyExtractor={(item, index) => index.toString()}
-        />
-        {!isItOtherUser && (
-          <View
-            style={{
-              // borderWidth: 1,
-              // borderColor: "rgba(0,0,0,0.2)",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 70,
-              position: "absolute",
-              bottom: 10,
-              right: 10,
-              height: 70,
-              // backgroundColor: "#fff",
-              borderRadius: 100,
-            }}
-          >
-            <ButtonComponent
-              buttonStyle={{
-                width: 60,
-                height: 60,
-                borderRadius: 60 / 2,
+        {loading ? (
+          <View style={styles.postViewStyle}>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                width: Dimensions.get("window").width,
+                backgroundColor: "white",
+                flex: 1,
               }}
-              buttonText={"+"}
-              textStyle={{ fontSize: 40 }}
-              handleButton={postUploadButtonHandle}
-            />
+            >
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          </View>
+        ) : (
+          <View>
+            {listOfAllPosts.length === 0 ? (
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: Dimensions.get("window").width,
+                  backgroundColor: "white",
+                  flex: 1,
+                }}
+              >
+                <Text>No posts available</Text>
+              </View>
+            ) : (
+              <FlatList
+                data={listOfAllPosts}
+                renderItem={renderCardItem}
+                numColumns={2}
+                style={{
+                  width: Dimensions.get("window").width,
+                  backgroundColor: "white",
+                }}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            )}
+
+            {!isItOtherUser && (
+              <View
+                style={{
+                  // borderWidth: 1,
+                  // borderColor: "rgba(0,0,0,0.2)",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 70,
+                  position: "absolute",
+                  bottom: 10,
+                  right: 10,
+                  height: 70,
+                  // backgroundColor: "#fff",
+                  borderRadius: 100,
+                }}
+              >
+                <ButtonComponent
+                  buttonStyle={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: 60 / 2,
+                  }}
+                  buttonText={"+"}
+                  textStyle={{ fontSize: 40 }}
+                  handleButton={postUploadButtonHandle}
+                />
+              </View>
+            )}
           </View>
         )}
       </View>
@@ -223,7 +281,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor:"white"
+    backgroundColor: "white",
     // backgroundColor: "green",
   },
   postTypeStyle: {
@@ -231,7 +289,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginVertical: 10,
-    backgroundColor:"white"
+    backgroundColor: "white",
   },
   spinner: {
     flex: 1,
@@ -257,7 +315,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   postCardStyle: {
-    borderWidth:0.8,
+    borderWidth: 0.8,
     borderColor: "#8CC0DE",
     // flex: 1,
     width: Dimensions.get("window").width / 2 - 15,
@@ -287,7 +345,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").width / 2 - 15,
     justifyContent: "space-between",
     borderRadius: 10,
-    borderWidth:0.8,
+    borderWidth: 0.8,
     borderColor: "#8CC0DE",
   },
   postViewStyle: {

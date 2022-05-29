@@ -10,6 +10,7 @@ import {
   TouchableNativeFeedback,
   ToastAndroid,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -29,6 +30,8 @@ import FollowersFollowingList from "./FollowersFollowingList";
 import Modal from "react-native-modal";
 import sendRequestToServer from "../hooks/sendRequestToServer";
 // import * as firebase from "firebase/compat/app";
+// import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+import SkeletonContent from "react-native-skeleton-content";
 
 const ProfileComponent = ({
   profileEmail,
@@ -44,6 +47,7 @@ const ProfileComponent = ({
   const navigation = useNavigation();
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
   const [profileData, setProfileData] = useState({});
+  const [loading, setLoading] = useState(true);
   const [currentUserData, setCurrentUserData] = useState({});
   const [modalVisibility, setModalVisibility] = useState(false);
   const [whoseListIsPassed, setWhoseListIsPassed] = useState();
@@ -90,7 +94,15 @@ const ProfileComponent = ({
   useEffect(() => {
     fetchLatestData();
     fetchCurrentUserLatestData();
+    // setLoading(false);
   }, [profileEmail]);
+
+  useEffect(() => {
+    // console.log(profileData.name);
+    if (profileData.name) {
+      setLoading(false);
+    }
+  }, [profileData]);
 
   //remove Current User From Followers Of Other User
   const unfollowOtherUser = async () => {
@@ -325,38 +337,93 @@ const ProfileComponent = ({
             </View>
           </TouchableNativeFeedback>
         </View>
-      ) : (
-        <View style={styles.container1Sub1Style}>
-          <TouchableNativeFeedback
-            disabled={
-              "followersArray" in profileData
-                ? profileData.followersArray.length > 0
-                  ? false
-                  : true
-                : true
-            }
-            onPress={() => {
-              navigation.navigate("UsersList", {
-                whoseListIsPassed: "followers",
-                usersList: profileData.followersArray,
-              });
+      ) : loading ? (
+        <View
+          style={{
+            width: Dimensions.get("window").width,
+            marginTop: 50,
+            marginBottom: 50,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <View
+            style={{
+              height: 80,
+              marginHorizontal: "3%",
             }}
           >
-            <View style={styles.followerFollowingContainerStyle}>
-              <Text style={styles.followNoTextStyle}>
-                {"followersArray" in profileData
-                  ? profileData.followersArray.length
-                  : ""}
-              </Text>
-              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                {"followersArray" in profileData
-                  ? profileData.followersArray.length === 1
-                    ? "Follower"
-                    : "Followers"
-                  : ""}
-              </Text>
-            </View>
-          </TouchableNativeFeedback>
+            <SkeletonContent isLoading={loading}>
+              <View style={{ width: 50, height: 50 }}></View>
+            </SkeletonContent>
+            <SkeletonContent isLoading={loading}>
+              <View style={{ width: 80, height: 20 }}></View>
+            </SkeletonContent>
+          </View>
+          <View>
+            <SkeletonContent isLoading={loading}>
+              <View
+                style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
+              ></View>
+            </SkeletonContent>
+          </View>
+          <View
+            style={{
+              height: 80,
+              marginHorizontal: "3%",
+            }}
+          >
+            <SkeletonContent isLoading={loading}>
+              <View style={{ width: 50, height: 50 }}></View>
+            </SkeletonContent>
+            <SkeletonContent isLoading={loading}>
+              <View style={{ width: 80, height: 20 }}></View>
+            </SkeletonContent>
+          </View>
+        </View>
+      ) : (
+        <View style={styles.container1Sub1Style}>
+          <View>
+            <TouchableNativeFeedback
+              disabled={
+                "followersArray" in profileData
+                  ? profileData.followersArray.length > 0
+                    ? false
+                    : true
+                  : true
+              }
+              onPress={() => {
+                navigation.navigate("UsersList", {
+                  whoseListIsPassed: "followers",
+                  usersList: profileData.followersArray,
+                });
+              }}
+            >
+              <View style={styles.followerFollowingContainerStyle}>
+                <SkeletonContent isLoading={loading}>
+                  <Text style={styles.followNoTextStyle}>
+                    {"followersArray" in profileData
+                      ? profileData.followersArray.length
+                      : ""}
+                  </Text>
+                </SkeletonContent>
+
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "bold",
+                  }}
+                >
+                  {"followersArray" in profileData
+                    ? profileData.followersArray.length === 1
+                      ? "Follower"
+                      : "Followers"
+                    : ""}
+                </Text>
+              </View>
+            </TouchableNativeFeedback>
+          </View>
           <View style={styles.profilePictureViewStyle}>
             <TouchableNativeFeedback>
               <ImageBackground
@@ -375,96 +442,97 @@ const ProfileComponent = ({
               </ImageBackground>
             </TouchableNativeFeedback>
           </View>
-          <TouchableNativeFeedback
-            disabled={
-              "followingArray" in profileData
-                ? profileData.followingArray.length > 0
-                  ? false
+          <View>
+            <TouchableNativeFeedback
+              disabled={
+                "followingArray" in profileData
+                  ? profileData.followingArray.length > 0
+                    ? false
+                    : true
                   : true
-                : true
-            }
-            onPress={() => {
-              navigation.navigate("UsersList", {
-                whoseListIsPassed: "following",
-                usersList: profileData.followingArray,
-              });
-            }}
-          >
-            <View style={styles.followerFollowingContainerStyle}>
-              <Text style={styles.followNoTextStyle}>
-                {"followingArray" in profileData
-                  ? profileData.followingArray.length
-                  : ""}
-              </Text>
-              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                {"followingArray" in profileData ? "Following" : ""}
-              </Text>
-            </View>
-          </TouchableNativeFeedback>
-        </View>
-      )}
-      <View>
-        <Text style={styles.userNameTextStyle}>
-          {"name" in profileData ? profileData.name : ""}
-        </Text>
-        <View style={styles.bioViewStyle}>
-          <Text style={styles.bioTextStyle}>
-            {"bio" in profileData ? profileData.bio : ""}
-          </Text>
-        </View>
-        <View
-          style={
-            isItOtherUser
-              ? styles.otherUserProfileViewStyle
-              : styles.editProfileTextViewStyle
-          }
-        >
-          {isItOtherUser ? (
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
+              }
+              onPress={() => {
+                navigation.navigate("UsersList", {
+                  whoseListIsPassed: "following",
+                  usersList: profileData.followingArray,
+                });
               }}
             >
-              <ButtonComponent
-                buttonStyle={{
-                  width: 100,
-                  height: 30,
-                  marginHorizontal: "2%",
-                  borderRadius: 20,
-                  backgroundColor:
-                    followButtonText !== "Follow" ? "#A9A9A9" : "#3399ff",
+              <View style={styles.followerFollowingContainerStyle}>
+                <Text style={styles.followNoTextStyle}>
+                  {"followingArray" in profileData
+                    ? profileData.followingArray.length
+                    : ""}
+                </Text>
+                <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                  {"followingArray" in profileData ? "Following" : ""}
+                </Text>
+              </View>
+            </TouchableNativeFeedback>
+          </View>
+        </View>
+      )}
+      {loading ? (
+        <View
+          style={{
+            width: Dimensions.get("window").width,
+            height: 50,
+            paddingLeft: "3%",
+            alignItems: "flex-start",
+          }}
+        >
+          <SkeletonContent isLoading={loading}>
+            <View style={{ width: 150, height: 20 }}></View>
+          </SkeletonContent>
+          <SkeletonContent isLoading={loading}>
+            <View style={{ width: 300, height: 20 }}></View>
+          </SkeletonContent>
+        </View>
+      ) : (
+        <View>
+          <Text style={styles.userNameTextStyle}>
+            {"name" in profileData ? profileData.name : ""}
+          </Text>
+          <View style={styles.bioViewStyle}>
+            <Text style={styles.bioTextStyle}>
+              {"bio" in profileData ? profileData.bio : ""}
+            </Text>
+          </View>
+          <View
+            style={
+              isItOtherUser
+                ? styles.otherUserProfileViewStyle
+                : styles.editProfileTextViewStyle
+            }
+          >
+            {isItOtherUser ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-                makeButtonDisabled={
-                  followButtonText === "Request sent" ||
-                  followButtonText === "Loading"
-                    ? true
-                    : false
-                }
-                buttonText={followButtonText}
-                handleButton={() => {
-                  handleFollowButton();
-                }}
-              />
-              <ButtonComponent
-                buttonStyle={{
-                  width: 100,
-                  height: 30,
-                  borderRadius: 20,
-                  marginHorizontal: "2%",
-                }}
-                buttonText={"Message"}
-                handleButton={() => {
-                  if (profileData) {
-                    navigation.navigate("Message", {
-                      messageWith: profileData.email,
-                      name: profileData.name,
-                    });
+              >
+                <ButtonComponent
+                  buttonStyle={{
+                    width: 100,
+                    height: 30,
+                    marginHorizontal: "2%",
+                    borderRadius: 20,
+                    backgroundColor:
+                      followButtonText !== "Follow" ? "#A9A9A9" : "#3399ff",
+                  }}
+                  makeButtonDisabled={
+                    followButtonText === "Request sent" ||
+                    followButtonText === "Loading"
+                      ? true
+                      : false
                   }
-                }}
-              />
-              {profileData.userType !== "Individual User" && (
+                  buttonText={followButtonText}
+                  handleButton={() => {
+                    handleFollowButton();
+                  }}
+                />
                 <ButtonComponent
                   buttonStyle={{
                     width: 100,
@@ -472,28 +540,47 @@ const ProfileComponent = ({
                     borderRadius: 20,
                     marginHorizontal: "2%",
                   }}
-                  buttonText={"Visit"}
+                  buttonText={"Message"}
                   handleButton={() => {
-                    if (profileData.coordinate) {
-                      navigation.navigate("Map", { userData: profileData });
+                    if (profileData) {
+                      navigation.navigate("Message", {
+                        messageWith: profileData.email,
+                        name: profileData.name,
+                      });
                     }
                   }}
                 />
-              )}
-            </View>
-          ) : (
-            <ButtonComponent
-              buttonStyle={{
-                paddingHorizontal: 10,
-                height: 25,
-                borderRadius: 25,
-              }}
-              buttonText={"Edit profile"}
-              handleButton={editButtonHandle}
-            />
-          )}
+                {profileData.userType !== "Individual User" && (
+                  <ButtonComponent
+                    buttonStyle={{
+                      width: 100,
+                      height: 30,
+                      borderRadius: 20,
+                      marginHorizontal: "2%",
+                    }}
+                    buttonText={"Visit"}
+                    handleButton={() => {
+                      if (profileData.coordinate) {
+                        navigation.navigate("Map", { userData: profileData });
+                      }
+                    }}
+                  />
+                )}
+              </View>
+            ) : (
+              <ButtonComponent
+                buttonStyle={{
+                  paddingHorizontal: 10,
+                  height: 25,
+                  borderRadius: 25,
+                }}
+                buttonText={"Edit profile"}
+                handleButton={editButtonHandle}
+              />
+            )}
+          </View>
         </View>
-      </View>
+      )}
     </View>
   );
 };
@@ -518,6 +605,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    // paddingHorizontal:20
   },
   profilePictureViewStyle: {
     width: 150,
