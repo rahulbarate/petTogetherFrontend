@@ -241,7 +241,7 @@ const SinglePostCard = ({
                   color={isLiked ? "red" : "black"}
                 />
                 <Text style={{ fontSize: 20, marginBottom: 5 }}>
-                  {likes.length > 0 && likes.length}
+                  {likes.length >= 0 && likes.length}
                 </Text>
               </View>
             </TouchableNativeFeedback>
@@ -252,8 +252,17 @@ const SinglePostCard = ({
                 handleComment(item);
               }}
             >
-              <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <Ionicons name={"chatbubble-outline"} size={30} />
+                <Text style={{ fontSize: 20, marginBottom: 5 }}>
+                  {item.comments ? item.comments.length : 0}
+                </Text>
               </View>
             </TouchableNativeFeedback>
           </View>

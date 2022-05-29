@@ -110,7 +110,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     getDataFromServer();
-  },[]);
+  }, [isFocused]);
 
   const sendRequest = async (
     postUserEmail,
