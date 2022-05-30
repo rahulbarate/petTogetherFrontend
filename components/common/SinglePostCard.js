@@ -355,7 +355,9 @@ const styles = StyleSheet.create({
   descriptionDivider: {
     borderTopWidth: 2,
     borderColor: "#8CC0DE",
-    width: Dimensions.get("window").width - 300,
+    width: Dimensions.get("window").width - 200,
+    marginTop:10,
+    marginBottom:5,
     // alignItems: "center",
   },
   postDetailsStyle: {

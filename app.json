@@ -4,9 +4,9 @@
     "slug": "petTogetherFrontendR",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./static/images/petTogetherIcon.jpg",
+    "icon": "./assets/petTogetherIconpng.png",
     "splash": {
-      "image": "./static/images/girlwithdog.jpg",
+      "image": "./assets/girlwithdog.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -14,7 +14,7 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/**/*"
     ],
     "ios": {
       "supportsTablet": true
