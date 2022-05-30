@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "petTogetherFrontendR",
+    "name": "Pet Together",
     "slug": "petTogetherFrontendR",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./static/images/petTogetherIcon.jpg",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./static/images/girlwithdog.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.pettogether"
+      "package": "com.pettogetherapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
