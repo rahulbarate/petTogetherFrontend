@@ -396,12 +396,11 @@ const Comment = (props) => {
   };
   return (
     <View>
-      <Button
-        icon="chat"
-        color="black"
-        title="Show Modal"
-        onPress={addComment}
-      />
+      <Button icon="chat" color="black" title="Show Modal" onPress={addComment}>
+        {props.postComments.length >= 0 && (
+          <Text>{props.postComments.length}</Text>
+        )}
+      </Button>
     </View>
   );
 };

@@ -61,7 +61,7 @@ const Like = (props) => {
         color={isLiked ? "red" : "black"}
         style={props.buttonStyle ? props.buttonStyle : {}}
       >
-        {likes.length > 0 && <Text>{likes.length}</Text>}
+        {likes.length >= 0 && <Text style={{color:"#000"}}>{likes.length}</Text>}
       </Button>
     </View>
   );
