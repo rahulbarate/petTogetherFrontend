@@ -39,7 +39,9 @@ const SinglePostCard = ({
       ? "Adopted"
       : item.organizationWhoResheltered
       ? "Impounded"
-      : ""
+      : item.userWhosePetBreededWith
+      ?"Bred"
+      :""
   );
   const [postTypeTextString, setPostTypeTextString] = useState(
     item.postType === "casual"
@@ -50,7 +52,7 @@ const SinglePostCard = ({
       ? "Up for impounding"
       : item.postType === "petForAdoption" && !item.userWhoAdopted
       ? "Up for adoption"
-      : item.postType === "breedPost"
+      : item.postType === "breedPost" && !item.userWhosePetBreededWith
       ? "Up for  breeding"
       : ""
   );
@@ -419,19 +421,19 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   markPostString: {
-    borderRadius: 25,
+    borderRadius: 20,
     backgroundColor: "#DCDCDC",
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: 10,
   },
   markPostTextStyle: {
-    fontSize: 18,
-    marginHorizontal: 15,
+    fontSize: 15,
+    marginHorizontal: 10,
   },
   userNameTextStyle: {
     paddingTop: 5,
-    fontSize: 20,
+    fontSize: 18,
     justifyContent: "flex-start",
     marginVertical: 2,
   },
@@ -443,9 +445,9 @@ const styles = StyleSheet.create({
   postImageStyle: {
     flex: 1,
     width: "100%",
-    height: 200,
+    height: 300,
     // aspectRatio: 1,
-    resizeMode: "contain",
+    resizeMode: "cover",
 
     // height: "100%",
     // width: "100%",

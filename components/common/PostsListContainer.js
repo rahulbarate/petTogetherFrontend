@@ -105,12 +105,14 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
           ? "Up for impounding"
           : item.postType === "petForAdoption" && !item.userWhoAdopted
           ? "Up for adoption"
-          : item.postType === "breedPost"
+          : item.postType === "breedPost" && !item.userWhosePetBreededWith
           ? "Up for  breeding"
           : item.userWhoBought
           ? "Sold"
           : item.organizationWhoResheltered
           ? "Impounded"
+          : item.userWhosePetBreededWith
+          ? "Bred"
           : "Adopted";
       return (
         <TouchableNativeFeedback
@@ -153,9 +155,7 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
                 {/* <Text style={{ fontSize: 18,paddingLeft:5 }} numberOfLines={1}>
                   {item.petName + " " + item.postDescription}
                 </Text> */}
-                <Text style={{ fontSize: 18}}>
-                  {item.petName}
-                </Text>
+                <Text style={{ fontSize: 18 }}>{item.petName}</Text>
               </View>
             </ImageBackground>
           </View>

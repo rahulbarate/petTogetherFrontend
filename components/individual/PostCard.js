@@ -133,6 +133,7 @@ export default PostCard = ({ item }) => {
   const handleItemClicked = () => {
     navigation.navigate("OtherUsersProfile", {
       clickedUsersEmail: item.item.postUserEmail,
+      clickedUsersType:item.item.postUserType,
     });
   };
 
@@ -146,6 +147,7 @@ export default PostCard = ({ item }) => {
       if (item.userWhoBought) setMarkPostString("Sold");
       else if (item.userWhoAdopted) setMarkPostString("Adopted");
       else if (item.organizationWhoResheltered) setMarkPostString("Impounded");
+      else if (item.userWhosePetBreededWith) setMarkPostString("Bred");
       else setMarkPostString("");
       //   console.log(item);
       return false;
@@ -274,7 +276,7 @@ export default PostCard = ({ item }) => {
                     />
                   </View>
                 </TouchableNativeFeedback>
-                <Text>Send request</Text>
+                <Text>{canSendRequest?"Send request":"Request sent"}</Text>
               </View>
             ) : (
               <View style={styles.markPostString}>

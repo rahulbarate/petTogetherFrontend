@@ -214,6 +214,7 @@ const OrganizationPostUpload = () => {
           <View style={styles.descriptionBoxStyle}>
             <TextInputComponent
               textInputStyle={{
+                flex:1,
                 height: 150,
                 justifyContent: "flex-start",
                 padding: 10,
@@ -324,7 +325,7 @@ const OrganizationPostUpload = () => {
             </SafeAreaView>
           )}
         </View>
-        <View style={{ flex: 1, paddingHorizontal: 10, marginBottom: 100 }}>
+        <View style={{ flex: 1, paddingHorizontal: 10, marginBottom: 170 }}>
           <TextInputComponent
             textInputStyle={{
               height: 50,
@@ -436,9 +437,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   bottomButtonGroupStyle: {
+    marginVertical: 10,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    marginBottom:15
+    marginBottom:30
   },
 });

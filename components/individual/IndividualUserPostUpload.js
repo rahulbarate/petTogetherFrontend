@@ -241,6 +241,7 @@ const IndividualUserPostUpload = () => {
           <View style={styles.descriptionBoxStyle}>
             <TextInputComponent
               textInputStyle={{
+                flex:1,
                 height: 150,
                 justifyContent: "flex-start",
                 padding: 10,
@@ -486,6 +487,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   descriptionBoxStyle: {
+    flex:1,
     height: "100%",
     marginRight: 8,
   },
@@ -524,12 +526,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    marginBottom: 100,
+    marginBottom: 170,
   },
   bottomButtonGroupStyle: {
     flex: 0.1,
     marginVertical: 10,
     alignItems: "center",
     flexDirection: "row",
+    marginBottom: 30
   },
 });

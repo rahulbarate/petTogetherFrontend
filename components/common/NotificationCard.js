@@ -252,9 +252,9 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
     if (notificationType === "breedRequest" && requestStatus === "waiting")
       return `${name} sent breed request for your pet`;
     if (notificationType === "breedRequest" && requestStatus === "accepted")
-      return `accepted ${name}'s breed request`;
+      return `accepted ${name}'s breed request for your pet`;
     if (notificationType === "breedRequest" && requestStatus === "rejected")
-      return `rejected ${name}'s breed request`;
+      return `rejected ${name}'s breed request for your pet`;
 
     //pet adoption reqeust
     if (notificationType === "adoptionRequest" && requestStatus === "waiting")

@@ -401,14 +401,11 @@ const ProfileComponent = ({
               }}
             >
               <View style={styles.followerFollowingContainerStyle}>
-                <SkeletonContent isLoading={loading}>
-                  <Text style={styles.followNoTextStyle}>
-                    {"followersArray" in profileData
-                      ? profileData.followersArray.length
-                      : ""}
-                  </Text>
-                </SkeletonContent>
-
+                <Text style={styles.followNoTextStyle}>
+                  {"followersArray" in profileData
+                    ? profileData.followersArray.length
+                    : ""}
+                </Text>
                 <Text
                   style={{
                     fontSize: 16,

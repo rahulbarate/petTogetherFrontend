@@ -247,6 +247,7 @@ const ShopPostUpload = () => {
           <View style={styles.descriptionBoxStyle}>
             <TextInputComponent
               textInputStyle={{
+                flex:1,
                 height: 150,
                 justifyContent: "flex-start",
                 padding: 10,
@@ -499,9 +500,10 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   bottomButtonGroupStyle: {
-    marginVertical: 15,
+    marginVertical: 10,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
+    marginBottom: 30
   },
 });
