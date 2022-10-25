@@ -101,7 +101,7 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
         : item.profileImageLink,
       notificationType: `${item.notificationType}${status}`,
       requestStatus: status,
-      sendTime: new Date(),
+      sendTime: new Date().toISOString(),
       postId: item.postId ? item.postId : "",
     };
     try {
@@ -338,7 +338,7 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
           )}
         </Text>
         <Text>
-          {/* {"at " + moment(item.sendTime.toDate()).calendar(null, formats)} */}
+          {"at " + moment(item.sendTime).calendar(null, formats)}
         </Text>
       </View>
       {isItRequest(item.notificationType) ? (

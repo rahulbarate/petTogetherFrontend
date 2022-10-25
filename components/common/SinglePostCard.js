@@ -160,7 +160,7 @@ const SinglePostCard = ({
         userType: userDataContext.userType,
         postUserType,
         postUserEmail,
-        sendTime: new Date(),
+        sendTime: new Date().toISOString(),
         isLiked,
       });
     } catch (error) {

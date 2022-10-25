@@ -37,6 +37,7 @@ const Comment = ({ route }) => {
           : "",
         content: text,
         userType: userDataContext.userType,
+        sendTime: new Date().toISOString(),
       });
 
       const newComment = {

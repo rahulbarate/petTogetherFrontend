@@ -22,6 +22,16 @@ import getUserTypeDocString from "../hooks/getUserTypeDocString";
 export default function NotifyScreen({ displayDotOnNotification }) {
   const { userDataContext, setUserDataContext } = useContext(AuthContext);
   const [notifications, setNotifications] = useState([]);
+
+  const sortNotifications = (a, b) => {
+    // return a - b;
+    if (a.sendTime < b.sendTime) return -1;
+    if (a.sendTime > b.sendTime) return 1;
+    return 0;
+    // return new Date(b.sendTime) - new Date(a.sendTime);
+  };
+
+
   // notifications.sort((a, b) => {
   //   if (a.sendTime < b.sendTime) return -1;
   //   if (a.sendTime > b.sendTime) return 1;
@@ -50,6 +60,8 @@ export default function NotifyScreen({ displayDotOnNotification }) {
           if (snapshot.exists && "notification" in snapshot.data()) {
             const notificationHistory = snapshot.data().notification;
             // console.log(notificationHistory);
+            notificationHistory.sort(sortNotifications);
+            notificationHistory.reverse();
             setNotifications([...notificationHistory]);
             // console.log("here");
             // if () {
@@ -74,28 +86,21 @@ export default function NotifyScreen({ displayDotOnNotification }) {
     // displayDotOnNotification(false);
   }, []);
 
-  useEffect(() => {
-    notifications.sort((a, b) => {
-      if (a.sendTime < b.sendTime) return -1;
-      if (a.sendTime > b.sendTime) return 1;
-      return 0;
-      // return new Date(b.sendTime) - new Date(a.sendTime);
-    });
-    notifications.reverse();
-    // displayDotOnNotification(true);
-
-    // if (notifications.length !== 0) {
-    //   let arrayToSort = notifications;
-    //   arrayToSort.sort((a, b) => {
-    //     return new Date(b.sendTime) - new Date(a.sendTime);
-    //   });
-    //   arrayToSort = arrayToSort.reverse();
-    //   setNotifications(arrayToSort);
-  }, [notifications]);
-
   // useEffect(() => {
+  //   notifications.sort();
+  //   notifications.reverse();
+  //   // displayDotOnNotification(true);
 
-  // },[])
+  //   // if (notifications.length !== 0) {
+  //   //   let arrayToSort = notifications;
+  //   //   arrayToSort.sort((a, b) => {
+  //   //     return new Date(b.sendTime) - new Date(a.sendTime);
+  //   //   });
+  //   //   arrayToSort = arrayToSort.reverse();
+  //   //   setNotifications(arrayToSort);
+  // }, [notifications]);
+
+  // useEffect(() => {}, []);
 
   const getIndividualUsersData = async (email) => {
     const result = await sendRequestToServer("/profile/fetchUserDetails", {
@@ -227,7 +232,7 @@ export default function NotifyScreen({ displayDotOnNotification }) {
       </ScrollView> */}
       <FlatList
         data={notifications}
-        style={{ backgroundColor: "white",height:"100%" }}
+        style={{ backgroundColor: "white", height: "100%" }}
         renderItem={oneProfile}
         keyExtractor={(item, index) => index.toString()}
       />
