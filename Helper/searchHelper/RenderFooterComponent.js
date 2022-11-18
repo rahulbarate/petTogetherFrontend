@@ -5,7 +5,7 @@ const RenderFooterComponent = ({ setvisibleComponent }) => {
   return (
     <View style={styles.conatiner}>
       <TouchableOpacity
-        onPress={() => setvisibleComponent("topTab")}
+        onPress={() => setvisibleComponent("topTab")} //callback for diplaying the top tab navigation 
         style={styles.resultButton}
       >
         <Text style={styles.resultButtonText}>See all results</Text>
