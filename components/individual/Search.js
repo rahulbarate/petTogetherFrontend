@@ -11,13 +11,9 @@ import AuthContext from "../hooks/useAuth";
 
 const SearchScreen = () => {
   const { userDataContext, setUserDataContext } = useContext(AuthContext); // global state for accessing user data
-
   const [searchQuery, setSearchQuery] = useState(""); // state for storing user input
-
   const [data, setdata] = useState([]); //state for storing response got from backend
-
   const [loading, setLoading] = useState(false); // state for loading spinner
-
   const [visibleComponent, setvisibleComponent] = useState("search"); // state for conditionally rendering component
 
   // backend call when search input is changed
@@ -54,7 +50,7 @@ const SearchScreen = () => {
     setLoading(false);
   };
 
-  //runsn when searchQuery dependency is changed(dynamic search)
+  //runs when searchQuery dependency is changed(dynamic search)
   useEffect(() => {
     if (searchQuery.length === 0 && loading) {
       return setLoading(false);
@@ -86,7 +82,7 @@ const SearchScreen = () => {
           )}
           <Searchbar
             placeholder="Search user"
-            onChangeText={(text) => setSearchQuery(text)} //callback set input text to search query
+            onChangeText={(inputText) => setSearchQuery(inputText)} //callback set input text to search query
             value={searchQuery}
             style={{
               marginTop: 10,
