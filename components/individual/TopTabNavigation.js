@@ -80,18 +80,19 @@ const Indivisual = ({ data }) => {
   return (
     <FlatList
       style={styles.flatList}
-      data={data.filter((result) => result.userType === "Individual User")}
+      data={data.filter((result) => result.userType === "Individual User")} // filtering out Individual users
       renderItem={({ item }) => <RenderItemComponent item={item} />}
       keyExtractor={(item) => item.id}
       ItemSeparatorComponent={RenderSeparator}
     />
   );
 };
+
 const Shop = ({ data }) => {
   return (
     <FlatList
       style={styles.flatList}
-      data={data.filter((result) => result.userType === "Shopkeeper")}
+      data={data.filter((result) => result.userType === "Shopkeeper")} //filtering out shopkeeper users
       renderItem={({ item }) => <RenderItemComponent item={item} />}
       keyExtractor={(item) => item.id}
       ItemSeparatorComponent={RenderSeparator}
@@ -103,7 +104,7 @@ const NGO = ({ data }) => {
   return (
     <FlatList
       style={styles.flatList}
-      data={data.filter((result) => result.userType === "Organization")}
+      data={data.filter((result) => result.userType === "Organization")} //filtering out organization users
       renderItem={({ item }) => <RenderItemComponent item={item} />}
       keyExtractor={(item) => item.id}
       ItemSeparatorComponent={RenderSeparator}

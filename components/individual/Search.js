@@ -1,34 +1,29 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FlatList, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Searchbar } from "react-native-paper";
-import {
-  Text,
-  Avatar,
-  TabBar,
-  Tab,
-  Button,
-  Spinner,
-} from "@ui-kitten/components";
+import { Text, Spinner } from "@ui-kitten/components";
 import TopTabNavigation from "./TopTabNavigation";
 import RenderItemComponent from "../../Helper/searchHelper/RenderItemComponent";
 import RenderFooterComponent from "../../Helper/searchHelper/RenderFooterComponent";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { AntDesign } from "@expo/vector-icons";
 import { localhostBaseURL } from "../common/baseURLs";
-import axios from "axios";
 import AuthContext from "../hooks/useAuth";
 
-const SearchScreen = ({ navigation, state }) => {
-  const {userDataContext, setUserDataContext} = useContext(AuthContext);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [data, setdata] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [visibleComponent, setvisibleComponent] = useState("search");
+const SearchScreen = () => {
+  const { userDataContext, setUserDataContext } = useContext(AuthContext); // global state for accessing user data
+  const [searchQuery, setSearchQuery] = useState(""); // state for storing user input
+  const [data, setdata] = useState([]); //state for storing response got from backend
+  const [loading, setLoading] = useState(false); // state for loading spinner
+  const [visibleComponent, setvisibleComponent] = useState("search"); // state for conditionally rendering component
 
+  // backend call when search input is changed
   const onChangeSearch = async (query) => {
+    //return if input contain space  
     if (query === " ") {
       return setSearchQuery("");
     }
+    
+    //return if input is empty
     if (query.length === 0) return setSearchQuery(query);
 
     setSearchQuery(query);
@@ -36,21 +31,26 @@ const SearchScreen = ({ navigation, state }) => {
     setLoading(true);
 
     try {
+      //backend api call
       const res = await localhostBaseURL.get(`/search/get/${searchQuery}`);
 
+      //if response is empty then setting data state to empty array
       if (res.data.length === 0) {
         data.length > 0 && setdata([]);
         return setLoading(false);
       }
 
-      setdata(res.data.filter((element) => element.id != userDataContext.email));
-      
+      //set data state with filtering out the logged used record from the response if it exists
+      setdata(
+        res.data.filter((element) => element.id != userDataContext.email)
+      );
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
   };
 
+  //runs when searchQuery dependency is changed(dynamic search)
   useEffect(() => {
     if (searchQuery.length === 0 && loading) {
       return setLoading(false);
@@ -82,7 +82,7 @@ const SearchScreen = ({ navigation, state }) => {
           )}
           <Searchbar
             placeholder="Search user"
-            onChangeText={(text) => setSearchQuery(text)}
+            onChangeText={(inputText) => setSearchQuery(inputText)} //callback set input text to search query
             value={searchQuery}
             style={{
               marginTop: 10,
@@ -93,27 +93,33 @@ const SearchScreen = ({ navigation, state }) => {
             }}
           />
         </View>
+      
+       {/* display loading spinner when request goes to backend */}
         {loading && visibleComponent === "search" && <LoadingSpinner />}
+
         {visibleComponent === "search" ? (
           data.length > 0 ? (
+            // component for displying the first three records
             <FlatList
               style={styles.flatList}
-              data={data.slice(0, 3)}
-              renderItem={({ item }) => <RenderItemComponent item={item} />}
-              keyExtractor={(item) => item.id}
-              ItemSeparatorComponent={RenderSeparator}
-              ListFooterComponent={() => (
+              data={data.slice(0, 3)}  //only pass the first three records
+              renderItem={({ item }) => <RenderItemComponent item={item} />} //callback for rendering component which displays the record
+              keyExtractor={(item) => item.id} 
+              ItemSeparatorComponent={RenderSeparator} 
+              ListFooterComponent={() => (     //footer component for displaying see more results button
                 <RenderFooterComponent
-                  setvisibleComponent={setvisibleComponent}
+                  setvisibleComponent={setvisibleComponent} 
                 />
               )}
             />
           ) : (
+            // componenent for displaying nor records found
             searchQuery !== "" &&
             !loading && <NoResultFound searchQuery={searchQuery} />
           )
         ) : (
           <>
+          {/* component for displaying detailed results according to user type */}
             <TopTabNavigation data={data} />
             {loading && <LoadingSpinner />}
             {data.length === 0 && searchQuery !== "" && !loading && (
@@ -126,6 +132,7 @@ const SearchScreen = ({ navigation, state }) => {
   );
 };
 
+//seprate the result list 
 const RenderSeparator = () => {
   return (
     <View
@@ -138,6 +145,8 @@ const RenderSeparator = () => {
     />
   );
 };
+
+//
 const NoResultFound = ({ searchQuery }) => {
   return (
     <View style={styles.spinner}>
@@ -145,6 +154,8 @@ const NoResultFound = ({ searchQuery }) => {
     </View>
   );
 };
+
+//
 const LoadingSpinner = () => {
   return (
     <View style={styles.spinner}>
@@ -152,6 +163,8 @@ const LoadingSpinner = () => {
     </View>
   );
 };
+
+//styles for component
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FFF" },
   searchBar: {

@@ -5,6 +5,8 @@ import { useNavigation } from "@react-navigation/native";
 
 const RenderItemComponent = ({ item }) => {
   const navigation = useNavigation();
+
+  //navigate logged use to the clicked user profile section
   const handleItemClicked = () => {
     navigation.navigate("OtherUsersProfile", {
       clickedUsersEmail: item.email,
