@@ -157,7 +157,7 @@ const ProfileComponent = ({
             name: userDataContext.name,
             profileImageLink: userDataContext.profileImageLink,
             requestStatus: "waiting",
-            sendTime: new Date(),
+            sendTime: new Date().toISOString(),
           }),
         });
     } catch (err) {

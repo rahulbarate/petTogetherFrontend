@@ -64,7 +64,7 @@ export default PostCard = ({ item }) => {
         userType: userDataContext.userType,
         postUserType,
         postUserEmail,
-        sendTime: new Date(),
+        sendTime: new Date().toISOString(),
       });
     } catch (error) {
       console.log(error);
