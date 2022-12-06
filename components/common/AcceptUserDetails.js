@@ -21,11 +21,13 @@ import { RadioButton } from "react-native-paper";
 const deviceHeight = Dimensions.get("window").height;
 const deviceWidth = Dimensions.get("window").width;
 
-const AcceptUserDetails = () => {
+const AcceptUserDetails = ({route}) => {
   //states and variables
   const navigation = useNavigation();
 
-  const { userDataContext, setUserDataContext } = useContext(AuthContext);
+  const {userDataContext, setUserDataContext } = useContext(AuthContext);
+  console.log(route.params);
+  const {user: userDataFromSignUP} = route.params;
 
   //   const [open, setOpen] = useState(false);
   const [name, setName] = useState();
@@ -79,6 +81,7 @@ const AcceptUserDetails = () => {
         .set(enteredUserData)
         .then(navigation.navigate("MainComponent"));
       alert("Registered Successfully");
+      setUserDataContext(enteredUserData);
     } catch (error) {
       console.log(error.message);
     }
@@ -86,11 +89,11 @@ const AcceptUserDetails = () => {
 
   const getEnteredUserData = () => {
     let updatedData = {
-      email: userDataContext.email,
-      password: userDataContext.password,
-      userType: userDataContext.userType,
-      profileImageLink: userDataContext.profileImageLink
-        ? userDataContext.profileImageLink
+      email: userDataFromSignUP.email,
+      password: userDataFromSignUP.password,
+      userType: userDataFromSignUP.userType,
+      profileImageLink: userDataFromSignUP.profileImageLink
+        ? userDataFromSignUP.profileImageLink
         : "",
       name: name ? name : "",
       phoneNumber: phoneNumber ? phoneNumber : "",
@@ -102,10 +105,10 @@ const AcceptUserDetails = () => {
       coordinate: userDataContext.coordinate ? userDataContext.coordinate : "",
     };
 
-    if (userDataContext.userType === "Shopkeeper")
+    if (userDataFromSignUP.userType === "Shopkeeper")
       updatedData = { ...updatedData, ownerName, sellerType };
 
-    if (userDataContext.userType === "Organization")
+    if (userDataFromSignUP.userType === "Organization")
       updatedData = { ...updatedData, ownerName };
 
     return updatedData;
@@ -114,7 +117,7 @@ const AcceptUserDetails = () => {
   const handleShopSubmit = () => {
     if (name) {
       const enteredUserData = getEnteredUserData();
-      setUserDataContext(enteredUserData);
+      // setUserDataContext(enteredUserData);
       handleSignup(enteredUserData);
       // console.log(enteredUserData);
     } else {
@@ -134,9 +137,9 @@ const AcceptUserDetails = () => {
           <TextInputComponent
             textInputStyle={styles.longTextInputStyle}
             placeholder={
-              userDataContext.userType === "Shopkeeper"
+              userDataFromSignUP.userType === "Shopkeeper"
                 ? "Shop name"
-                : userDataContext.userType === "Organization"
+                : userDataFromSignUP.userType === "Organization"
                 ? "Organization name"
                 : "Your name"
             }
@@ -147,8 +150,8 @@ const AcceptUserDetails = () => {
               setName(text);
             }}
           />
-          {userDataContext.userType === "Shopkeeper" ||
-          userDataContext.userType === "Organization" ? (
+          {userDataFromSignUP.userType === "Shopkeeper" ||
+          userDataFromSignUP.userType === "Organization" ? (
             <TextInputComponent
               textInputStyle={styles.longTextInputStyle}
               placeholder={"Owner name"}
@@ -170,7 +173,7 @@ const AcceptUserDetails = () => {
             }}
           />
         </View>
-        {userDataContext.userType === "Shopkeeper" && (
+        {userDataFromSignUP.userType === "Shopkeeper" && (
           <View style={{ marginLeft: 15, marginVertical: 5 }}>
             <Text style={{ fontSize: 20, marginLeft: 10 }}>
               What do you sell ?

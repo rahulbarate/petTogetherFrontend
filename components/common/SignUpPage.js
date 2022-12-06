@@ -62,8 +62,8 @@ const SignUpPage = () => {
       // console.log("Please enter all details");
     } else {
       // console.log(userType);
-      setUserDataContext(user);
-      navigation.navigate("AcceptUserDetails");
+      // setUserDataContext(user);
+      navigation.navigate("AcceptUserDetails",{user:user});
     }
   };
 
