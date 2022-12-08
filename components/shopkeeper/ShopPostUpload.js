@@ -41,6 +41,7 @@ const ShopPostUpload = () => {
   const [breed, setBreed] = useState();
   const [productCategory, setProductCategory] = useState();
   const [image, setImage] = useState("");
+  // const [disablePostButton, setDisablePostButton] = useState(false);
 
   const [petTypes, setPetTypes] = useState([
     {
@@ -222,6 +223,7 @@ const ShopPostUpload = () => {
   };
 
   const handleUploadButton = () => {
+    // setDisablePostButton(true);
     ToastAndroid.show("Uploading", ToastAndroid.SHORT);
     uploadImage(uploadPost);
     // navigation.navigate("MainComponent");

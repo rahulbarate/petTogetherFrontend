@@ -98,7 +98,7 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
     if (item.postImageLink) {
       const postTypeTextString =
         item.postType === "casual"
-          ? "Casual"
+          ? "Casual post"
           : item.postType === "petSellPost" && !item.userWhoBought
           ? "Up for sell"
           : item.postType === "reshelter" && !item.organizationWhoResheltered
@@ -107,6 +107,10 @@ const PostsListContainer = ({ userData, isItOtherUser, allPosts }) => {
           ? "Up for adoption"
           : item.postType === "breedPost" && !item.userWhosePetBreededWith
           ? "Up for  breeding"
+          :item.postType==="productShowcasePost"
+          ? "Product Showcase"
+          : item.postType==="eventPost"
+          ? "Event post"
           : item.userWhoBought
           ? "Sold"
           : item.organizationWhoResheltered

@@ -324,7 +324,7 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
         <View style={styles.avatarContainer}>
           <Image
             style={styles.avatar}
-            source={item.profileImageLink && { uri: item.profileImageLink }}
+            source={item.profileImageLink? { uri: item.profileImageLink }:{uri:"https://firebasestorage.googleapis.com/v0/b/pettogether-f16ce.appspot.com/o/temp%2FblankProfilePicture.png?alt=media&token=c4fd0020-8702-4f79-9871-8f4543d8d2b3"}}
           ></Image>
         </View>
       </View>
@@ -404,7 +404,7 @@ const NotificationCard = ({ item, updateWholeArrayForPost, index }) => {
           )}
         </View>
       ) : (
-        <View style={{ flex: 1 }}>
+        <View>
           {/* <View style={styles.avatarContainer}>
             <Image
               style={styles.avatar}
@@ -446,7 +446,6 @@ const styles = StyleSheet.create({
   nameDescriptionStyle: {
     flex: 4,
     flexDirection: "column",
-    marginLeft: "2%",
     // backgroundColor:"white"
   },
   avatar: {

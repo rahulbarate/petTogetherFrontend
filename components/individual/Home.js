@@ -231,7 +231,7 @@ export default function HomeScreen() {
       {!loading &&
         (data.length > 0 ? (
           <FlatList
-            data={data}
+            data={data.reverse()}
             style={{ backgroundColor: "#BFFFF0" }}
             renderItem={renderEachPost}
             keyExtractor={(item) => item.id}

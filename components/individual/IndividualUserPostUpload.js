@@ -37,6 +37,7 @@ const IndividualUserPostUpload = () => {
   const [breed, setBreed] = useState();
   const [price, setPrice] = useState();
   const [image, setImage] = useState("");
+  // const [disablePostButton, setDisablePostButton] = useState(false);
   const [petTypes, setPetTypes] = useState([
     {
       label: "Dog",
@@ -213,6 +214,7 @@ const IndividualUserPostUpload = () => {
 
   const handleUploadButton = () => {
     // console.log(getEnteredData());
+    // setDisablePostButton(true);
     uploadImage(uploadPost);
     // navigation.navigate("MainComponent");
   };

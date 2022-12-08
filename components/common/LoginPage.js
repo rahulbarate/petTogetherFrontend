@@ -47,7 +47,9 @@ const LoginPage = () => {
         return user;
       })
       .then((user) => {
+        console.log(user.email)
         getDataFromServer(user.email);
+        console.log("in then");
         // setUserDataContext(user);
         // ToastAndroid.show("Logged In", ToastAndroid.SHORT);
         // navigation.navigate("MainComponent");
@@ -82,7 +84,8 @@ const LoginPage = () => {
       });
 
       setUserDataContext(res.data);
-      // console.log(res.data);
+      // consol
+      console.log(res.data);
     } catch (error) {
       console.log(error);
     }

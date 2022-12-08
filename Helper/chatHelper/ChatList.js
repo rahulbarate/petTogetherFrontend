@@ -64,7 +64,7 @@ const RenderItemComponent = ({ item }) => {
           source={{
             uri: item.profileImageLink
               ? item.profileImageLink
-              : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+              : "https://firebasestorage.googleapis.com/v0/b/pettogether-f16ce.appspot.com/o/temp%2FblankProfilePicture.png?alt=media&token=c4fd0020-8702-4f79-9871-8f4543d8d2b3",
           }}
           size="giant"
           style={styles.profilePic}

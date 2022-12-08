@@ -626,11 +626,11 @@ const styles = StyleSheet.create({
   userNameTextStyle: {
     fontSize: 22,
     fontWeight: "bold",
-    paddingLeft: "3%",
+    paddingLeft: "5%",
   },
   bioTextStyle: {
     fontSize: 14,
-    paddingLeft: "3%",
+    paddingLeft: "5%",
     paddingRight: "2%",
   },
   bioViewStyle: {

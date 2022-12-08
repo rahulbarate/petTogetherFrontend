@@ -45,7 +45,11 @@ const SinglePostCard = ({
   );
   const [postTypeTextString, setPostTypeTextString] = useState(
     item.postType === "casual"
-      ? "Casual"
+      ? "Casual post"
+      : item.postType==="productShowcasePost"
+      ? "Product Showcase"
+      : item.postType==="eventPost"
+      ? "Event Post"
       : item.postType === "petSellPost" && !item.userWhoBought
       ? "Up for sell"
       : item.postType === "reshelter" && !item.organizationWhoResheltered
@@ -184,7 +188,7 @@ const SinglePostCard = ({
           <View style={styles.profilePictureViewStyle}>
             <Image
               style={styles.profilePictureStyle}
-              source={{ uri: profileImageLink }}
+              source={isItOtherUser?{uri:userData.profileImageLink?userData.profileImageLink:"https://firebasestorage.googleapis.com/v0/b/pettogether-f16ce.appspot.com/o/temp%2FblankProfilePicture.png?alt=media&token=c4fd0020-8702-4f79-9871-8f4543d8d2b3"}:profileImageLink?{uri:profileImageLink}:{uri:"https://firebasestorage.googleapis.com/v0/b/pettogether-f16ce.appspot.com/o/temp%2FblankProfilePicture.png?alt=media&token=c4fd0020-8702-4f79-9871-8f4543d8d2b3"}}
             />
           </View>
           <View style={styles.userNameAndPostTimeStyle}>
